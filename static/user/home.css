@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: url('https://source.unsplash.com/1600x900/?warehouse,futuristic') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    text-align: center;
+}
+
+
+
+h1 {
+    color: #fff;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.dashboard {
+    display: flex;
+    gap: 15px;
+    width: 80%;
+    max-width: 1000px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card i {
+    font-size: 30px;
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.sub-options {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.sub-options a {
+    display: block;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s;
+}
+
+.sub-options a:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.expanded {
+    flex: 2;
+    min-height: 300px;
+}
+
+.expanded .sub-options {
+    display: block;
+    opacity: 1;
+}
+
+.minimized {
+    flex: 0.7;
+    min-height: 150px;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+}
