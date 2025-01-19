@@ -14,7 +14,7 @@ def login(request):
             form = CustomAuthenticationForm(request, data=request.POST)
             if form.is_valid():
                 user = form.get_user()
-                login(request, user)
+                # login(request, user)
                 return redirect('home')  # Redirect to home page after successful login
     else:
         register_form = CustomUserCreationForm()
