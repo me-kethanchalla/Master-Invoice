@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SupplierInvoiceConfig(AppConfig):
+class OutwardSupplyConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'supplier_invoice'
+    name = 'outward_supply'

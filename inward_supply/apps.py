@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class GenerateInvoiceConfig(AppConfig):
+class InwardSupplyConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'generate_invoice'
+    name = 'inward_supply'
