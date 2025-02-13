@@ -1,0 +1,45 @@
+<!-- edit_inventory.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Inventory Item</title>
+</head>
+<body>
+    <h1>Edit Inventory Item: {{ item.product_name }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" value="{{ item.product_name }}" required>
+        </div>
+        <div>
+            <label for="item_id">Item ID:</label>
+            <input type="text" id="item_id" name="item_id" value="{{ item.item_id }}" required>
+        </div>
+        <div>
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" value="{{ item.quantity }}" required>
+        </div>
+        <div>
+            <label for="cost_price">Cost Price:</label>
+            <input type="number" id="cost_price" name="cost_price" value="{{ item.cost_price }}" required step="0.01">
+        </div>
+        <div>
+            <label for="sale_price">Sale Price:</label>
+            <input type="number" id="sale_price" name="sale_price" value="{{ item.sale_price }}" required step="0.01">
+        </div>
+        <div>
+            <label for="max_retail_price">Maximum Retail Price:</label>
+            <input type="number" id="max_retail_price" name="max_retail_price" value="{{ item.max_retail_price }}" required step="0.01">
+        </div>
+        <div>
+            <label for="gst">GST (%)</label>
+            <input type="number" id="gst" name="gst" value="{{ item.gst }}" required step="0.01">
+        </div>
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{% url 'inventory_list' %}">Back to Inventory List</a>
+</body>
+</html>
