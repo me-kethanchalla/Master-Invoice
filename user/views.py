@@ -3,27 +3,28 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
-def login(request):
+def user_login(request):
+    register_form = CustomUserCreationForm()
+    login_form = CustomAuthenticationForm()
+
     if request.method == 'POST':
-        if 'register' in request.POST:  # Register form submitted
-            form = CustomUserCreationForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('login')  # Redirect to login page after successful registration
-        elif 'login' in request.POST:  # Login form submitted
-            form = CustomAuthenticationForm(request, data=request.POST)
-            if form.is_valid():
-                user = form.get_user()
-                # login(request, user)
-                return redirect('home')  # Redirect to home page after successful login
-    else:
-        register_form = CustomUserCreationForm()
-        login_form = CustomAuthenticationForm()
+        if 'register' in request.POST:
+            register_form = CustomUserCreationForm(request.POST)
+            if register_form.is_valid():
+                register_form.save()
+                return redirect('login')  
+        elif 'login' in request.POST:
+            login_form = CustomAuthenticationForm(request, data=request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                login(request, user)
+                return redirect('home')  
 
-    return render(request, 'user/login.html', {
+    return render(request, 'registration/login.html', {
         'register_form': register_form,
-        'login_form': login_form })
+        'login_form': login_form
+    })
 
-def welcome(request):
-    return render(request, 'user/welcome.html')
+def home(request):
+    return render(request, 'registration/home.html')
 

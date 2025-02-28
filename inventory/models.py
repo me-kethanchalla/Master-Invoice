@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
+
 
 class Inventory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to Django User model
@@ -14,9 +16,15 @@ class Inventory(models.Model):
     total_qty_sold = models.PositiveIntegerField(default=0)  # Total items sold
 
     def save(self, *args, **kwargs):
-        # Automatically calculate profit (profit per item = sale price - cost price)
+        # Ensure values are Decimal before performing calculations
+        self.sale_price = Decimal(self.sale_price)
+        self.cost_price = Decimal(self.cost_price)
+        
+        # Calculate profit (profit per item = sale price - cost price)
         self.profit = self.sale_price - self.cost_price
+        
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.product_name} ({self.item_id}) - Qty: {self.quantity}"

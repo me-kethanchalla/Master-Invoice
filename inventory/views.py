@@ -64,7 +64,7 @@ def edit_inventory(request, id):
         item.gst = request.POST['gst']
 
         # Recalculate profit
-        item.profit = item.sale_price - item.cost_price
+        item.profit = str(float(item.sale_price) - float( item.cost_price))
         item.save()  # Save the updated item
 
         return redirect('inventory_list')  # Redirect to the inventory list after saving
