@@ -194,10 +194,10 @@
                 Supply Outflow
               </a>
               <ul class="dropdown-menu" aria-labelledby="outflowDropdown">
-                <li><a class="dropdown-item" href="#">Add Retailer</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
                 <li><a class="dropdown-item" href="#">Billing to Retailer</a></li>
                 <li><a class="dropdown-item" href="#">Transaction Outflow</a></li>
-                <li><a class="dropdown-item" href="#">View Retailers</a></li>
+                <li><a class="dropdown-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
               </ul>
             </li>
 
@@ -262,7 +262,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Retailer Name</th>
+            <th>Supplier Name</th>
             <th>Firm Name</th>
             <th>Phone Number</th>
             <th>Email</th>
