@@ -1,74 +1,281 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'user/home.css' %}">
-</head>
-<body>
-
-    <h1>Warehouse Management</h1>
-
-    <div class="dashboard">
-        <div class="card" id="inventory" onclick="toggleSection('inventory')">
-            <i class="fas fa-box"></i>
-            <h2>Inventory</h2>
-            <div class="sub-options">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Master Invoice</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="{% static 'user/styles.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-1 px-lg-2">
+                <a class="navbar-brand" href="#page-top">
+                    <img src="{% static 'user/mainlogo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
+                    <br>Master Invoice
+                </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">Inventory</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Supply Inflow</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Supply Outflow</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Transactions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class='fas fa-line-chart' style='font-size:20px'></i></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class='fas fa-home' style='font-size:20px'></i></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about"><i class='fas fa-info-circle' style='font-size:20px'></i></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contact"><i class='fas fa-headset' style='font-size:20px'></i></a></li>     
+                        <li class="nav-item"><a class="nav-link" href="/profile"><i class='fas fa-user' style='font-size:20px'></i></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/"><i class='fas fa-sign-out-alt' style='font-size:20px'></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <!--<header class="masthead">
+            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+                <div class="d-flex justify-content-center">
+                    <div class="text-center">
+                        <h1 id="jo">Welcome User!</h1>
+                        <h2 class="text-white-50 mx-auto mt-2 mb-5">A free, responsive, one page Bootstrap theme created by Start Bootstrap.</h2>
+                    </div>
+                </div>
+            </div>
+        </header>-->
+        <!-- Tools-->
+        <header class="masthead">
+            <section class="contact-section bg-var2 px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center" id="tools">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5">
+                        <div class="text-center">
+                            <h1 id="jo">Welcome User!</h1><br><br>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="cardd" id="inventory" onclick="toggleSection('inventory')">
+                                <i id="Siu" class="fas fa-box"></i>
+                                <h3 class="text-uppercase m-0">Inventory</h3>
+                                <div class="sub-optionss">
+                                    <a href="/add-product/">Add Product</a>
+                                    <a href="/view-inventory">View Inventory</a>
+                                </div>
+                            </div>
+                        </div>
                 
-                <a href="#">Add Product</a>
-                <a href="#">Check Inventory</a>
-            </div>
-        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="cardd" id="suppliers" onclick="toggleSection('suppliers')">
+                                <i id="Siu" class="fas fa-truck"></i>
+                                <h3 class="text-uppercase m-0">Supply Inflow</h3>
+                                <div class="sub-optionss">
+                                    <a href="{% url 'add_supplier' %}">Add Supplier</a>
+                                    <a href="/get-bill/">Enter Invoice Bill</a>
+                                    <a href="/product-inflow/">Transaction Inflow</a>
+                                    <a href="{% url 'view_suppliers' %}">View Suppliers</a>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="cardd" id="retailers" onclick="toggleSection('retailers')">
+                                <i id="Siu" class="fas fa-store"></i>
+                                <h3 class="text-uppercase m-0">Supply Outflow</h3>
+                                <div class="sub-optionss">
+                                    <a href="/add-retailer/">Add Retailer</a>
+                                    <a href="/generate-bill/">Billing to Retailer</a>
+                                    <a href="/product-outflow/">Transaction Outlfow</a>
+                                    <a href="/view-retailer/">View Retailers</a>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="card" id="suppliers" onclick="toggleSection('suppliers')">
-            <i class="fas fa-truck"></i>
-            <h2>Manage Suppliers</h2>
-            <div class="sub-options">
-                <a href="#">Add New Supplier</a> 
-                <a href="#">Enter Invoice Bill</a>
-                <a href="#">Inward Transaction History</a>
-            </div>
-        </div>
 
-        <div class="card" id="retailers" onclick="toggleSection('retailers')">
-            <i class="fas fa-store"></i>
-            <h2>Manage Retailers</h2>
-            <div class="sub-options">
-                <a href="#">Add New Retailer</a>
-                <a href="#">Billing to Retailer</a>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="cardd" id="payments" onclick="toggleSection('payments')">
+                                <i id="Siu" class="fas fa-money-bill-wave"></i>
+                                <h3 class="text-uppercase m-0">Transactions</h3>
+                                <div class="sub-optionss">
+                                    <a href="/inward-transaction/">Add Inward Transactions</a>
+                                    <a href="/outward-transaction/">Add Outward Transactions</a>
+                                    <a href="#">View Transaction History</a>
+                                    <a href="/pending">Pending Transactions</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br><br><br><br><br>
+                </div>
+                <script>
+                    function toggleSection(section) {
+                        let sections = ["inventory", "suppliers", "retailers", "payments"];
+                        sections.forEach(id => {
+                            let card = document.getElementById(id);
+                            if (id === section) {
+                                card.classList.toggle("expandeded");
+                                card.classList.remove("minimizeded");
+                            }
+                            else{
+                                card.classList.remove("expandeded");
+                            }
+                        });
+                    }
+                </script>
+            </section>
+        </header>
+        <!-- About-->
+        <section class="about-section text-center" id="about">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-white mb-4">Built by while(1)</h2>
+                        <p class="text-white-50">
+                            Our app streamlines warehouse operations by digitalizing the storage and dispatch process.
+                            It ensures efficient tracking, easy inventory management, and seamless order fulfillment. 
+                            With a user-friendly interface, it reduces manual errors and enhances productivity. 
+                            Optimize your warehouse logistics with our smart, digital solution!
+                            <br><br><br><br><br><br><br>
+                        </p>
+                    </div>
+                </div>
+                <img class="img-fluid" src="assets/img/ipad.png" alt="..." />
             </div>
-        </div>
+        </section>
 
-        <div class="card" id="payments" onclick="toggleSection('payments')">
-            <i class="fas fa-money-bill-wave"></i>
-            <h2>Payments & Receipts</h2>
-            <div class="sub-options">
-                <a href="#">Paid</a>
-                <a href="#">Received</a>
-                <a href="#">Pending</a>
+       <!-- <section class="contact-section bg-var2 px-4 px-lg-5 d-flex h-100" id="tools">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="cardd" id="inventory" onclick="toggleSection('inventory')">
+                            <i id="Siu" class="fas fa-box"></i>
+                            <h3 class="text-uppercase m-0">Inventory</h3>
+                            <div class="sub-optionss">
+                                <a href="#">Add Company</a>
+                                <a href="#">Add Product</a>
+                                <a href="#">Check Inventory</a>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="cardd" id="suppliers" onclick="toggleSection('suppliers')">
+                            <i id="Siu" class="fas fa-truck"></i>
+                            <h3 class="text-uppercase m-0">Manage Supply</h3>
+                            <div class="sub-optionss">
+                                <a href="#">Add Supplier</a>
+                                <a href="#">Enter Invoice Bill</a>
+                                <a href="#">Inward Transaction History</a>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="cardd" id="retailers" onclick="toggleSection('retailers')">
+                            <i id="Siu" class="fas fa-store"></i>
+                            <h3 class="text-uppercase m-0">Manage Retail</h3>
+                            <div class="sub-optionss">
+                                <a href="#">Add Retailer</a>
+                                <a href="#">Billing to Retailer</a>
+                                <a href="#">Outward Transaction History</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="cardd" id="payments" onclick="toggleSection('payments')">
+                            <i id="Siu" class="fas fa-money-bill-wave"></i>
+                            <h3 class="text-uppercase m-0">Payments & Receipts</h3>
+                            <div class="sub-optionss">
+                                <a href="#">Paid</a>
+                                <a href="#">Received</a>
+                                <a href="#">Pending</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br><br><br><br><br>
             </div>
-        </div>
-    </div>
-
-    <script>
-        function toggleSection(section) {
-            let sections = ["inventory", "suppliers", "retailers", "payments"];
-            sections.forEach(id => {
-                let card = document.getElementById(id);
-                if (id === section) {
-                    card.classList.toggle("expanded");
-                    card.classList.remove("minimized");
-                } else {
-                    card.classList.remove("expanded");
-                    card.classList.add("minimized");
+            <script>
+                function toggleSection(section) {
+                    let sections = ["inventory", "suppliers", "retailers", "payments"];
+                    sections.forEach(id => {
+                        let card = document.getElementById(id);
+                        if (id === section) {
+                            card.classList.toggle("expandeded");
+                            card.classList.remove("minimizeded");
+                        }
+                        else{
+                            card.classList.remove("expandeded");
+                        }
+                    });
                 }
-            });
-        }
-    </script>
-
-</body>
+            </script>
+        </section>-->
+        <!-- Contact-->
+        <section class="contact-section bg-var" id="contact">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Address</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">RM101, IIT Kanpur</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50"><a href="#!">isaha@cse.iitk.ac.in</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Phone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">+91 6942069420</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="https://www.linkedin.com/in/indranil-saha-8859135/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a class="mx-2" href="https://www.instagram.com/master_invoice/?utm_source=ig_web_button_share_sheet" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a class="mx-2" href="https://github.com/me-kethanchalla/Master-Invoice" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="footer bg-black small text-center text-white-50"><div class="container px-4 px-lg-5">Version v1.01</div></footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'user/scripts.js' %}"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
 </html>
 
