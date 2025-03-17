@@ -47,9 +47,10 @@
             <i class="fas fa-money-bill-wave"></i>
             <h2>Payments & Receipts</h2>
             <div class="sub-options">
-                <a href="#">Paid</a>
-                <a href="#">Received</a>
-                <a href="#">Pending</a>
+                <a href="{% url 'clear_retailer_debit' %}">Add Inward Transaction</a>
+                <a href="{% url 'clear_supplier_debit' %}">Add Ouward Transaction</a>
+                <a href="{% url 'pending' %}">Received</a>
+                <a href="{% url 'pending' %}">Pending</a>
             </div>
         </div>
     </div>
