@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import SupplierForm
 from .models import Supplier
+from django.db.models import Q
 
 @login_required
 def add_supplier(request):
@@ -20,18 +21,27 @@ def add_supplier(request):
     return render(request, 'inward_supply/add_supplier.html', {'form': form, 'message': message})
 
 def view_suppliers(request):
-    suppliers = Supplier.objects.all()
+    query = request.GET.get('query', '')
+    if query:
+        suppliers = Supplier.objects.filter(
+            Q(person_name__icontains=query) |
+            Q(firm_name__icontains=query)
+        )
+    else:
+        suppliers = Supplier.objects.all()
+    
     return render(request, 'inward_supply/view_suppliers.html', {'suppliers': suppliers})
 
-
-
-
-
-
-
-
-
-
-
-
-
+def edit_supplier(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    message = ""
+    if request.method == "POST":
+        form = SupplierForm(request.POST, instance=supplier)
+        if form.is_valid():
+            form.save()
+            message = "Supplier updated successfully!"
+            # Optionally redirect after saving
+            return redirect('view_suppliers')
+    else:
+        form = SupplierForm(instance=supplier)
+    return render(request, 'inward_supply/edit_supplier.html', {'form': form, 'message': message, 'supplier': supplier})

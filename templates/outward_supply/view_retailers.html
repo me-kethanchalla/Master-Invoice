@@ -246,17 +246,18 @@
       </div>
       <br />
       <div class="section">
-        <form action="#" method="get">
+        <form method="get" action="{% url 'view_retailers' %}">
           <label for="search">Search:</label>
-          <input
-            type="text"
-            id="search"
-            name="query"
-            style="width: 350px;"
-            placeholder="Search Retailer with Name, Firm or Address"
-          />
+          <input 
+              type="text" 
+              id="search" 
+              name="query" 
+              style="width: 350px;" 
+              placeholder="Search Retailer with Name or Firm"
+              value="{{ request.GET.query|default_if_none:'' }}"
+          >
           <button type="submit">Search</button>
-        </form>
+      </form>
       </div>
 
       <table class="table">
@@ -282,7 +283,7 @@
             <td>{{ retailer.credit }}</td>
             <td>
               <i class="fas fa-edit"></i>
-              <!-- Potential edit link can go here -->
+              <a href="{% url 'edit_retailer' retailer.id %}" style="text-decoration: none;" >Edit</a>
             </td>
           </tr>
           {% empty %}

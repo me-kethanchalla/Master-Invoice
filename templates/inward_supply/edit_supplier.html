@@ -9,14 +9,12 @@
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>View Suppliers</title>
-
-    <!-- Bootstrap 5 CSS -->
+    <title>Edit Supplier</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
     <!-- FontAwesome, Google Fonts, and your custom CSS -->
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
@@ -37,7 +35,6 @@
     <link rel="stylesheet" href="{% static 'Final.css' %}" />
 
     <style>
-      /* Your existing custom styles */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -126,7 +123,6 @@
           />
           <span class="ms-2">Master Invoice</span>
         </a>
-
         <!-- Navbar Toggler -->
         <button
           class="navbar-toggler"
@@ -139,7 +135,6 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <!-- Collapsible Menu Items -->
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto">
@@ -160,7 +155,6 @@
                 <li><a class="dropdown-item" href="#">Manage Inventory</a></li>
               </ul>
             </li>
-
             <!-- Supply Inflow Dropdown -->
             <li class="nav-item dropdown">
               <a
@@ -177,10 +171,11 @@
                 <li><a class="dropdown-item" href="{% url 'add_supplier' %}">Add Supplier</a></li>
                 <li><a class="dropdown-item" href="#">Enter Invoice Bill</a></li>
                 <li><a class="dropdown-item" href="#">Transaction Inflow</a></li>
-                <li><a class="dropdown-item" href="{% url 'view_suppliers' %}">View Suppliers</a></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'view_suppliers' %}">View Suppliers</a>
+                </li>
               </ul>
             </li>
-
             <!-- Supply Outflow Dropdown -->
             <li class="nav-item dropdown">
               <a
@@ -200,7 +195,6 @@
                 <li><a class="dropdown-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
               </ul>
             </li>
-
             <!-- Transactions Dropdown -->
             <li class="nav-item dropdown">
               <a
@@ -220,7 +214,6 @@
                 <li><a class="dropdown-item" href="#">Pending Transactions</a></li>
               </ul>
             </li>
-
             <!-- Other Menu Items -->
             <li class="nav-item">
               <a class="nav-link" href="#" style="text-decoration: none;">Analysis</a>
@@ -241,61 +234,46 @@
     <!-- NAVBAR END -->
 
     <div class="supplier-container">
-      <div class="header">
-        <h2><b><u>My Suppliers</u></b></h2>
+        <div class="header">
+          <h2><b><u>Edit Supplier</u></b></h2>
+        </div>
+        <br />
+        {% if message %}
+        <div class="alert alert-success" style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 20px;">
+          {{ message }}
+        </div>
+        {% endif %}
+        <div class="section">
+          <!-- Note: We pass the supplier's primary key in the URL -->
+          <form action="{% url 'edit_supplier' supplier.pk %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="supplierName">Firm Name:</label>
+              {{ form.firm_name }}
+            </div>
+            <div class="form-group">
+              <label for="supplierName">Person Name:</label>
+              {{ form.person_name }}
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number:</label>
+              {{ form.phone_number }}
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              {{ form.email_id }}
+            </div>
+            <div class="form-group">
+              <label for="address">Address:</label>
+              {{ form.address }}
+            </div>
+            <div class="buttons">
+              <button type="submit" class="button">Save Changes</button>
+              <button type="reset" class="button">Reset</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <br />
-      <div class="section">
-        <form method="get" action="{% url 'view_suppliers' %}">
-          <label for="search">Search:</label>
-          <input 
-              type="text" 
-              id="search" 
-              name="query" 
-              style="width: 350px;" 
-              placeholder="Search Supplier with Name or Firm"
-              value="{{ request.GET.query|default_if_none:'' }}"
-          >
-          <button type="submit">Search</button>
-        </form>
-      </div>
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Supplier Name</th>
-            <th>Firm Name</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Debit</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for supplier in suppliers %}
-          <tr>
-            <td>{{ supplier.person_name }}</td>
-            <td>{{ supplier.firm_name }}</td>
-            <td>{{ supplier.phone_number }}</td>
-            <td>{{ supplier.email_id }}</td>
-            <td>{{ supplier.address }}</td>
-            <td>{{ supplier.debit }}</td>
-            <td>
-              <i class="fas fa-edit"></i>
-              <!-- Potential edit link can go here -->
-              <a href="{% url 'edit_supplier' supplier.id %}" style="text-decoration: none;">Edit</a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7">No suppliers found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
     <div class="footer-button">
       <a class="nav-link" href="#">
         <i
@@ -305,7 +283,10 @@
       </a>
     </div>
 
-    <!-- Bootstrap JS (necessary for dropdowns to function) -->
+    <!-- Required for the forms from startbootstrap, if you use them -->
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+    <!-- Bootstrap 5 JS for navbar toggler/collapse and dropdowns -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
