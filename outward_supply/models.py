@@ -1,5 +1,4 @@
 from django.db import models
-from inventory.models import Product
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
