@@ -1,9 +1,10 @@
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
     <title>Interactive Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'user/home.css' %}">
@@ -28,8 +29,8 @@
             <h2>Manage Suppliers</h2>
             <div class="sub-options">
                 <a href="#">Add New Supplier</a> 
-                <a href="#">Enter Invoice Bill</a>
-                <a href="#">Inward Transaction History</a>
+                <a href="/inward_supply/add_invoice/">Enter Invoice Bill</a>
+                <a href="/inward_supply/">Inward Transaction History</a>
             </div>
         </div>
 

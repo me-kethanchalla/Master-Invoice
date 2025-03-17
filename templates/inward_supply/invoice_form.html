@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container d-flex flex-column align-items-center mt-4">
+    <form method="post" class="w-65">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <table class="table table-striped table-hover table-bordered mt-3 text-center w-100" id="invoice-table">
+            <thead class="table-dark">
+                <tr>
+                    <th class="w-40">Product</th>
+                    <th class="w-25">Quantity</th>
+                    <th class="w-25">Amount</th>
+                    <th class="w-10"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added dynamically -->
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-center mt-3">
+            <button type="button" class="btn btn-success me-3" onclick="addRow()">Add Row</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addRow() {
+        let table = document.getElementById("invoice-table").getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow();
+
+        let productCell = newRow.insertCell(0);
+        let quantityCell = newRow.insertCell(1);
+        let amountCell = newRow.insertCell(2);
+        let removeCell = newRow.insertCell(3);
+
+        productCell.innerHTML = '<input type="text" name="product[]" class="form-control text-center" placeholder="Enter Product" required>';
+        quantityCell.innerHTML = '<input type="number" name="quantity[]" class="form-control text-center" placeholder="Enter Quantity" required>';
+        amountCell.innerHTML = '<input type="number" name="amount[]" class="form-control text-center" placeholder="Enter Amount" required>';
+
+        removeCell.innerHTML = '<button type="button" class="btn btn-danger btn-sm px-2 py-1" onclick="removeRow(this)">❌</button>';
+        removeCell.classList.add("align-middle", "text-center");
+    }
+
+    function removeRow(button) {
+        let row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+    
+    // Add an initial row when the page loads
+    window.onload = function() {
+        addRow();
+    }
+</script>
+
+{% endblock content %}
