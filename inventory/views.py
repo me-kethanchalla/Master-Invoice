@@ -1,11 +1,12 @@
 # views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Inventory
+from django.contrib.auth.models import User
 
 # View to display the list of inventory items
 def inventory_list(request):
     # Fetch all inventory items
-    inventory = Inventory.objects.all()
+    inventory = Inventory.objects.filter(user=request.user)
     return render(request, 'inventory/inventory.html', {'inventory': inventory})
 
 # View to add a new inventory item
@@ -51,7 +52,7 @@ def add_inventory(request):
 # View to edit an existing inventory item
 def edit_inventory(request, id):
     # Fetch the inventory item by ID
-    item = get_object_or_404(Inventory, id=id)
+    item = get_object_or_404(Inventory, id=id, user=request.user)
 
     if request.method == 'POST':
         # Update the item with the data from the POST request
@@ -73,11 +74,9 @@ def edit_inventory(request, id):
     return render(request, 'inventory/edit_inventory.html', {'item': item})
 
 # View to delete an inventory item
+@login_required
 def delete_inventory(request, id):
-    # Fetch the inventory item by ID
-    item = get_object_or_404(Inventory, id=id)
-
-    # Delete the item
+    item = get_object_or_404(Inventory, id=id, user=request.user)  # Ensure user owns this item
     item.delete()
+    return redirect('inventory_list')
 
-    return redirect('inventory_list')  # Redirect to the inventory list after deleting

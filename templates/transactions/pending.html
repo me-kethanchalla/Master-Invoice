@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Pending Transactions</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'user/Final.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(#616161, black);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .supplier-container {
+            width: 83%;
+            margin: 30px auto;
+            background: #fff;
+            border: 1px solid #ddd; 
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: white;
+            color: black;
+            padding: 10px 15px;
+            border: 2px solid #0056b3;  /* Proper border definition */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+            color: white;
+            border-color: #003b80; /* Slightly darker border on hover */
+        }
+        .table-container {
+            display: none; /* Hide tables by default */
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+        .footer-button {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .footer-button i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-1 px-lg-2">
+            <a class="navbar-brand" href="#page-top">
+                <img src="{% static 'user/mainlogo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
+                <br>Master Invoice
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Inventory</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Inflow</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Outflow</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Transactions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="supplier-container">
+        <div class="header">
+            <h2><b><u>Pending</u></b></h2>
+        </div>
+
+        <div class="button-container">
+            <button class="button" id="button" onclick="showTable('retailersTable')">Retailers</button>
+            <button class="button" id="button" onclick="showTable('suppliersTable')">Suppliers</button>
+        </div>
+        <br>
+        <!-- Retailers Table -->
+        <div id="retailersTable" class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Retailer Name</th>
+                        <th>Firm</th>
+                        <th>Debit</th>
+                        <th>Last Transaction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for retailer in retailers %}
+                {% if retailer.credit != 0 %}
+                <tr>
+                    <td>{{ retailer.person_name }}</td>
+                    <td>{{ retailer.firm_name }}</td>
+                    <td style="color: red;">-₹{{ retailer.credit }}</td>
+                    <td>12/06/2024</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Suppliers Table -->
+        <div id="suppliersTable" class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Supplier Name</th>
+                        <th>Firm</th>
+                        <th>Credit</th>
+                        <th>Last Transaction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for supplier in suppliers %}
+                {% if supplier.debit != 0 %}
+                <tr>
+                    <td>{{ supplier.person_name }}</td>
+                    <td>{{ supplier.firm_name }}</td>
+                    <td style="color: green;">₹{{ supplier.debit }}</td>
+                    <td>12/06/2024</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer-button">
+        <a href="#"><i class='far fa-arrow-alt-circle-up' style="font-size: 35px; color: aliceblue;"></i></a>
+    </div>
+
+    <script>
+        function showTable(tableName) {
+            document.getElementById("retailersTable").style.display = "none";
+            document.getElementById("suppliersTable").style.display = "none";
+            document.getElementById(tableName).style.display = "block";
+        }
+
+        // Show retailers table by default
+        showTable("retailersTable");
+    </script>
+
+</body>
+</html>
