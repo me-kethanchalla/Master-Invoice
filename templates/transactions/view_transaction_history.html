@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Pending Transactions</title>
+    <title>Transaction History</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
@@ -166,7 +166,7 @@
 
     <div class="supplier-container">
         <div class="header">
-            <h2><b><u>Pending</u></b></h2>
+            <h2><b><u>Transactions</u></b></h2>
         </div>
 
         <div class="button-container">
@@ -181,17 +181,17 @@
                     <tr>
                         <th>Retailer Name</th>
                         <th>Firm</th>
-                        <th>Debit</th>
+                        <th>Received</th>
                         <th>Last Transaction</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for retailer in retailers %}
-                {% if retailer.credit != 0 %}
+                {% for item in transactions %}
+                {% if item.type == 0 %}
                 <tr>
-                    <td>{{ retailer.person_name }}</td>
-                    <td>{{ retailer.firm_name }}</td>
-                    <td style="color: red;">-₹{{ retailer.credit }}</td>
+                    <td>{{ item.person_name }}</td>
+                    <td>{{ item.firm_name }}</td>
+                    <td style="color: green;">₹{{ item.payment }}</td>
                     <td>12/06/2024</td>
                 </tr>
                 {% endif %}
@@ -207,17 +207,17 @@
                     <tr>
                         <th>Supplier Name</th>
                         <th>Firm</th>
-                        <th>Credit</th>
+                        <th>Paid</th>
                         <th>Last Transaction</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for supplier in suppliers %}
-                {% if supplier.debit != 0 %}
+                {% for item in transactions %}
+                {% if item.type == 1 %}
                 <tr>
-                    <td>{{ supplier.person_name }}</td>
-                    <td>{{ supplier.firm_name }}</td>
-                    <td style="color: green;">₹{{ supplier.debit }}</td>
+                    <td>{{ item.person_name }}</td>
+                    <td>{{ item.firm_name }}</td>
+                    <td style="color: red;">₹{{ item.payment }}</td>
                     <td>12/06/2024</td>
                 </tr>
                 {% endif %}
@@ -240,6 +240,8 @@
 
         // Show retailers table by default
         showTable("retailersTable");
+
+
 
         document.addEventListener("DOMContentLoaded", function () {
         const dropdown = document.getElementById("inventoryDropdown");
@@ -310,8 +312,6 @@
             }
         });
     });
-
-
     </script>
 
 </body>

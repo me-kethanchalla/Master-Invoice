@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,7 +11,9 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'user/Final.css' %}">
     <style>
@@ -18,9 +21,10 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(#616161,black);
+            background: linear-gradient(#616161, black);
             min-height: 100vh;
         }
+
         .invoice-container {
             width: 83%;
             margin: 30px auto;
@@ -30,12 +34,14 @@
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
+
         .header .logo {
             width: 100px;
             height: 100px;
@@ -45,51 +51,64 @@
             color: #888;
             border-radius: 4px;
         }
+
         .header .info {
             text-align: right;
         }
+
         .section {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
         }
+
         .section .details {
             width: 48%;
         }
+
         .dropdown {
             margin-bottom: 20px;
         }
+
         .table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
+
         .table th {
             background-color: #f2f2f2;
         }
+
         .totals {
             text-align: right;
             margin-top: 10px;
         }
+
         .totals span {
             display: block;
             margin-bottom: 5px;
         }
+
         .footer {
             text-align: left;
             margin-top: 20px;
         }
+
         .buttons {
             margin-top: 20px;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
+
         .button {
             background-color: #007bff;
             color: #fff;
@@ -99,21 +118,24 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .button:hover {
             background-color: #0056b3;
         }
+
         .footer-button {
-        position: fixed;
-        bottom: 20px;
-        right: 10px;
-        color: white;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
         }
+
         .footer-button i {
-        margin-right: 5px;
+            margin-right: 5px;
         }
         .dropdownn {
             position: relative;
@@ -141,99 +163,107 @@
         .dropdownn-menu a:hover {
             background-color: #f1f1f1;
         }
-
     </style>
     <script>
-        let firmOptions = `{% for item in retailers %}<option value="{{ item.firm_name }}">{{ item.firm_name }}</option>{% endfor %}`;
+        // Store firm options from Django template
+        let firmOptions = `<option value="">Select Firm</option>
+            {% for item in retailers %}
+                <option value="{{ item.firm_name }}">{{ item.firm_name }}</option>
+            {% endfor %}`;
+    
         function addPaymentRow() {
             let table = document.getElementById("paymentTable").getElementsByTagName('tbody')[0];
             let newRow = table.insertRow();
-
+    
             let firmCell = newRow.insertCell(0);
             let amountCell = newRow.insertCell(1);
             let remarksCell = newRow.insertCell(2);
             let actionCell = newRow.insertCell(3);
-
-            firmCell.innerHTML = `<select>${firmOptions}</select>`;
-            amountCell.innerHTML = `<input type="number" placeholder="Amount Paid">`;
-            remarksCell.innerHTML = `<input type="text" placeholder="Remarks" style="width: 700px;">`;
-            actionCell.innerHTML = `<button onclick="removePaymentRow(this)">X</button>`;
+    
+            // Populate row with input fields
+            firmCell.innerHTML = `<select name="firm_name[]" required>${firmOptions}</select>`;
+            amountCell.innerHTML = `<input type="number" name="amount_paid[]" placeholder="Amount Paid" step="0.01" required>`;
+            remarksCell.innerHTML = `<input type="text" name="remarks[]" placeholder="Remarks" style="width: 700px;" required>`;
+            actionCell.innerHTML = `<button type="button" onclick="removePaymentRow(this)" style="color: red; border: none; background: none; font-size: 16px;">X</button>`;
         }
+    
         function removePaymentRow(button) {
             let row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
         }
         document.addEventListener("DOMContentLoaded", function () {
-            const dropdown = document.getElementById("inventoryDropdown");
-            const menu = document.getElementById("dropdownMenu1");
+        const dropdown = document.getElementById("inventoryDropdown");
+        const menu = document.getElementById("dropdownMenu1");
 
-            // Toggle dropdown on click
-            dropdown.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent default link behavior
-                menu.style.display = menu.style.display === "block" ? "none" : "block";
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
-                    menu.style.display = "none";
-                }
-            });
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const dropdown = document.getElementById("inflowDropdown");
-            const menu = document.getElementById("dropdownMenu2");
-
-            // Toggle dropdown on click
-            dropdown.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent default link behavior
-                menu.style.display = menu.style.display === "block" ? "none" : "block";
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
-                    menu.style.display = "none";
-                }
-            });
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const dropdown = document.getElementById("outflowDropdown");
-            const menu = document.getElementById("dropdownMenu3");
+    });
 
-            // Toggle dropdown on click
-            dropdown.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent default link behavior
-                menu.style.display = menu.style.display === "block" ? "none" : "block";
-            });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inflowDropdown");
+        const menu = document.getElementById("dropdownMenu2");
 
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
-                    menu.style.display = "none";
-                }
-            });
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const dropdown = document.getElementById("transactionDropdown");
-            const menu = document.getElementById("dropdownMenu4");
 
-            // Toggle dropdown on click
-            dropdown.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent default link behavior
-                menu.style.display = menu.style.display === "block" ? "none" : "block";
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function (event) {
-                if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
-                    menu.style.display = "none";
-                }
-            });
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
         });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("outflowDropdown");
+        const menu = document.getElementById("dropdownMenu3");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("transactionDropdown");
+        const menu = document.getElementById("dropdownMenu4");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
     </script>
+    
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-1 px-lg-2">
@@ -282,54 +312,70 @@
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
                     <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    
+    <form method="POST" action="{% url 'update_transaction_retailer' %}">
+        {% csrf_token %}
+        <div class="invoice-container">
+            <div class="header">
+                <h2><b><u>ShopRocket</u></b></h2>
+            </div>
 
-  <div class="invoice-container">
-    <div class="header">
-          <h2><b><u>ShopRocket</u></b></h2>
-    </div>
+            <div class="section">
+                <div class="dropdown">
+                    <label name ="date" for="date">Transaction Date:</label>
+                    <input type="date">
+                </div>
+            </div>
 
-    <div class="section">
-        <div class="dropdown">
-            <label for="billed-to">Transaction Date:</label>
-            <input type="date">
-        </div>
-    </div>
-
-    <table class="table" id="paymentTable">
-        <thead>
+            <table class="table" id="paymentTable">
+                <thead>
+                    <tr>
+                        <th>Retail Firm Name</th>
+                        <th>Amount Paid</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="paymentTableBody">
+                    <tr>
+                        <td>
+                            <select name="firm_name[]" required>
+                                <option value="">Select Firm</option>
+                                {% for retailer in retailers %}
+                                    <option value="{{ retailer.firm_name }}">{{ retailer.firm_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="amount_paid[]" step="0.01" required>
+                        </td>
+                        <td>
+                            <input type="text" name="remarks[]" style="width: 700px;" required>
+                        </td>
+                    </tr>
+                </tbody>                
+            </table>
             <tr>
-                <th>Retail Firm Name</th>
-                <th>Amount Paid</th>
-                <th>Remarks</th>
+                <td colspan="4" style="text-align: center;">
+                    <button type="button" onclick="addPaymentRow()" class="button">Add Payment</button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <tr>
-        <td colspan="4" style="text-align: center;">
-            <button onclick="addPaymentRow()" class="button">Add Payment</button>
-        </td>
-    </tr>
-    <div class="buttons">
-        <button class="button">Update</button>
-    </div>
-    <div class="footer-button" href="#">
-        <a class="nav-link" href="#"><i class='far fa-arrow-alt-circle-up' style="font-size: 35px; color: aliceblue; padding-right: 20px;"></i></a>
-    </div>
-</div>
+            <div class="buttons">
+                <button type="submit" class="button">Update</button>
+            </div>
+            <div class="footer-button" href="#">
+                <a class="nav-link" href="#"><i class='far fa-arrow-alt-circle-up'
+                        style="font-size: 35px; color: aliceblue; padding-right: 20px;"></i></a>
+            </div>
+        </div>
+    </form>
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
-
-
-
