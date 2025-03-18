@@ -80,6 +80,32 @@
         .footer-button i {
             margin-right: 5px;
         }
+        .dropdownn {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdownn-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 1000;
+            padding: 5px 0;
+            border-radius: 5px;
+            list-style: none;
+            margin: 5px;
+        }
+        .dropdownn-menu a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: black;
+            white-space: nowrap;
+        }
+        .dropdownn-menu a:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
@@ -95,14 +121,44 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Inventory</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Inflow</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Outflow</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Transactions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inventoryDropdown" style="text-decoration: none;">Inventory</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu1">
+                            <li><a class="dropdownn-item" href="#">View Inventory</a></li>
+                            <li><a class="dropdownn-item" href="#">Manage Inventory</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inflowDropdown" style="text-decoration: none;">Supply Inflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu2">
+                            <li><a class="dropdownn-item" href="#">Add Supplier</a></li>
+                            <li><a class="dropdownn-item" href="#">Enter Invoice Bill</a></li>
+                            <li><a class="dropdownn-item" href="#">Transaction Inflow</a></li>
+                            <li><a class="dropdownn-item" href="#">View Suppliers</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="outflowDropdown" style="text-decoration: none;">Supply Outflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu3">
+                            <li><a class="dropdownn-item" href="#">Add Retailer</a></li>
+                            <li><a class="dropdownn-item" href="#">Billing to Retailer</a></li>
+                            <li><a class="dropdownn-item" href="#">Transaction Outflow</a></li>
+                            <li><a class="dropdownn-item" href="#">View Retailers</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="transactionDropdown" style="text-decoration: none;">Transactions</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu4">
+                            <li><a class="dropdownn-item" href="#">Add Inward Transactions</a></li>
+                            <li><a class="dropdownn-item" href="#">Add Outward Transactions</a></li>
+                            <li><a class="dropdownn-item" href="#">View Transaction History</a></li>
+                            <li><a class="dropdownn-item" href="#">Pending Transactions</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
                 </ul>
             </div>
         </div>
@@ -184,6 +240,78 @@
 
         // Show retailers table by default
         showTable("retailersTable");
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inventoryDropdown");
+        const menu = document.getElementById("dropdownMenu1");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inflowDropdown");
+        const menu = document.getElementById("dropdownMenu2");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("outflowDropdown");
+        const menu = document.getElementById("dropdownMenu3");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("transactionDropdown");
+        const menu = document.getElementById("dropdownMenu4");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+
+
     </script>
 
 </body>

@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Transaction History</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'user/Final.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(#616161, black);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .supplier-container {
+            width: 83%;
+            margin: 30px auto;
+            background: #fff;
+            border: 1px solid #ddd; 
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: white;
+            color: black;
+            padding: 10px 15px;
+            border: 2px solid #0056b3;  /* Proper border definition */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+            color: white;
+            border-color: #003b80; /* Slightly darker border on hover */
+        }
+        .table-container {
+            display: none; /* Hide tables by default */
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+        .footer-button {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .footer-button i {
+            margin-right: 5px;
+        }
+        .dropdownn {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdownn-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 1000;
+            padding: 5px 0;
+            border-radius: 5px;
+            list-style: none;
+            margin: 5px;
+        }
+        .dropdownn-menu a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: black;
+            white-space: nowrap;
+        }
+        .dropdownn-menu a:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-1 px-lg-2">
+            <a class="navbar-brand" href="#page-top">
+                <img src="{% static 'user/mainlogo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
+                <br>Master Invoice
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inventoryDropdown" style="text-decoration: none;">Inventory</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu1">
+                            <li><a class="dropdownn-item" href="#">View Inventory</a></li>
+                            <li><a class="dropdownn-item" href="#">Manage Inventory</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inflowDropdown" style="text-decoration: none;">Supply Inflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu2">
+                            <li><a class="dropdownn-item" href="#">Add Supplier</a></li>
+                            <li><a class="dropdownn-item" href="#">Enter Invoice Bill</a></li>
+                            <li><a class="dropdownn-item" href="#">Transaction Inflow</a></li>
+                            <li><a class="dropdownn-item" href="#">View Suppliers</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="outflowDropdown" style="text-decoration: none;">Supply Outflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu3">
+                            <li><a class="dropdownn-item" href="#">Add Retailer</a></li>
+                            <li><a class="dropdownn-item" href="#">Billing to Retailer</a></li>
+                            <li><a class="dropdownn-item" href="#">Transaction Outflow</a></li>
+                            <li><a class="dropdownn-item" href="#">View Retailers</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="transactionDropdown" style="text-decoration: none;">Transactions</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu4">
+                            <li><a class="dropdownn-item" href="#">Add Inward Transactions</a></li>
+                            <li><a class="dropdownn-item" href="#">Add Outward Transactions</a></li>
+                            <li><a class="dropdownn-item" href="#">View Transaction History</a></li>
+                            <li><a class="dropdownn-item" href="#">Pending Transactions</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="supplier-container">
+        <div class="header">
+            <h2><b><u>Transactions</u></b></h2>
+        </div>
+
+        <div class="button-container">
+            <button class="button" id="button" onclick="showTable('retailersTable')">Retailers</button>
+            <button class="button" id="button" onclick="showTable('suppliersTable')">Suppliers</button>
+        </div>
+        <br>
+        <!-- Retailers Table -->
+        <div id="retailersTable" class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Retailer Name</th>
+                        <th>Firm</th>
+                        <th>Received</th>
+                        <th>Last Transaction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in transactions %}
+                {% if item.type == 0 %}
+                <tr>
+                    <td>{{ item.person_name }}</td>
+                    <td>{{ item.firm_name }}</td>
+                    <td style="color: green;">₹{{ item.payment }}</td>
+                    <td>12/06/2024</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Suppliers Table -->
+        <div id="suppliersTable" class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Supplier Name</th>
+                        <th>Firm</th>
+                        <th>Paid</th>
+                        <th>Last Transaction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in transactions %}
+                {% if item.type == 1 %}
+                <tr>
+                    <td>{{ item.person_name }}</td>
+                    <td>{{ item.firm_name }}</td>
+                    <td style="color: red;">₹{{ item.payment }}</td>
+                    <td>12/06/2024</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer-button">
+        <a href="#"><i class='far fa-arrow-alt-circle-up' style="font-size: 35px; color: aliceblue;"></i></a>
+    </div>
+
+    <script>
+        function showTable(tableName) {
+            document.getElementById("retailersTable").style.display = "none";
+            document.getElementById("suppliersTable").style.display = "none";
+            document.getElementById(tableName).style.display = "block";
+        }
+
+        // Show retailers table by default
+        showTable("retailersTable");
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inventoryDropdown");
+        const menu = document.getElementById("dropdownMenu1");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inflowDropdown");
+        const menu = document.getElementById("dropdownMenu2");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("outflowDropdown");
+        const menu = document.getElementById("dropdownMenu3");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("transactionDropdown");
+        const menu = document.getElementById("dropdownMenu4");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ class InvoiceBill(models.Model):
     retailer_name = models.CharField(max_length=100)
     
     def __str__(self):
-        return f"Invoice {self.bill_number} - {self.user.username}"
+        return f"Invoice {self.bill_number} - {self.retailer_name}"
     
     def get_total_amount(self):
         # Calculate total by summing (quantity * amount) for each product
