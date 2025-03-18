@@ -20,27 +20,28 @@ def add_supplier(request):
         form = SupplierForm()
     return render(request, 'inward_supply/add_supplier.html', {'form': form, 'message': message})
 
+@login_required
 def view_suppliers(request):
     query = request.GET.get('query', '')
     if query:
         suppliers = Supplier.objects.filter(
-            Q(person_name__icontains=query) |
-            Q(firm_name__icontains=query)
+            (Q(person_name__icontains=query) | Q(firm_name__icontains=query)),
+            user=request.user
         )
     else:
-        suppliers = Supplier.objects.all()
+        suppliers = Supplier.objects.filter(user=request.user)
     
     return render(request, 'inward_supply/view_suppliers.html', {'suppliers': suppliers})
 
+@login_required
 def edit_supplier(request, pk):
-    supplier = get_object_or_404(Supplier, pk=pk)
+    supplier = get_object_or_404(Supplier, pk=pk, user=request.user)
     message = ""
     if request.method == "POST":
         form = SupplierForm(request.POST, instance=supplier)
         if form.is_valid():
             form.save()
             message = "Supplier updated successfully!"
-            # Optionally redirect after saving
             return redirect('view_suppliers')
     else:
         form = SupplierForm(instance=supplier)

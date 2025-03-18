@@ -20,27 +20,28 @@ def add_retailer(request):
         form = RetailerForm()
     return render(request, 'outward_supply/add_retailer.html', {'form': form, 'message': message})
 
+@login_required
 def view_retailers(request):
     query = request.GET.get('query', '')
     if query:
         retailers = Retailer.objects.filter(
-            Q(person_name__icontains=query) |
-            Q(firm_name__icontains=query)
+            (Q(person_name__icontains=query) | Q(firm_name__icontains=query)),
+            user=request.user
         )
     else:
-        retailers = Retailer.objects.all()
-
+        retailers = Retailer.objects.filter(user=request.user)
+    
     return render(request, 'outward_supply/view_retailers.html', {'retailers': retailers})
 
+@login_required
 def edit_retailer(request, pk):
-    retailer = get_object_or_404(Retailer, pk=pk)
+    retailer = get_object_or_404(Retailer, pk=pk, user=request.user)
     message = ""
     if request.method == "POST":
         form = RetailerForm(request.POST, instance=retailer)
         if form.is_valid():
             form.save()
             message = "Retailer updated successfully!"
-            # Optionally redirect after saving
             return redirect('view_retailers')
     else:
         form = RetailerForm(instance=retailer)

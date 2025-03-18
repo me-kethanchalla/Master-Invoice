@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Supplier(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     firm_name = models.CharField(max_length=255)
     person_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=10, unique=True)
