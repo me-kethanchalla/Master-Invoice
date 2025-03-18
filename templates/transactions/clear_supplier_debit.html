@@ -166,9 +166,9 @@
     </style>
     <script>
         // Store firm options from Django template
-        let firmOptions = `<option value="">Select Firm</option>
+        let firmOptions = `<option value="">Select Person</option>
             {% for item in suppliers %}
-                <option value="{{ item.firm_name }}">{{ item.firm_name }}</option>
+                <option value="{{ item.person_name }}">{{ item.person_name }}</option>
             {% endfor %}`;
     
         function addPaymentRow() {
