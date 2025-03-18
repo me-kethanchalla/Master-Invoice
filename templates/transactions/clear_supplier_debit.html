@@ -336,7 +336,7 @@
             <table class="table" id="paymentTable">
                 <thead>
                     <tr>
-                        <th>Supply Firm Name</th>
+                        <th>Supplier Name</th>
                         <th>Amount Paid</th>
                         <th>Remarks</th>
                     </tr>
@@ -345,9 +345,9 @@
                     <tr>
                         <td>
                             <select name="firm_name[]" required>
-                                <option value="">Select Firm</option>
+                                <option value="">Select Supplier</option>
                                 {% for supplier in suppliers %}
-                                    <option value="{{ supplier.firm_name }}">{{ supplier.firm_name }}</option>
+                                    <option value="{{ supplier.person_name }}">{{ supplier.person_name }}</option>
                                 {% endfor %}
                             </select>
                         </td>

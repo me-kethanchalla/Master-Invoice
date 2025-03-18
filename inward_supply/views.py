@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import InvoiceForm
-from .models import InvoiceBill, ProductEntry
+from .models import InvoiceBill, ProductEntry, Supplier
 
 def add_invoice(request):
+    supplier = Supplier.objects.all()
     if request.method == 'POST':
         form = InvoiceForm(request.POST)
         if form.is_valid():
@@ -33,7 +34,7 @@ def add_invoice(request):
     else:
         form = InvoiceForm()
     
-    return render(request, "inward_supply/invoice_form.html", {"form": form})
+    return render(request, "inward_supply/invoice_form.html", {"form": form, 'supplier': supplier})
 
 def invoice_list(request):
     invoices = InvoiceBill.objects.filter(user=request.user)

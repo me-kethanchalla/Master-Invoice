@@ -34,13 +34,13 @@ def update_transaction_supplier(request):
         remarks = request.POST.getlist('remarks[]')
         # date = request.POST.get('date')
         for i in range(len(transactions)):
-            firm_name = transactions[i]
+            person_name = transactions[i]
             payment = float(amounts[i])
             remark = remarks[i]
-            person_name = None
+            firm_name = None
             for supplier in suppliers:
-                if supplier.firm_name == firm_name:
-                    person_name = supplier.person_name
+                if supplier.person_name == person_name:
+                    firm_name = supplier.firm_name
                     supplier.debit = supplier.debit - payment
                     supplier.save()
                     break
@@ -81,13 +81,13 @@ def update_transaction_retailer(request):
         remarks = request.POST.getlist('remarks[]')
         # date = request.POST.get('date')
         for i in range(len(transactions)):
-            firm_name = transactions[i]
+            person_name = transactions[i]
             payment = float(amounts[i])
             remark = remarks[i]
             person_name = None
             for retailer in retailers:
-                if retailer.firm_name == firm_name:
-                    person_name = retailer.person_name
+                if retailer.person_name == person_name:
+                    firm_name = retailer.firm_name
                     retailer.credit = retailer.credit - payment
                     retailer.save()
                     break
