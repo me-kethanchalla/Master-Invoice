@@ -26,5 +26,5 @@ def user_login(request):
     })
 
 def home(request):
-    return render(request, 'registration/home.html')
+    return render(request, 'registration/welcome.html')
 

@@ -15,4 +15,4 @@ class Transaction(models.Model):
     remarks = models.CharField(max_length=1023)
     type = models.IntegerField(default=0)
     def __str__(self):
-        return f"{self.firm_name}"
+        return f"{self.firm_name} - {self.person_name}"
