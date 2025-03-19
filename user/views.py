@@ -12,7 +12,7 @@ def login(request):
             register_form = CustomUserCreationForm(request.POST)
             if register_form.is_valid():
                 register_form.save()
-                return redirect('login')  # Redirect to login page after successful registration
+                return redirect('login2')  # Redirect to login page after successful registration
         elif 'login' in request.POST:  # Login form submitted
             login_form = CustomAuthenticationForm(request, data=request.POST)
             if login_form.is_valid():
