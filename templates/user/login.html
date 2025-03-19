@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static%}
-    <!-- <link rel="stylesheet" href="static/user/login.css"> -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    {% load static %}
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="icon" href="{% static 'mainlogo.png' %}" type="image/png">
     <title>Master-Invoice</title>
+    <!-- Optionally include your CSS file -->
+    <link rel="stylesheet" href="{% static 'user/login.css' %}">
 </head> 
-
 <body>
-
     <div class="container" id="container">
+        <!-- Display Django messages -->
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        
         <!-- Registration Form -->
         <div class="form-container sign-up">
             <form method="POST">
-                
                 <h1>Create Account</h1>
                 {% csrf_token %}
                 {{ register_form.as_p }}
@@ -30,7 +35,6 @@
         <!-- Sign-in Form -->
         <div class="form-container sign-in">
             <form method="POST">
-                
                 <h1>Sign In</h1>
                 {% csrf_token %}
                 {{ login_form.as_p }}
@@ -43,13 +47,13 @@
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
-                    <img src="static/user/mainlogo.png" alt="Master Invoice Logo" class="panel-image">
+                    <img src="{% static 'user/mainlogo.png' %}" alt="Master Invoice Logo" class="panel-image">
                     <h1>Welcome To <br>Master Invoice</h1>
                     <p>Already a family member?</p>
                     <button class="hidden" id="login">Sign In</button>
                 </div>
                 <div class="toggle-panel toggle-right">
-                    <img src="static/user/mainlogo.png" alt="Master Invoice Logo" class="panel-image">
+                    <img src="{% static 'user/mainlogo.png' %}" alt="Master Invoice Logo" class="panel-image">
                     <h1>Master-Invoice</h1>
                     <p>Don't have an account? Join Today</p>
                     <button class="hidden" id="register">Sign Up</button>
@@ -58,7 +62,6 @@
         </div>
     </div>
 
-    <script src="static/user/login.js"></script>
+    <script src="{% static 'user/login.js' %}"></script>
 </body>
-
 </html>

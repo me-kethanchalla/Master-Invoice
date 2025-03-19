@@ -1,0 +1,398 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>View Suppliers</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome, Google Fonts, and your custom CSS -->
+    <script
+      src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Varela+Round"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'Final.css' %}" />
+
+    <style>
+      /* Your existing custom styles */
+      body {
+        /* Black at the top, lighter at the bottom */
+        background: linear-gradient(to bottom, #000000 0%, #1a1919 100%);
+        color: #e0e0e0;       /* Light text for readability */
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif; /* Example font */
+      }
+
+
+      .supplier-container {
+        border-top: 2px solid #f9f9fb;
+        background: #1c1c1c;
+        border: 1px solid rgba(122, 92, 255, 0.5);
+        box-shadow: 0 0 10px rgba(122, 92, 255, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        color: #e5e5e5;
+        margin: 30px auto;
+        width: 83%;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        width: 15%;
+        text-align: right;
+        margin-right: 20px;
+      }
+      .form-group input,
+      .form-group textarea {
+        flex-grow: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 120px;
+      }
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .button {
+        background-color: #7a5cff;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+      .footer-button {
+        position: fixed;
+        bottom: 20px;
+        right: 10px;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+      }
+      .footer-button i {
+        margin-right: 5px;
+      }
+      .table {
+        background-color: #1c1c1c;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .table thead th {
+        font-weight: 600;
+        color: #fff !important; /* Force white text color */
+      }
+      .table td {
+        color: #fff !important;
+      }
+
+      .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #2a2a2a;
+      }
+      .table-hover tbody tr:hover {
+        background-color: #333333; /* Subtle highlight */
+      }
+      .btn-primary {
+        background-color: #7a5cff;
+        border-color: #7a5cff;
+      }
+      .btn-primary:hover {
+        background-color: #6b52e6;
+        border-color: #6b52e6;
+      }
+      .btn-outline-secondary {
+        color: #b19cff;         /* Light purple text */
+        border-color: #b19cff;
+      }
+      .btn-outline-secondary:hover {
+        background-color: #b19cff;
+        color: #fff;
+        border-color: #a28ef2;  /* Slightly darker purple on hover */
+      }
+      a:hover, a:focus {
+        color: #7a5cff;
+      }
+      input:focus, .form-control:focus {
+        outline: none;
+        box-shadow: 0 0 4px 1px rgba(122, 92, 255, 0.7);
+        border-color: #7a5cff;
+      }
+      .navbar-dark .navbar-nav .nav-link {
+        color: #e0e0e0;
+      }
+      .section-line {
+        border: none;            /* Remove default hr border */
+        height: 2px;             /* Line thickness */
+        background-color: #7a5cff;  /* Purple line (or #fff for white) */
+        margin: 0 0 20px 0;      /* Adjust spacing above/below the line */
+      }
+      .navbar-dark .dropdown-menu {
+        background-color: #1f1f1f;
+        border: 1px solid #2a2a2a;
+      }
+      .navbar-dark .dropdown-item {
+        color: #ddd;
+      }
+      .navbar-dark .dropdown-item:hover {
+        background-color: #333;
+        color: #fff;
+      }
+      .supplier-container {
+        border: 1px solid rgba(122, 92, 255, 0.3); /* lighter border */
+        box-shadow: 0 0 8px rgba(122, 92, 255, 0.2); /* softer glow */
+      }
+      h2 {
+        color: #f0f0f0;
+        font-weight: 600;
+        font-size: 2rem; /* Slightly larger heading */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000; ">
+      <div class="container px-1 px-lg-2">
+        <a class="navbar-brand d-flex align-items-center" href="#page-top">
+          <img
+            src="{% static 'user/mainlogo.png' %}"
+            alt="Logo"
+            width="60"
+            height="60"
+            class="d-inline-block align-text-top me-2"
+          />
+          <span class="ms-2 fw-bold">Master Invoice</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapsible Menu Items -->
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto">
+            <!-- Inventory Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="inventoryDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Inventory
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="inventoryDropdown">
+                <li><a class="dropdown-item" href="#">View Inventory</a></li>
+                <li><a class="dropdown-item" href="#">Manage Inventory</a></li>
+              </ul>
+            </li>
+
+            <!-- Supply Inflow Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="inflowDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Supply Inflow
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="inflowDropdown">
+                <li><a class="dropdown-item" href="{% url 'add_supplier' %}">Add Supplier</a></li>
+                <li><a class="dropdown-item" href="#">Enter Invoice Bill</a></li>
+                <li><a class="dropdown-item" href="#">Transaction Inflow</a></li>
+                <li><a class="dropdown-item" href="{% url 'view_suppliers' %}">View Suppliers</a></li>
+              </ul>
+            </li>
+
+            <!-- Supply Outflow Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="outflowDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Supply Outflow
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="outflowDropdown">
+                <li><a class="dropdown-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
+                <li><a class="dropdown-item" href="#">Billing to Retailer</a></li>
+                <li><a class="dropdown-item" href="#">Transaction Outflow</a></li>
+                <li><a class="dropdown-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
+              </ul>
+            </li>
+
+            <!-- Transactions Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="transactionDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Transactions
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                <li><a class="dropdown-item" href="#">Add Inward Transactions</a></li>
+                <li><a class="dropdown-item" href="#">Add Outward Transactions</a></li>
+                <li><a class="dropdown-item" href="#">View Transaction History</a></li>
+                <li><a class="dropdown-item" href="#">Pending Transactions</a></li>
+              </ul>
+            </li>
+
+            <!-- Other Menu Items -->
+            <li class="nav-item">
+              <a class="nav-link" href="#" style="text-decoration: none;">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" style="text-decoration: none;">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" style="text-decoration: none;">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- NAVBAR END -->
+
+    <hr class="section-line" />
+
+    <div class="supplier-container">
+      <div class="header">
+        <h2><b>My Suppliers</b></h2>
+      </div>
+      <br />
+      <div class="section mb-3">
+        <form method="get" action="{% url 'view_suppliers' %}">
+          <div class="input-group" style="max-width: 400px;">
+            <input
+              type="text"
+              class="form-control"
+              name="query"
+              placeholder="Search Supplier with Name or Firm"
+              value="{{ request.GET.query|default_if_none:'' }}"
+            />
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Table Responsive Wrapper -->
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Supplier Name</th>
+              <th>Firm Name</th>
+              <th>Phone Number</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Debit</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for supplier in suppliers %}
+            <tr>
+              <td>{{ supplier.person_name }}</td>
+              <td>{{ supplier.firm_name }}</td>
+              <td>{{ supplier.phone_number }}</td>
+              <td>{{ supplier.email_id }}</td>
+              <td>{{ supplier.address }}</td>
+              <td>{{ supplier.debit }}</td>
+              <td>
+                <a
+                  href="{% url 'edit_supplier' supplier.id %}"
+                  class="btn btn-sm btn-primary"
+                >
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">No suppliers found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer-button">
+      <a class="nav-link" href="#">
+        <i
+          class="far fa-arrow-alt-circle-up"
+          style="font-size: 35px; color: aliceblue; padding-right: 20px;"
+        ></i>
+      </a>
+    </div>
+
+    <!-- Bootstrap JS (necessary for dropdowns to function) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

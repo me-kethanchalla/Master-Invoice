@@ -80,10 +80,10 @@
                                 <i id="Siu" class="fas fa-truck"></i>
                                 <h3 class="text-uppercase m-0">Supply Inflow</h3>
                                 <div class="sub-optionss">
-                                    <a href="#">Add Supplier</a>
-                                    <a href="/inward_supply/add_invoice/">Enter Invoice Bill</a>
-                                    <a href="/inward_supply/">View Invoice Bills</a>
-                                    <a href="#">View Suppliers</a>
+                                    <a href="{% url 'add_supplier' %}">Add Supplier</a>
+                                    <a href="{% url 'add-inward-bill' %}">Enter Invoice Bill</a>
+                                    <a href="{% url 'invoice_list' %}">Transaction Inflow</a>
+                                    <a href="{% url 'view_suppliers' %}">View Suppliers</a>
                                 </div>
                             </div>
                         </div>
@@ -93,10 +93,10 @@
                                 <i id="Siu" class="fas fa-store"></i>
                                 <h3 class="text-uppercase m-0">Supply Outflow</h3>
                                 <div class="sub-optionss">
-                                    <a href="#">Add Retailer</a>
-                                    <a href="#">Billing to Retailer</a>
-                                    <a href="#">Transaction Outlfow</a>
-                                    <a href="#">View Retailers</a>
+                                    <a href="{% url 'add_retailer' %}">Add Retailer</a>
+                                    <a href= "#">Billing to Retailer</a>
+                                    <a href= "#">Transaction Outlfow</a>
+                                    <a href="{% url 'view_retailers' %}">View Retailers</a>
                                 </div>
                             </div>
                         </div>

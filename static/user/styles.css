@@ -95,6 +95,82 @@
   }
 }
 
+
+.cardd {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.cardd:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#Siu {
+  font-size: 20px;
+  color: #64A19D;
+  margin-bottom: 10px;
+}
+
+.cardd h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.sub-optionss {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.sub-optionss a {
+  display: block;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.3s;
+}
+
+.sub-optionss a:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.expandeded {
+  flex: 2;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.expandeded .sub-optionss {
+  display: block;
+  opacity: 1;
+}
+
+.minimizeded {
+  flex: 0.7;
+  min-height: 150px;
+}
+
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -107,6 +183,16 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+#jo {
+  font-size: 5em;
+  font-weight: bold;
+  letter-spacing: normal;
+  word-spacing: normal;
+  display: inline;
+}
+
+
 
 hr {
   margin: 1rem 0;
@@ -6819,6 +6905,12 @@ textarea.form-control-lg {
 
 }
 
+.bg-var2{
+    background: linear-gradient(to bottom, #616161, black);
+    height: 100vh;
+    margin: 0;
+}
+
 .text-bg-black {
   color: #fff !important;
   background-color: RGBA(0, 0, 0, var(--bs-bg-opacity, 1)) !important;
@@ -11087,7 +11179,7 @@ body {
   font-size: 2.5rem;
   line-height: 2.5rem;
   letter-spacing: 0.8rem;
-  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  background: white;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
           background-clip: text;
@@ -11119,11 +11211,11 @@ body {
 }
 
 .about-section {
-  padding-top: 0rem;
-  background: linear-gradient(to bottom, #545454 0%, rgba(0, 0, 0, 0.9) 75%, rgba(0, 0, 0, 0.8) 100%);
+  padding-top: 4rem;
+  background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 75%, rgba(0, 0, 0, 0.8) 100%);
 }
 .about-section p {
-  margin-bottom: 5rem;
+  margin-bottom: 0rem;
 }
 
 .projects-section {
@@ -11168,7 +11260,7 @@ body {
 }
 
 .contact-section {
-  padding-top: 5rem;
+  padding-top: 2rem;
 }
 .contact-section .card {
   border: 0;
