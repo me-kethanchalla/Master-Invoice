@@ -1,6 +1,6 @@
 from re import S
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 # Create your views here.
 from inward_supply.models import Supplier
 from outward_supply.models import Retailer
@@ -8,6 +8,9 @@ from outward_supply.models import Retailer
 from django.db.models import Sum, Avg
 
 def view(request):
+    if request.user.is_anonymous:
+        return HttpResponseForbidden("You must be logged in to access this page.")
+    
     total_num_suppliers = Supplier.objects.filter(user=request.user).count()
     total_num_retailers = Retailer.objects.filter(user=request.user).count()
     return render(request, 'analysis/graph.html', {
