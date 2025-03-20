@@ -65,7 +65,8 @@ def get_top_retailers(request):
 #     1. extract profit on one month basis
 #     2. route to the graph
 #     '''
-    
+#      if request.from_date < request.to_date :
+#         return HttpResponseForbidden("From date must be less than to date.")
     
 #     profits_query_set = outwardInvoiceBill.objects.filter(
 #         date__range=[request.from_date, request.to_date]

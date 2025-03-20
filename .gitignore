@@ -5,3 +5,4 @@ db.sqlite3
 /staticfiles
 *.log
 *.sqlite3
+.venv/
