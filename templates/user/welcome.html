@@ -16,6 +16,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="{% static 'user/styles.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -39,7 +40,8 @@
                         <li class="nav-item"><a class="nav-link" href="#"><i class='fas fa-home' style='font-size:20px'></i></a></li>
                         <li class="nav-item"><a class="nav-link" href="#about"><i class='fas fa-info-circle' style='font-size:20px'></i></a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact"><i class='fas fa-headset' style='font-size:20px'></i></a></li>     
-                        <li class="nav-item"><a class="nav-link" href="/profile"><i class='fas fa-user' style='font-size:20px'></i></a></li>
+                        {% comment %} <li class="nav-item"><a class="nav-link" href="/profile"><i class='fas fa-user' style='font-size:20px'></i></a></li> {% endcomment %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class='fas fa-user' style='font-size:20px'></i></a></li>
                         <li class="nav-item"><a class="nav-link" href="/"><i class='fas fa-sign-out-alt' style='font-size:20px'></i></a></li>
                     </ul>
                 </div>
