@@ -7,17 +7,19 @@ class InvoiceBill(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  
     date = models.DateField()
     bill_number = models.CharField(max_length=255)
-    retailer_name = models.CharField(max_length=100)
-    
+    supplier = models.ForeignKey("Supplier", on_delete=models.CASCADE, null=True, blank=True)
+
+
     def __str__(self):
-        return f"Invoice {self.bill_number} - {self.retailer_name}"
-    
+        return f"Invoice {self.bill_number} - {self.supplier.firm_name}"
+
     def get_total_amount(self):
         # Calculate total by summing (quantity * amount) for each product
         return sum(item.quantity * item.amount for item in self.products.all())
     
     def get_item_count(self):
         return self.products.count()
+
     
 class ProductEntry(models.Model):
     invoice = models.ForeignKey(InvoiceBill, on_delete=models.CASCADE, related_name="products")

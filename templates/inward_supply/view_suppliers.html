@@ -37,36 +37,43 @@
     <link rel="stylesheet" href="{% static 'Final.css' %}" />
 
     <style>
-      /* Your existing custom styles */
+      /* Overall Body */
       body {
-        /* Black at the top, lighter at the bottom */
         background: linear-gradient(to bottom, #000000 0%, #1a1919 100%);
-        color: #e0e0e0;       /* Light text for readability */
+        color: #e0e0e0;
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        font-family: 'Poppins', sans-serif; /* Example font */
+        font-family: "Poppins", sans-serif;
       }
 
-
+      /* Container Spacing & Aesthetics */
       .supplier-container {
-        border-top: 2px solid #f9f9fb;
+        margin: 50px auto; /* Increased margin for breathing space */
+        width: 83%;
+        padding: 30px; /* Increased padding */
         background: #1c1c1c;
-        border: 1px solid rgba(122, 92, 255, 0.5);
+        border: 1px solid rgba(122, 92, 255, 0.3);
         box-shadow: 0 0 10px rgba(122, 92, 255, 0.3);
         border-radius: 8px;
-        padding: 20px;
         color: #e5e5e5;
-        margin: 30px auto;
-        width: 83%;
       }
 
+      /* Header and Headings */
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
       }
+      h2 {
+        color: #f0f0f0;
+        font-weight: 700; /* Bolder heading */
+        font-size: 2.2rem; /* Slightly larger heading */
+        margin-bottom: 10px;
+      }
+
+      /* Form Spacing */
       .form-group {
         display: flex;
         align-items: center;
@@ -85,6 +92,8 @@
         border-radius: 4px;
         margin-right: 120px;
       }
+
+      /* Buttons */
       .buttons {
         display: flex;
         justify-content: flex-end;
@@ -103,6 +112,89 @@
       .button:hover {
         background-color: #0056b3;
       }
+
+      /* Table Styling */
+      .table-responsive {
+        margin-top: 20px; /* Space above the table */
+      }
+      .table {
+        background-color: #1c1c1c;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .table thead th {
+        font-weight: 700; /* Heavier text */
+        font-size: 1.1rem; /* Slightly larger header text */
+        color: #fff !important;
+        border-bottom: 2px solid #7a5cff; /* Subtle accent under headers */
+      }
+      .table td {
+        color: #fff !important;
+      }
+      .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #2a2a2a;
+      }
+      .table-hover tbody tr:hover {
+        background-color: #333333; /* Subtle highlight */
+      }
+
+      /* Edit Button */
+      .btn-primary {
+        background-color: #7a5cff;
+        border-color: #7a5cff;
+        transition: background-color 0.3s;
+      }
+      .btn-primary:hover {
+        background-color: #6b52e6;
+        border-color: #6b52e6;
+      }
+
+      /* Outline Button */
+      .btn-outline-secondary {
+        color: #b19cff;
+        border-color: #b19cff;
+      }
+      .btn-outline-secondary:hover {
+        background-color: #b19cff;
+        color: #fff;
+        border-color: #a28ef2;
+      }
+
+      /* Input Focus State */
+      input:focus,
+      .form-control:focus {
+        outline: none;
+        box-shadow: 0 0 4px 1px rgba(122, 92, 255, 0.7);
+        border-color: #7a5cff;
+      }
+
+      /* Navbar */
+      .navbar-dark .navbar-nav .nav-link {
+        color: #e0e0e0;
+      }
+      .navbar-dark .dropdown-menu {
+        background-color: #1f1f1f;
+        border: 1px solid #2a2a2a;
+      }
+      .navbar-dark .dropdown-item {
+        color: #ddd;
+      }
+      .navbar-dark .dropdown-item:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
+      /* Section Line */
+      .section-line {
+        border: none;
+        height: 2px;
+        background-color: #7a5cff;
+        margin: 0 0 20px 0;
+      }
+
+      /* Footer Button (Scroll to top, etc.) */
       .footer-button {
         position: fixed;
         bottom: 20px;
@@ -116,86 +208,14 @@
       .footer-button i {
         margin-right: 5px;
       }
-      .table {
-        background-color: #1c1c1c;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .table thead th {
-        font-weight: 600;
-        color: #fff !important; /* Force white text color */
-      }
-      .table td {
-        color: #fff !important;
-      }
-
-      .table-striped > tbody > tr:nth-of-type(odd) {
-        background-color: #2a2a2a;
-      }
-      .table-hover tbody tr:hover {
-        background-color: #333333; /* Subtle highlight */
-      }
-      .btn-primary {
-        background-color: #7a5cff;
-        border-color: #7a5cff;
-      }
-      .btn-primary:hover {
-        background-color: #6b52e6;
-        border-color: #6b52e6;
-      }
-      .btn-outline-secondary {
-        color: #b19cff;         /* Light purple text */
-        border-color: #b19cff;
-      }
-      .btn-outline-secondary:hover {
-        background-color: #b19cff;
-        color: #fff;
-        border-color: #a28ef2;  /* Slightly darker purple on hover */
-      }
-      a:hover, a:focus {
-        color: #7a5cff;
-      }
-      input:focus, .form-control:focus {
-        outline: none;
-        box-shadow: 0 0 4px 1px rgba(122, 92, 255, 0.7);
-        border-color: #7a5cff;
-      }
-      .navbar-dark .navbar-nav .nav-link {
-        color: #e0e0e0;
-      }
-      .section-line {
-        border: none;            /* Remove default hr border */
-        height: 2px;             /* Line thickness */
-        background-color: #7a5cff;  /* Purple line (or #fff for white) */
-        margin: 0 0 20px 0;      /* Adjust spacing above/below the line */
-      }
-      .navbar-dark .dropdown-menu {
-        background-color: #1f1f1f;
-        border: 1px solid #2a2a2a;
-      }
-      .navbar-dark .dropdown-item {
-        color: #ddd;
-      }
-      .navbar-dark .dropdown-item:hover {
-        background-color: #333;
-        color: #fff;
-      }
-      .supplier-container {
-        border: 1px solid rgba(122, 92, 255, 0.3); /* lighter border */
-        box-shadow: 0 0 8px rgba(122, 92, 255, 0.2); /* softer glow */
-      }
-      h2 {
-        color: #f0f0f0;
-        font-weight: 600;
-        font-size: 2rem; /* Slightly larger heading */
+      .footer-button:hover i {
+        color: #7a5cff; /* Accent color on hover */
       }
     </style>
   </head>
   <body>
     <!-- NAVBAR START -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000; ">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #000000;">
       <div class="container px-1 px-lg-2">
         <a class="navbar-brand d-flex align-items-center" href="#page-top">
           <img
@@ -325,7 +345,7 @@
       <div class="header">
         <h2><b>My Suppliers</b></h2>
       </div>
-      <br />
+
       <div class="section mb-3">
         <form method="get" action="{% url 'view_suppliers' %}">
           <div class="input-group" style="max-width: 400px;">
@@ -343,7 +363,7 @@
 
       <!-- Table Responsive Wrapper -->
       <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
               <th>Supplier Name</th>
