@@ -177,7 +177,7 @@
 
     <div class="supplier-container">
         <div class="header">
-            <h2><b><u>Supplier Invoice Bills</u></b></h2>
+            <h2><b><u>Retailer Invoice Bills</u></b></h2>
         </div>
         <br>
         <!-- Optional Search Form -->
@@ -191,8 +191,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Supplier Name</th>
-                    <th>Supplier's Bill Number</th>
+                    <th>Retailer Name</th>
+                    <th>Retailer's Bill Number</th>
                     <th>Date</th>
                     <th>Total Amount</th>
                     <th>Number of Items</th>
@@ -202,13 +202,13 @@
             <tbody>
                 {% for invoice in invoices %}
                 <tr>
-                    <td>{{ invoice.supplier.firm_name }}</td>
+                    <td>{{ invoice.retailer.firm_name }}</td>
                     <td>{{ invoice.bill_number }}</td>
                     <td>{{ invoice.date|date:"d/m/Y" }}</td>
                     <td>₹{{ invoice.get_total_amount }}</td>
                     <td>{{ invoice.get_item_count }}</td>
                     <td style="text-align: center;">
-                        <a href="{% url 'invoice_detail' invoice.bill_number %}">
+                        <a href="{% url 'out_invoice_detail' invoice.bill_number %}">
                             <i class="fas fa-file"></i>
                         </a>
                     </td>
@@ -230,4 +230,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

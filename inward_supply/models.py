@@ -15,31 +15,33 @@ class InvoiceBill(models.Model):
 
     def get_total_amount(self):
         # Calculate total by summing (quantity * amount) for each product
-        return sum(item.quantity * item.amount for item in self.products.all())
+        return sum(item.amount for item in self.products.all())
     
     def get_item_count(self):
-        return self.products.count()
+        return sum(item.quantity for item in self.products.all())
+    class Meta:
+        unique_together = ('user', 'bill_number')
 
     
 class ProductEntry(models.Model):
     invoice = models.ForeignKey(InvoiceBill, on_delete=models.CASCADE, related_name="products")
     product_name = models.CharField(max_length=255)
     quantity = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()  # This is the unit price/amount per item
+    amount = models.FloatField()  # This is the unit price*quantity per item
     
     def __str__(self):
         return f"{self.product_name} - {self.amount}"
     
-    def get_total(self):
-        return self.quantity * self.amount
+    def unit_amount(self):
+        return self.amount/self.quantity
    
 User = get_user_model()
 class Supplier(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     firm_name = models.CharField(max_length=255)
     person_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=10, unique=True)
-    email_id = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=10)
+    email_id = models.EmailField()
     address = models.CharField(max_length=255)
     debit = models.FloatField(default=0.0)
     total_sales = models.IntegerField(default=0)
