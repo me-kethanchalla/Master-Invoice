@@ -6,7 +6,7 @@ from decimal import Decimal
 class Inventory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to Django User model
     product_name = models.CharField(max_length=255)
-    item_id = models.CharField(max_length=50, unique=True)  # Unique identifier for item
+    item_id = models.CharField(max_length=50)  # Unique identifier for item
     quantity = models.PositiveIntegerField()  # Available quantity
     cost_price = models.DecimalField(max_digits=10, decimal_places=2)  # Cost price
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)  # Sale price
@@ -28,4 +28,7 @@ class Inventory(models.Model):
 
     def __str__(self):
         return f"{self.product_name} ({self.item_id}) - Qty: {self.quantity}"
+    
+    class Meta:
+        unique_together = ('user', 'item_id')
 

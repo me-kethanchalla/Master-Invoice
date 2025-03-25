@@ -12,3 +12,8 @@ class RetailerForm(forms.ModelForm):
             'email_id': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control'}),
             'address': forms.Textarea(attrs={'placeholder': 'Address', 'class': 'form-control', 'rows': 3}),
         }
+
+class OutwardInvoiceForm(forms.Form):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Enter Date'}))
+    bill_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'}))
+    discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Discount (%)'}), help_text="Enter discount percentage (if any).")
