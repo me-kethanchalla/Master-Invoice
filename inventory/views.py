@@ -1,92 +1,70 @@
-# views.py
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Inventory
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Inventory
+from django.db.models import Q
+from .forms import InventoryForm
 
-# View to display the list of inventory items
+@login_required
 def inventory_list(request):
-    # Fetch all inventory items
-    inventory = Inventory.objects.filter(user=request.user)
+    query = request.GET.get('query', '')
+    if query:
+        inventory = Inventory.objects.filter(
+            (Q(product_name__icontains=query) | Q(item_id__icontains=query)),
+            user=request.user
+        )
+    else:
+        inventory = Inventory.objects.filter(user=request.user)
+    
     return render(request, 'inventory/inventory.html', {'inventory': inventory})
 
-# View to add a new inventory item
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Inventory
+    # inventory = Inventory.objects.filter(user=request.user)
+    # return render(request, 'inventory/inventory.html', {'inventory': inventory})
 
-@login_required  # Ensure the user is logged in
+@login_required
 def add_inventory(request):
+    message = ""
+    message_type = ""
     if request.method == 'POST':
-        # Get the form data
-        product_name = request.POST['product_name']
-        item_id = request.POST['item_id']
-        quantity = int(request.POST['quantity'])  # Convert to int
-        cost_price = float(request.POST['cost_price'])  # Convert to float
-        sale_price = float(request.POST['sale_price'])  # Convert to float
-        max_retail_price = float(request.POST['max_retail_price'])  # Convert to float
-        gst = float(request.POST['gst'])  # Convert to float
+        form = InventoryForm(request.POST)
+        if form.is_valid():
+            inventory_item = form.save(commit=False)
+            inventory_item.user = request.user
+            inventory_item.profit = inventory_item.sale_price - inventory_item.cost_price
+            
+            if Inventory.objects.filter(user=request.user, item_id=inventory_item.item_id).exists():
+                message = "Inventory item with this Item ID already exists for your account."
+                message_type = "error"
+            else:
+                inventory_item.total_qty_sold = 0
+                inventory_item.save()
+                message = "Inventory item added successfully!"
+                message_type = "success"
+                form = InventoryForm()
+        else:
+            print("Form errors:", form.errors)
+    else:
+        form = InventoryForm()
+    return render(request, 'inventory/add_inventory.html', {'form': form, 'message': message,  'message_type': message_type})
 
-        # Calculate the profit
-        profit = sale_price - cost_price
-
-        # Check if an inventory with the same item_id exists for this user
-        if Inventory.objects.filter(user=request.user, item_id=item_id).exists():
-            error_message = "Inventory item with this Item ID already exists for your account."
-            # You can either pass the error message in context or use Django messages framework:
-            messages.error(request, error_message)
-            return render(request, 'inventory/add_inventory.html', {'error_message': error_message})
-
-        # Create the new inventory item
-        new_inventory_item = Inventory(
-            user=request.user,  # Assign the logged-in user to this inventory
-            product_name=product_name,
-            item_id=item_id,
-            quantity=quantity,
-            cost_price=cost_price,
-            sale_price=sale_price,
-            max_retail_price=max_retail_price,
-            gst=gst,
-            profit=profit,
-            total_qty_sold=0  # Initialize with 0 or based on your requirement
-        )
-        
-        new_inventory_item.save()
-
-        messages.success(request, "Inventory item added successfully!")
-        return redirect('inventory_list')  # Redirect to the inventory list page
-
-    return render(request, 'inventory/add_inventory.html')
-
-# View to edit an existing inventory item
+@login_required
 def edit_inventory(request, id):
-    # Fetch the inventory item by ID
     item = get_object_or_404(Inventory, id=id, user=request.user)
-
+    message = ""
     if request.method == 'POST':
-        # Update the item with the data from the POST request
-        item.product_name = request.POST['product_name']
-        item.item_id = request.POST['item_id']
-        item.quantity = request.POST['quantity']
-        item.cost_price = request.POST['cost_price']
-        item.sale_price = request.POST['sale_price']
-        item.max_retail_price = request.POST['max_retail_price']
-        item.gst = request.POST['gst']
+        form = InventoryForm(request.POST, instance=item)
+        if form.is_valid():
+            updated_item = form.save(commit=False)
+            updated_item.profit = updated_item.sale_price - updated_item.cost_price
+            updated_item.save()
+            message = "Inventory item updated successfully!"
+            return redirect('inventory_list')
+    else:
+        form = InventoryForm(instance=item)
+    return render(request, 'inventory/edit_inventory.html', {'form': form, 'message': message, 'item': item})
 
-        # Recalculate profit
-        item.profit = str(float(item.sale_price) - float( item.cost_price))
-        item.save()  # Save the updated item
-
-        return redirect('inventory_list')  # Redirect to the inventory list after saving
-
-    # If not a POST request, render the edit form
-    return render(request, 'inventory/edit_inventory.html', {'item': item})
-
-# View to delete an inventory item
 @login_required
 def delete_inventory(request, id):
-    item = get_object_or_404(Inventory, id=id, user=request.user)  # Ensure user owns this item
+    item = get_object_or_404(Inventory, id=id, user=request.user)
     item.delete()
     return redirect('inventory_list')
-
