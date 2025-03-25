@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_view
 from django.contrib import admin
@@ -9,4 +9,6 @@ urlpatterns = [
     # path('welcome/', views.welcome, name='welcome'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('details/', views.details, name='details'),
+    path('verify_otp/', views.verify_otp, name='verify_otp'),
 ]  
