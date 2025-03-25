@@ -49,12 +49,11 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+      align-items: center;
     }
-    .section .details {
-      width: 48%;
-    }
-    .dropdown {
-      margin-bottom: 20px;
+    .section label {
+      margin-right: 10px;
+      font-weight: bold;
     }
     .table {
       width: 100%;
@@ -145,7 +144,7 @@
   <div class="invoice-container">
     <!-- Header displaying manual form fields for bill number and date -->
     <div class="header">
-      <h2><b>Supplier Invoice Bill</b></h2>
+      <h2><b>Retailer Invoice Bill</b></h2>
     </div>
     
     <!-- Wrap all input fields in a form -->
@@ -165,6 +164,12 @@
       {% endif %}
 
       
+      <!-- Add Discount Field -->
+      <div class="section">
+        <label for="id_discount">Discount (%):</label>
+        {{ form.discount }}
+      </div>
+      
       <!-- Billed To: Supplier Dropdown -->
       <div class="section">
         <label for="billed-to">Billed To:</label>
@@ -172,7 +177,7 @@
           {% for supplier in suppliers %}
             <option value="{{ supplier.id }}">{{ supplier.firm_name }}</option>
           {% empty %}
-            <option value="">No suppliers available</option>
+            <option value="">No retailers available</option>
           {% endfor %}
         </select>
       </div>
@@ -204,6 +209,7 @@
     <div class="totals">
       <span id="subtotal">Subtotal: ₹0.00</span>
       <span id="tax-display">Tax: ₹0.00</span>
+      <span id="disc">Discount: 0%</span>
       <strong id="bill-total">Bill Total: ₹0.00</strong>
     </div>
     
@@ -222,121 +228,168 @@
   <script>
     // Parse product JSON passed from the view
     const productData = JSON.parse('{{ productJSON|escapejs }}');
-
+  
+    // Helper: find product object by its id
     function getProductById(productId) {
-        return productData.find(p => p.id == productId);
+      return productData.find(p => p.id == productId);
     }
-
-    function addRow() {
-        const tbody = document.getElementById("invoice-table").getElementsByTagName("tbody")[0];
-        let newRow = tbody.insertRow();
-
-        let cellProduct = newRow.insertCell(0);
-        let cellUnitCost = newRow.insertCell(1);
-        let cellQuantity = newRow.insertCell(2);
-        let cellAmount = newRow.insertCell(3);
-        let cellAction = newRow.insertCell(4);
-
-        // Product dropdown with name "product_id[]"
-        cellProduct.innerHTML = `
-            <select name="product_id[]" class="form-control product-select" onchange="updateRow(this)" required>
-                <option value="">Select Product</option>
-                ${productData.map(prod => `<option value="${prod.id}">${prod.name}</option>`).join('')}
-            </select>
-        `;
-
-        // Unit Cost input (read-only)
-        cellUnitCost.innerHTML = `<input type="number" name="unit_cost[]" class="form-control unit-cost" value="0" readonly>`;
-
-        // Quantity input (triggers recalculation on input)
-        cellQuantity.innerHTML = `<input type="number" name="quantity[]" class="form-control quantity" value="1" min="1" oninput="updateAmount(this)" required>`;
-
-        // Amount input (read-only)
-        cellAmount.innerHTML = `<input type="number" name="amount[]" class="form-control amount" value="0" readonly>`;
-
-        // Remove button
-        cellAction.innerHTML = `<button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>`;
+  
+    // Get discount value from discount field (assumed id="id_discount")
+    function getDiscount() {
+      const discountField = document.getElementById("id_discount");
+      return discountField ? parseFloat(discountField.value) || 0 : 0;
     }
-
-    function removeRow(btn) {
-        let row = btn.parentNode.parentNode;
-        row.parentNode.removeChild(row);
-        updateTotals();
-    }
-
+  
+    // Update a row when a product is selected
     function updateRow(selectEl) {
-        let row = selectEl.parentNode.parentNode;
-        let productId = selectEl.value;
-        let unitCostInput = row.querySelector(".unit-cost");
-        let quantityInput = row.querySelector(".quantity");
-        let amountInput = row.querySelector(".amount");
-
-        if (productId) {
-            let prod = getProductById(productId);
-            if (prod) {
-                unitCostInput.value = prod.sale_price;
-                let quantity = parseInt(quantityInput.value) || 1;
-                let total = (prod.sale_price * quantity);
-                amountInput.value = total.toFixed(2);
-            }
-        } else {
-            unitCostInput.value = 0;
-            amountInput.value = 0;
-        }
-        updateTotals();
-    }
-
-    function updateAmount(quantityEl) {
-        let row = quantityEl.parentNode.parentNode;
-        let productSelect = row.querySelector(".product-select");
-        let productId = productSelect.value;
-        let unitCostInput = row.querySelector(".unit-cost");
-        let amountInput = row.querySelector(".amount");
-
-        if (productId) {
-            let prod = getProductById(productId);
-            if (prod) {
-                let quantity = parseInt(quantityEl.value) || 1;
-                let total = (prod.sale_price * quantity) * (1 + (prod.gst / 100));
-                amountInput.value = total.toFixed(2);
-            }
-        }
-        updateTotals();
-    }
-
-    function updateTotals() {
-    let rows = document.querySelectorAll("#invoice-table tbody tr");
-    let subtotal = 0;
-    let tax = 0;
+      let row = selectEl.parentNode.parentNode;
+      let productId = selectEl.value;
+      let unitCostInput = row.querySelector(".unit-cost");
+      let quantityInput = row.querySelector(".quantity");
+      let amountInput = row.querySelector(".amount");
+      let discount = getDiscount();
     
-    rows.forEach(row => {
+      if (productId) {
+        let prod = getProductById(productId);
+        if (prod) {
+          // Set unit cost to sale price
+          unitCostInput.value = prod.sale_price;
+          // Get current quantity; default to 1 if invalid
+          let quantity = parseInt(quantityInput.value) || 1;
+          let sale_price = parseFloat(prod.sale_price);
+          let gst = parseFloat(prod.gst);
+          // Calculate row total using:
+          // sale_price * quantity * (1 + gst/100) * (1 - discount/100)
+          let rowTotal = sale_price * quantity * (1 + (gst / 100)) * (1 - discount / 100);
+          amountInput.value = rowTotal.toFixed(2);
+        }
+      } else {
+        unitCostInput.value = 0;
+        amountInput.value = 0;
+      }
+      updateTotals();
+    }
+  
+    // Update row when quantity changes
+    function updateAmount(quantityEl) {
+      let row = quantityEl.parentNode.parentNode;
+      let productSelect = row.querySelector(".product-select");
+      let productId = productSelect.value;
+      let unitCostInput = row.querySelector(".unit-cost");
+      let amountInput = row.querySelector(".amount");
+      let discount = getDiscount();
+    
+      if (productId) {
+        let prod = getProductById(productId);
+        if (prod) {
+          let quantity = parseInt(quantityEl.value) || 1;
+          let sale_price = parseFloat(prod.sale_price);
+          let gst = parseFloat(prod.gst);
+          let rowTotal = sale_price * quantity * (1 + (gst / 100)) * (1 - discount / 100);
+          amountInput.value = rowTotal.toFixed(2);
+        }
+      }
+      updateTotals();
+    }
+    
+    // Recalculate and update invoice totals
+    function updateTotals() {
+      let rows = document.querySelectorAll("#invoice-table tbody tr");
+      let globalSubtotal = 0;
+      let globalTax = 0;
+      let globalTotal = 0;
+      let discount = getDiscount();
+    
+      rows.forEach(row => {
         let productSelect = row.querySelector(".product-select");
-        let quantityEl = row.querySelector(".quantity");
-        if (productSelect && quantityEl && productSelect.value) {
-            let prod = getProductById(productSelect.value);
-            let quantity = parseInt(quantityEl.value) || 1;
-            let sale_price = parseFloat(prod.sale_price);
-            let gst = parseFloat(prod.gst);
-            subtotal += sale_price * quantity;
-            tax += sale_price * quantity * (gst / 100);
+        let quantityInput = row.querySelector(".quantity");
+        if (productSelect && quantityInput) {
+          let productId = productSelect.value;
+          let quantity = parseInt(quantityInput.value) || 1;
+          if (productId) {
+            let prod = getProductById(productId);
+            if (prod) {
+              let sale_price = parseFloat(prod.sale_price);
+              let gst = parseFloat(prod.gst);
+              let rowSubtotal = sale_price * quantity;
+              let rowTax = rowSubtotal * (gst / 100);
+              let rowTotal = rowSubtotal * (1 + (gst / 100)) * (1 - discount / 100);
+    
+              globalSubtotal += rowSubtotal;
+              globalTax += rowTax;
+              globalTotal += rowTotal;
+            }
+          }
         }
       });
-    
-      // Bill total is subtotal plus tax
-      let total = subtotal + tax;
-    
-      document.getElementById("subtotal").textContent = `Subtotal: ₹${subtotal.toFixed(2)}`;
-      document.getElementById("tax-display").textContent = `Tax: ₹${tax.toFixed(2)}`;
-      document.getElementById("bill-total").textContent = `Bill Total: ₹${total.toFixed(2)}`;
+      document.getElementById("subtotal").textContent = `Subtotal: ₹${globalSubtotal.toFixed(2)}`;
+      document.getElementById("tax-display").textContent = `Tax: ₹${globalTax.toFixed(2)}`;
+      document.getElementById("disc").textContent = `Discount: ${discount.toFixed(2)}%`;
+      document.getElementById("bill-total").textContent = `Bill Total: ₹${globalTotal.toFixed(2)}`;
     }
-
-
+    
+    // Function to add a new product row
+    function addRow() {
+      const tbody = document.getElementById("invoice-table").getElementsByTagName("tbody")[0];
+      let newRow = tbody.insertRow();
+    
+      // Create cells for Product, Unit Cost, Quantity, Amount, and Action
+      let cellProduct = newRow.insertCell(0);
+      let cellUnitCost = newRow.insertCell(1);
+      let cellQuantity = newRow.insertCell(2);
+      let cellAmount = newRow.insertCell(3);
+      let cellAction = newRow.insertCell(4);
+    
+      // Product dropdown with name "product_id[]"
+      cellProduct.innerHTML = `
+        <select name="product_id[]" class="form-control product-select" onchange="updateRow(this)" required>
+          <option value="">Select Product</option>
+          ${productData.map(prod => `<option value="${prod.id}">${prod.name}</option>`).join('')}
+        </select>
+      `;
+    
+      // Unit Cost (read-only)
+      cellUnitCost.innerHTML = `<input type="number" name="unit_cost[]" class="form-control unit-cost" value="0" readonly>`;
+      
+      // Quantity input
+      cellQuantity.innerHTML = `<input type="number" name="quantity[]" class="form-control quantity" value="1" min="1" oninput="updateAmount(this)" required>`;
+      
+      // Amount input (read-only)
+      cellAmount.innerHTML = `<input type="number" name="amount[]" class="form-control amount" value="0" readonly>`;
+      
+      // Remove button
+      cellAction.innerHTML = `<button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>`;
+    }
+    
+    // Remove a row and update totals
+    function removeRow(btn) {
+      let row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+      updateTotals();
+    }
+    
+    // When page loads, add an initial row and set discount event listener
     window.onload = function() {
-        addRow();
-        updateTotals();
+      addRow();
+      updateTotals();
+    
+      let discountField = document.getElementById("id_discount");
+      if (discountField) {
+        discountField.addEventListener("input", function() {
+          let rows = document.querySelectorAll("#invoice-table tbody tr");
+          rows.forEach(row => {
+            let quantityEl = row.querySelector(".quantity");
+            if (quantityEl) {
+              updateAmount(quantityEl);
+            }
+          });
+          updateTotals();
+        });
+      }
     }
-</script>
-
+  </script>
+  
+  
 
   <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

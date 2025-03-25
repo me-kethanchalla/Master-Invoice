@@ -2,6 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Inventory
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 # View to display the list of inventory items
 def inventory_list(request):
@@ -28,7 +29,14 @@ def add_inventory(request):
         gst = float(request.POST['gst'])  # Convert to float
 
         # Calculate the profit
-        profit = sale_price - cost_price  # Ensure cost_price and sale_price are floats
+        profit = sale_price - cost_price
+
+        # Check if an inventory with the same item_id exists for this user
+        if Inventory.objects.filter(user=request.user, item_id=item_id).exists():
+            error_message = "Inventory item with this Item ID already exists for your account."
+            # You can either pass the error message in context or use Django messages framework:
+            messages.error(request, error_message)
+            return render(request, 'inventory/add_inventory.html', {'error_message': error_message})
 
         # Create the new inventory item
         new_inventory_item = Inventory(
@@ -46,7 +54,9 @@ def add_inventory(request):
         
         new_inventory_item.save()
 
+        messages.success(request, "Inventory item added successfully!")
         return redirect('inventory_list')  # Redirect to the inventory list page
+
     return render(request, 'inventory/add_inventory.html')
 
 # View to edit an existing inventory item

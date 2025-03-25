@@ -18,6 +18,14 @@
             <label for="item_id">Item ID:</label>
             <input type="text" id="item_id" name="item_id" required>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <div>
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required>
