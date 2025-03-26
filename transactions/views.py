@@ -17,12 +17,12 @@ def view_transaction_history(request):
  transactions = Transaction.objects.all()
  return render(request, 'transactions/view_transaction_history.html', {'suppliers': suppliers, 'retailers': retailers, 'transactions': transactions})
 
-def clear_retailer_debit(request):
+def add_outward_transaction(request):
  retailers = Retailer.objects.all()
- return render(request, 'transactions/clear_retailer_debit.html',{'retailers': retailers})
-def clear_supplier_debit(request):
+ return render(request, 'transactions/add_outward_transaction.html',{'retailers': retailers})
+def add_inward_transaction(request):
  suppliers = Supplier.objects.all()
- return render(request, 'transactions/clear_supplier_debit.html', {'suppliers': suppliers})
+ return render(request, 'transactions/add_inward_transaction.html', {'suppliers': suppliers})
 
 @login_required
 def update_transaction_supplier(request):
@@ -34,13 +34,13 @@ def update_transaction_supplier(request):
         remarks = request.POST.getlist('remarks[]')
         # date = request.POST.get('date')
         for i in range(len(transactions)):
-            person_name = transactions[i]
+            firm_name = transactions[i]
             payment = float(amounts[i])
             remark = remarks[i]
-            firm_name = None
+            person_name = None
             for supplier in suppliers:
-                if supplier.person_name == person_name:
-                    firm_name = supplier.firm_name
+                if supplier.firm_name == firm_name:
+                    person_name = supplier.person_name
                     supplier.debit = supplier.debit - payment
                     supplier.save()
                     break
@@ -68,7 +68,7 @@ def update_transaction_supplier(request):
             )
         messages.success(request, "Transactions updated successfully!")
         return redirect('pending')
-    return render(request, 'transactions/clear_supplier_debit.html', {'suppliers': suppliers, 'retailers': retailers})
+    return render(request, 'transactions/add_inward_transaction.html', {'suppliers': suppliers, 'retailers': retailers})
 
 
 @login_required
@@ -81,13 +81,13 @@ def update_transaction_retailer(request):
         remarks = request.POST.getlist('remarks[]')
         # date = request.POST.get('date')
         for i in range(len(transactions)):
-            person_name = transactions[i]
+            firm_name = transactions[i]
             payment = float(amounts[i])
             remark = remarks[i]
             person_name = None
             for retailer in retailers:
-                if retailer.person_name == person_name:
-                    firm_name = retailer.firm_name
+                if retailer.firm_name == firm_name:
+                    person_name = retailer.person_name
                     retailer.credit = retailer.credit - payment
                     retailer.save()
                     break

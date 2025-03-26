@@ -7,125 +7,235 @@
     {% load static %}
     
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'user/Final.css' %}">
     <link rel="icon" href="{% static 'mainlogo.png' %}" type="image/png">
     <title>Master Invoice</title>
     
     <style>
 
         body {
-            padding-top: 150px; /* Adjust if your navbar height is different */
+            font-family: Arial, sans-serif;
+            background: linear-gradient(#616161, black);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
-
-        .dropdown-menu {
-            background-color: #222; /* Dark background */
-            border-radius: 8px; /* Rounded corners */
-            border: none;
-            padding: 8px 0;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.2s ease-in-out;
-            display: none;
+        .supplier-container {
+            width: 83%;
+            margin: 30px auto;
+            background: #fff;
+            border: 1px solid #ddd; 
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-       
-        .nav-item.dropdown:hover .dropdown-menu {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-
-        /* Dropdown item styling */
-        .dropdown-item {
+        .button {
+            background-color: white;
+            color: black;
+            padding: 10px 15px;
+            border: 2px solid #0056b3;  /* Proper border definition */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
             color: white;
-            padding: 10px 20px;
-            transition: 0.2s;
+            border-color: #003b80; /* Slightly darker border on hover */
         }
-
-        .dropdown-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .table-container {
+            display: none; /* Hide tables by default */
         }
-        /* Make dropdown appear on hover */
-        .navbar-nav .dropdown:hover .dropdown-menu {
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+        .footer-button {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .footer-button i {
+            margin-right: 5px;
+        }
+        .dropdownn {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdownn-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 1000;
+            padding: 5px 0;
+            border-radius: 5px;
+            list-style: none;
+            margin: 5px;
+        }
+        .dropdownn-menu a {
             display: block;
-            margin-top: 0;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: black;
+            white-space: nowrap;
         }
-
-        /* Change button color on hover */
-        .navbar-nav .nav-item:hover .nav-link,
-        .navbar-nav .nav-item:focus-within .nav-link {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
-
-        /* Keep active button highlighted */
-        .navbar-nav .nav-item .nav-link.active {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
+        .dropdownn-menu a:hover {
+            background-color: #f1f1f1;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inventoryDropdown");
+        const menu = document.getElementById("dropdownMenu1");
 
+        // Toggle dropdown on click
+        dropdown.addEventListener("mouseover", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("mouseover", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("inflowDropdown");
+        const menu = document.getElementById("dropdownMenu2");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("mouseover", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("mouseover", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("outflowDropdown");
+        const menu = document.getElementById("dropdownMenu3");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("mouseover", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("mouseover", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("transactionDropdown");
+        const menu = document.getElementById("dropdownMenu4");
+
+        // Toggle dropdown on click
+        dropdown.addEventListener("mouseover", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("mouseover", function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+    </script>
     {% block style %}{% endblock %}
+    {% block scripts %}{% endblock %}
   </head>
   <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="z-index: 1000; ">
-        <div class="container">
-            <a class="navbar-brand" href="#page-top"style="position: relative; right: 100px;">
-                <img src="{% static 'mainlogo.png' %}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top"style="position: relative; left: 25px;" >
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-1 px-lg-2">
+            <a class="navbar-brand" href="#page-top">
+                <img src="{% static 'user/mainlogo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
                 <br>Master Invoice
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
             </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav  mx-auto " >
-                    <!-- Home Dropdown -->
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle active" href="#" id="homeDropdown" data-bs-toggle="dropdown">Inventory</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Home 1</a></li>
-                            <li><a class="dropdown-item" href="#">Home 2</a></li>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inventoryDropdown" style="text-decoration: none;">Inventory</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu1">
+                            <li><a class="dropdownn-item" href="{% url 'add_inventory' %}">Add New Product</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'inventory_list' %}">Manage Inventory</a></li>
                         </ul>
                     </li>
-    
-                    <!-- Services Dropdown -->
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" data-bs-toggle="dropdown">Supply Inflow</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Web Development</a></li>
-                            <li><a class="dropdown-item" href="#">App Development</a></li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="inflowDropdown" style="text-decoration: none;">Supply Inflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu2">
+                            <li><a class="dropdownn-item" href="{% url 'add_supplier' %}">Add Supplier</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add-inward-bill' %}">Enter Invoice Bill</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'invoice_list' %}">Transaction Inflow</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_suppliers' %}">View Suppliers</a></li>
                         </ul>
                     </li>
-    
-                    <!-- About Dropdown -->
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" data-bs-toggle="dropdown">Supply Outflow</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Company</a></li>
-                            <li><a class="dropdown-item" href="#">Team</a></li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="outflowDropdown" style="text-decoration: none;">Supply Outflow</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu3">
+                            <li><a class="dropdownn-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add-outward-bill' %}">Billing to Retailer</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'out_invoice_list' %}">Transaction Outflow</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
                         </ul>
                     </li>
-    
-                    <!-- Contact Dropdown -->
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" data-bs-toggle="dropdown">Transactions</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Email</a></li>
-                            <li><a class="dropdown-item" href="#">Phone</a></li>
+                    <li class="nav-item dropdownn">
+                        <a class="nav-link" href="#" id="transactionDropdown" style="text-decoration: none;">Transactions</a>
+                        <ul class="dropdownn-menu" id="dropdownMenu4">
+                            <li><a class="dropdownn-item" href="{% url 'add_outward_transaction' %}">Add Inward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_inward_transaction' %}">Add Outward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_transaction_history' %}">View Transaction History</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'pending' %}">Pending Transactions</a></li>
                         </ul>
                     </li>
-
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" data-bs-toggle="dropdown">Analysis</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Email</a></li>
-                            <li><a class="dropdown-item" href="#">Phone</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}" style="text-decoration: none;">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/" style="text-decoration: none;">Log Out</a></li>
                 </ul>
             </div>
         </div>
