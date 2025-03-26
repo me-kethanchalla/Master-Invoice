@@ -24,12 +24,43 @@
         <!-- Registration Form -->
         <div class="form-container sign-up">
             <form method="POST">
-                <h1>Create Account</h1>
                 {% csrf_token %}
-                {{ register_form.as_p }}
-                <p id="error2"></p>
-                <button type="submit" name="register">Sign Up</button>
+                
+                <div>
+                    <label for="id_username">Username</label>
+                    <input type="text" name="username" id="id_username" value="{{ register_form.username.value|default:'' }}">
+                    {% for error in register_form.username.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            
+                <div>
+                    <label for="id_email">Email</label>
+                    <input type="email" name="email" id="id_email" value="{{ register_form.email.value|default:'' }}">
+                    {% for error in register_form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            
+                <div>
+                    <label for="id_password1">Password</label>
+                    <input type="password" name="password1" id="id_password1">
+                    {% for error in register_form.password1.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            
+                <div>
+                    <label for="id_password2">Confirm Password</label>
+                    <input type="password" name="password2" id="id_password2">
+                    {% for error in register_form.password2.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            
+                <button type="submit" name="register">Register</button>
             </form>
+            
         </div>
 
         <!-- Sign-in Form -->
