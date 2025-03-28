@@ -182,7 +182,8 @@
                         <th>Retailer Name</th>
                         <th>Firm</th>
                         <th>Received</th>
-                        <th>Last Transaction</th>
+                        <th>Transaction Date</th>
+                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -192,7 +193,8 @@
                     <td>{{ item.person_name }}</td>
                     <td>{{ item.firm_name }}</td>
                     <td style="color: green;">₹{{ item.payment }}</td>
-                    <td>12/06/2024</td>
+                    <td>{{ item.add_date }}</td>
+                    <td>{{ item.remarks }}</td>
                 </tr>
                 {% endif %}
                 {% endfor %}
@@ -209,6 +211,7 @@
                         <th>Firm</th>
                         <th>Paid</th>
                         <th>Last Transaction</th>
+                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,7 +221,8 @@
                     <td>{{ item.person_name }}</td>
                     <td>{{ item.firm_name }}</td>
                     <td style="color: red;">₹{{ item.payment }}</td>
-                    <td>12/06/2024</td>
+                    <td>{{ item.add_date }}</td>
+                    <td>{{ item.remarks }}</td>
                 </tr>
                 {% endif %}
                 {% endfor %}

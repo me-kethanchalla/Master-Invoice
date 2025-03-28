@@ -182,7 +182,6 @@
                         <th>Retailer Name</th>
                         <th>Firm</th>
                         <th>Debit</th>
-                        <th>Last Transaction</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -192,7 +191,6 @@
                     <td>{{ retailer.person_name }}</td>
                     <td>{{ retailer.firm_name }}</td>
                     <td style="color: red;">-₹{{ retailer.credit }}</td>
-                    <td>12/06/2024</td>
                 </tr>
                 {% endif %}
                 {% endfor %}
@@ -218,7 +216,6 @@
                     <td>{{ supplier.person_name }}</td>
                     <td>{{ supplier.firm_name }}</td>
                     <td style="color: green;">₹{{ supplier.debit }}</td>
-                    <td>12/06/2024</td>
                 </tr>
                 {% endif %}
                 {% endfor %}
