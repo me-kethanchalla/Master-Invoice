@@ -11,6 +11,7 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     firm_name = models.CharField(max_length=255)
     person_name = models.CharField(max_length=255)
+    add_date = models.DateField()
     payment = models.FloatField(default=0.0)
     remarks = models.CharField(max_length=1023)
     type = models.IntegerField(default=0)
