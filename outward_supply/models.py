@@ -12,7 +12,7 @@ class Retailer(models.Model):
     email_id = models.EmailField()
     address = models.CharField(max_length=255)
     credit = models.FloatField(default=0.0)
-    total_sales = models.IntegerField(default=0)
+    total_sales = models.FloatField(default=0)
 
     def __str__(self):
         return f"{self.firm_name} ({self.person_name})"
