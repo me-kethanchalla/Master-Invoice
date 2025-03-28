@@ -6,33 +6,42 @@ from .models import Transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+
+
+@login_required
 def pending(request):
- suppliers = Supplier.objects.all()
- retailers = Retailer.objects.all()
+ suppliers = Supplier.objects.filter(user=request.user)
+ retailers = Retailer.objects.filter(user=request.user)
  return render(request, 'transactions/pending.html', {'suppliers': suppliers, 'retailers': retailers})
 
+
+@login_required
 def view_transaction_history(request):
- suppliers = Supplier.objects.all()
- retailers = Retailer.objects.all()
- transactions = Transaction.objects.all()
+ suppliers = Supplier.objects.filter(user=request.user)
+ retailers = Retailer.objects.filter(user=request.user)
+ transactions = Transaction.objects.filter(user=request.user)
  return render(request, 'transactions/view_transaction_history.html', {'suppliers': suppliers, 'retailers': retailers, 'transactions': transactions})
 
+
+@login_required
 def add_outward_transaction(request):
- retailers = Retailer.objects.all()
- return render(request, 'transactions/add_outward_transaction.html',{'retailers': retailers})
+ suppliers = Supplier.objects.filter(user=request.user)
+ return render(request, 'transactions/add_outward_transaction.html',{'suppliers': suppliers})
+
+@login_required
 def add_inward_transaction(request):
- suppliers = Supplier.objects.all()
- return render(request, 'transactions/add_inward_transaction.html', {'suppliers': suppliers})
+ retailers = Retailer.objects.filter(user=request.user)
+ return render(request, 'transactions/add_inward_transaction.html', {'retailers': retailers})
 
 @login_required
 def update_transaction_supplier(request):
-    suppliers = Supplier.objects.all()
-    retailers = Retailer.objects.all()
+    suppliers = Supplier.objects.filter(user=request.user)
+    retailers = Retailer.objects.filter(user=request.user)
     if request.method == 'POST':
         transactions = request.POST.getlist('firm_name[]')
         amounts = request.POST.getlist('amount_paid[]')
         remarks = request.POST.getlist('remarks[]')
-        # date = request.POST.get('date')
+        add_date = request.POST.get('add_date')
         for i in range(len(transactions)):
             firm_name = transactions[i]
             payment = float(amounts[i])
@@ -50,7 +59,7 @@ def update_transaction_supplier(request):
                 user=request.user,
                 firm_name=firm_name,
                 person_name=person_name,
-                # date=date,
+                add_date=add_date,
                 payment=payment,
                 remarks=remark,
                 type=0
@@ -61,25 +70,25 @@ def update_transaction_supplier(request):
                 user=request.user,
                 firm_name=firm_name,
                 person_name=person_name,
-                # date=date,
+                add_date=add_date,
                 payment=payment,
                 remarks=remark,
                 type=0
             )
         messages.success(request, "Transactions updated successfully!")
-        return redirect('pending')
+        return redirect('view_transaction_history')
     return render(request, 'transactions/add_inward_transaction.html', {'suppliers': suppliers, 'retailers': retailers})
 
 
 @login_required
 def update_transaction_retailer(request):
-    suppliers = Supplier.objects.all()
-    retailers = Retailer.objects.all()
+    suppliers = Supplier.objects.filter(user=request.user)
+    retailers = Retailer.objects.filter(user=request.user)
     if request.method == 'POST':
         transactions = request.POST.getlist('firm_name[]')
         amounts = request.POST.getlist('amount_paid[]')
         remarks = request.POST.getlist('remarks[]')
-        # date = request.POST.get('date')
+        add_date = request.POST.get('add_date')
         for i in range(len(transactions)):
             firm_name = transactions[i]
             payment = float(amounts[i])
@@ -97,7 +106,7 @@ def update_transaction_retailer(request):
                 user=request.user,
                 firm_name=firm_name,
                 person_name=person_name,
-                # date=date,
+                add_date=add_date,
                 payment=payment,
                 remarks=remark,
                 type=1
@@ -107,11 +116,11 @@ def update_transaction_retailer(request):
                 user=request.user,
                 firm_name=firm_name,
                 person_name=person_name,
-                # date=date,
+                add_date=add_date,
                 payment=payment,
                 remarks=remark,
                 type=1
             )
         messages.success(request, "Transactions updated successfully!")
-        return redirect('pending')
+        return redirect('view_transaction_history')
     return render(request, 'transactions/pending.html', {'suppliers': suppliers, 'retailers': retailers})
