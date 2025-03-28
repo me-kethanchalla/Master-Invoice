@@ -130,7 +130,7 @@ def add_invoice(request):
 
                 if invoice.supplier:
                     invoice.supplier.debit += float(invoice_total)
-                    invoice.supplier.total_sales += total_items
+                    invoice.supplier.total_sales += float(invoice_total)
                     invoice.supplier.save()
 
                 message = "Invoice is added successfully!"
@@ -197,3 +197,9 @@ def view_suppliers(request):
         suppliers = Supplier.objects.filter(user=request.user)
     
     return render(request, 'inward_supply/view_suppliers.html', {'suppliers': suppliers})
+
+@login_required
+def delete_supplier(request, id):
+    supp = get_object_or_404(Supplier, id=id, user=request.user)
+    supp.delete()
+    return redirect('view_suppliers')
