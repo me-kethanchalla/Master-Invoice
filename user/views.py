@@ -70,9 +70,6 @@ def edit_profile(request):
         user_profile.address = address
         user_profile.save()
 
-        # Update email in User model
-        request.user.email = request.POST.get('email')
-        request.user.save()
 
         messages.success(request, "Profile updated successfully!")  # Show success message
         return redirect('profile')  # Redirect to profile page after saving
