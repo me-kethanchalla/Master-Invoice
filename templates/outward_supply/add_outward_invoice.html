@@ -118,7 +118,7 @@
   <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
     <div class="container px-1 px-lg-2">
       <a class="navbar-brand" href="#page-top">
-        <img src="{% static 'user/mainlogo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
+        <img src="{% static 'images/master_invoice_logo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
         <br>Master Invoice
       </a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -198,6 +198,13 @@
         </tbody>
       </table>
       
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+    
+      
       <!-- Buttons for Adding Rows and Submitting Invoice -->
       <div class="buttons">
         <button type="button" class="button" onclick="addRow()">Add Product</button>
@@ -247,21 +254,21 @@
       let unitCostInput = row.querySelector(".unit-cost");
       let quantityInput = row.querySelector(".quantity");
       let amountInput = row.querySelector(".amount");
-      let discount = getDiscount();
-    
+
       if (productId) {
         let prod = getProductById(productId);
         if (prod) {
-          // Set unit cost to sale price
           unitCostInput.value = prod.sale_price;
-          // Get current quantity; default to 1 if invalid
+          // Set the max attribute to the product's available quantity
+          quantityInput.max = prod.available;
+          // Optionally, if the current quantity is greater than available, reset it
+          let currentQty = parseInt(quantityInput.value) || 1;
+          if (currentQty > prod.available) {
+            quantityInput.value = prod.available;
+          }
           let quantity = parseInt(quantityInput.value) || 1;
-          let sale_price = parseFloat(prod.sale_price);
-          let gst = parseFloat(prod.gst);
-          // Calculate row total using:
-          // sale_price * quantity * (1 + gst/100) * (1 - discount/100)
-          let rowTotal = sale_price * quantity * (1 + (gst / 100)) * (1 - discount / 100);
-          amountInput.value = rowTotal.toFixed(2);
+          let total = (prod.sale_price * quantity) * (1 + (prod.gst / 100));
+          amountInput.value = total.toFixed(2);
         }
       } else {
         unitCostInput.value = 0;
@@ -269,6 +276,7 @@
       }
       updateTotals();
     }
+
   
     // Update row when quantity changes
     function updateAmount(quantityEl) {

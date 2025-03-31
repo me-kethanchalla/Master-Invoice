@@ -118,7 +118,7 @@
         <!-- Brand/Logo -->
         <a class="navbar-brand d-flex align-items-center" href="#page-top">
           <img
-            src="{% static 'user/mainlogo.png' %}"
+            src="{% static 'images/master_invoice_logo.png' %}"
             alt="Logo"
             width="80"
             height="80"
@@ -284,6 +284,9 @@
             <td>
               <i class="fas fa-edit"></i>
               <a href="{% url 'edit_retailer' retailer.id %}" style="text-decoration: none;" >Edit</a>
+              <a href="{% url 'delete_retailer' retailer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Retailer?');">
+                <i class="fas fa-trash"></i> Delete
+            </a>
             </td>
           </tr>
           {% empty %}

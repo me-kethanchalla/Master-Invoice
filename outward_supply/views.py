@@ -80,55 +80,67 @@ def add_out_invoice(request):
         print("POST received")
         form = OutwardInvoiceForm(request.POST)
         if form.is_valid():
-            print("Form is valid")
-            bill_number = form.cleaned_data['bill_number']
-            # Approach 1: Validate uniqueness of bill_number
-            if Outward_Invoice.objects.filter(user=request.user, bill_number=bill_number).exists():
-                form.add_error('bill_number', "Bill number already exists. Please use a unique bill number.")
-                return render(request, "outward_supply/add_outward_invoice.html", {
+            # Pre-check: Validate that for each product the requested quantity does not exceed available stock
+            product_ids = request.POST.getlist('product_id[]')
+            quantities = request.POST.getlist('quantity[]')
+            stock_errors = []
+            for product_id, quantity in zip(product_ids, quantities):
+                if product_id.strip() and quantity.strip():
+                    product_obj = get_object_or_404(Inventory, id=product_id, user=request.user)
+                    try:
+                        quantity_val = int(quantity)
+                    except ValueError:
+                        quantity_val = 0
+                    if product_obj.quantity < quantity_val:
+                        stock_errors.append(
+                            f"Not enough stock for {product_obj.product_name} (Available: {product_obj.quantity}, requested: {quantity_val})."
+                        )
+            if stock_errors:
+                # If there are errors, add them to the form's non-field errors and re-render
+                form.add_error(None, " ".join(stock_errors))
+                return render(request, "outward_supply/add_out_invoice.html", {
                     "form": form,
-                    "suppliers": retailers,  # You may wish to rename this key to 'retailers'
+                    "suppliers": retailers,
                     "productJSON": productJSON,
-                    "message": message
+                    "message": "Error: " + " ".join(stock_errors)
                 })
             
-            # Retrieve the selected retailer from the dropdown (name="billed-to")
+            # If no stock errors, continue with invoice creation
+            print("Form is valid")
             retailer_id = request.POST.get('billed-to')
             retailer_obj = get_object_or_404(Retailer, id=retailer_id, user=request.user) if retailer_id else None
             
-            # Create invoice using form data
             invoice = Outward_Invoice.objects.create(
                 user=request.user,
                 date=form.cleaned_data['date'],
-                bill_number=bill_number,
+                bill_number=form.cleaned_data['bill_number'],
                 retailer=retailer_obj,
                 discount=form.cleaned_data['discount']
             )
             
-            # Process product rows
-            product_ids = request.POST.getlist('product_id[]')
-            quantities = request.POST.getlist('quantity[]')
             invoice_total = Decimal('0.00')
+            invoice_profit = Decimal('0.00')
             total_items = 0
             product_entries = []
             
             for product_id, quantity in zip(product_ids, quantities):
                 if product_id.strip() and quantity.strip():
-                    product_obj = get_object_or_404(Inventory, id=product_id)
+                    product_obj = get_object_or_404(Inventory, id=product_id, user=request.user)
                     try:
                         quantity_val = int(quantity)
                         if quantity_val <= 0:
-                            continue  # Skip invalid quantities
+                            continue
                     except ValueError:
                         continue
 
-                    cost_price = Decimal(product_obj.sale_price)
+                    cost_price = Decimal(product_obj.sale_price)  
                     gst = Decimal(product_obj.gst)
+                    profit = Decimal(product_obj.profit)
                     
                     # Calculate total amount including GST
                     total_amount = (cost_price * quantity_val) * (1 + (gst / Decimal(100)))
+                    total_profit = (profit * quantity_val)
                     
-                    # Create product entry
                     product_entries.append(
                         ProductEntry(
                             invoice=invoice,
@@ -138,28 +150,26 @@ def add_out_invoice(request):
                         )
                     )
                     
-                    # Update product quantity in inventory (reduce stock)
-                    if product_obj.quantity >= quantity_val:
-                        product_obj.quantity -= quantity_val
-                        product_obj.save()  # Save the updated quantity
-                    else:
-                        print(f"Warning: Not enough stock for {product_obj.product_name}")
+                    product_obj.quantity -= quantity_val
+                    product_obj.save()
                     
                     invoice_total += total_amount
                     total_items += quantity_val
-            
-            # Apply discount on the subtotal
+                    invoice_profit += total_profit
+
             discount_percent = Decimal(form.cleaned_data['discount'])
             final_total = invoice_total * (1 - discount_percent / Decimal(100))
             
-            # Bulk insert product entries for better performance
+            # Bulk insert product entries for performance
             ProductEntry.objects.bulk_create(product_entries)
             
-            # Update retailer's credit and total sales if retailer exists
             if invoice.retailer:
                 invoice.retailer.credit += float(final_total)
-                invoice.retailer.total_sales += total_items
+                invoice.retailer.total_sales += float(final_total)
                 invoice.retailer.save()
+
+            invoice.profit = invoice_profit
+            invoice.save()
             
             message = "Invoice added successfully!"
             return redirect('out_invoice_list')
@@ -167,6 +177,7 @@ def add_out_invoice(request):
             print("Form errors:", form.errors)
     else:
         form = OutwardInvoiceForm()
+
     
     return render(request, "outward_supply/add_outward_invoice.html", {
         "form": form,
@@ -200,3 +211,9 @@ def out_invoice_list(request):
 def out_invoice_detail(request, bill_number):
     invoice = get_object_or_404(Outward_Invoice, bill_number=bill_number, user=request.user)
     return render(request, "outward_supply/out_invoice_detail.html", {"invoice": invoice})
+
+@login_required
+def delete_retailer(request, id):
+    ret = get_object_or_404(Retailer, id=id, user=request.user)
+    ret.delete()
+    return redirect('view_retailers')

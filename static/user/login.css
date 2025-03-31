@@ -7,7 +7,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: url('warehouse.jpg') no-repeat center center fixed;
+    background: url('images/warehouse.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     display: flex; 

@@ -1,0 +1,76 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Interactive Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'user/home.css' %}">
+</head>
+<body>
+
+    <h1>Warehouse Management</h1>
+
+    <div class="dashboard">
+        <div class="card" id="inventory" onclick="toggleSection('inventory')">
+            <i class="fas fa-box"></i>
+            <h2>Inventory</h2>
+            <div class="sub-options">
+                
+                <a href="{% url 'add_inventory' %}">Add Product</a>
+                <a href="{% url 'inventory_list' %}">Check Inventory</a>
+            </div>
+        </div>
+
+        <div class="card" id="suppliers" onclick="toggleSection('suppliers')">
+            <i class="fas fa-truck"></i>
+            <h2>Manage Suppliers</h2>
+            <div class="sub-options">
+                <a href="#">Add New Supplier</a> 
+                <a href="/inward_supply/add_invoice/">Enter Invoice Bill</a>
+                <a href="/inward_supply/">Inward Transaction History</a>
+            </div>
+        </div>
+
+        <div class="card" id="retailers" onclick="toggleSection('retailers')">
+            <i class="fas fa-store"></i>
+            <h2>Manage Retailers</h2>
+            <div class="sub-options">
+                <a href="#">Add New Retailer</a>
+                <a href="#">Billing to Retailer</a>
+            </div>
+        </div>
+
+        <div class="card" id="payments" onclick="toggleSection('payments')">
+            <i class="fas fa-money-bill-wave"></i>
+            <h2>Payments & Receipts</h2>
+            <div class="sub-options">
+                <a href="{% url 'clear_retailer_debit' %}">Add Inward Transaction</a>
+                <a href="{% url '' %}">Add Outward Transaction</a>
+                <a href="{% url 'view_transaction_history' %}">View Transaction History</a>
+                <a href="{% url 'pending' %}">Pending</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(section) {
+            let sections = ["inventory", "suppliers", "retailers", "payments"];
+            sections.forEach(id => {
+                let card = document.getElementById(id);
+                if (id === section) {
+                    card.classList.toggle("expanded");
+                    card.classList.remove("minimized");
+                } else {
+                    card.classList.remove("expanded");
+                    card.classList.add("minimized");
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+ -->
