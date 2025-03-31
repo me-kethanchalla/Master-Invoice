@@ -1,6 +1,7 @@
 from django.db import models
 from inventory.models import Inventory
 from django.contrib.auth import get_user_model
+from django.core.validators import MinLengthValidator
 
 User = get_user_model()
 
@@ -8,7 +9,10 @@ class Retailer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     firm_name = models.CharField(max_length=255)
     person_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=10)
+    phone_number = models.CharField(
+        max_length=10,
+        validators=[MinLengthValidator(10)]
+    )
     email_id = models.EmailField()
     address = models.CharField(max_length=255)
     credit = models.FloatField(default=0.0)

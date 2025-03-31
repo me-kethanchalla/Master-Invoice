@@ -124,41 +124,41 @@
                     <li class="nav-item dropdownn">
                         <a class="nav-link" href="#" id="inventoryDropdown" style="text-decoration: none;">Inventory</a>
                         <ul class="dropdownn-menu" id="dropdownMenu1">
-                            <li><a class="dropdownn-item" href="#">View Inventory</a></li>
-                            <li><a class="dropdownn-item" href="#">Manage Inventory</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_inventory' %}">Add New Product</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'inventory_list' %}">Manage Inventory</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdownn">
                         <a class="nav-link" href="#" id="inflowDropdown" style="text-decoration: none;">Supply Inflow</a>
                         <ul class="dropdownn-menu" id="dropdownMenu2">
-                            <li><a class="dropdownn-item" href="#">Add Supplier</a></li>
-                            <li><a class="dropdownn-item" href="#">Enter Invoice Bill</a></li>
-                            <li><a class="dropdownn-item" href="#">Transaction Inflow</a></li>
-                            <li><a class="dropdownn-item" href="#">View Suppliers</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_supplier' %}">Add Supplier</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add-inward-bill' %}">Enter Invoice Bill</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'invoice_list' %}">Transaction Inflow</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_suppliers' %}">View Suppliers</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdownn">
                         <a class="nav-link" href="#" id="outflowDropdown" style="text-decoration: none;">Supply Outflow</a>
                         <ul class="dropdownn-menu" id="dropdownMenu3">
-                            <li><a class="dropdownn-item" href="#">Add Retailer</a></li>
-                            <li><a class="dropdownn-item" href="#">Billing to Retailer</a></li>
-                            <li><a class="dropdownn-item" href="#">Transaction Outflow</a></li>
-                            <li><a class="dropdownn-item" href="#">View Retailers</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add-outward-bill' %}">Billing to Retailer</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'out_invoice_list' %}">Transaction Outflow</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdownn">
                         <a class="nav-link" href="#" id="transactionDropdown" style="text-decoration: none;">Transactions</a>
                         <ul class="dropdownn-menu" id="dropdownMenu4">
-                            <li><a class="dropdownn-item" href="#">Add Inward Transactions</a></li>
-                            <li><a class="dropdownn-item" href="#">Add Outward Transactions</a></li>
-                            <li><a class="dropdownn-item" href="#">View Transaction History</a></li>
-                            <li><a class="dropdownn-item" href="#">Pending Transactions</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_outward_transaction' %}">Add Inward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_inward_transaction' %}">Add Outward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'view_transaction_history' %}">View Transaction History</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'pending' %}">Pending Transactions</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
-                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}" style="text-decoration: none;">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/" style="text-decoration: none;">Log Out</a></li>
                 </ul>
             </div>
         </div>

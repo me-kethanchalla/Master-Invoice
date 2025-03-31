@@ -1,8 +1,8 @@
+{% extends "base.html" %}
 
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
+{% block style %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Inventory List</title>
@@ -38,57 +38,45 @@
             text-align: center;
         }
     </style>
-</head>
-<body>
-    <!-- NAVBAR START -->
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f9fa;">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{% static 'images/master_invoice_logo.png' %}" alt="Logo" width="80" height="80" class="me-2" />
-                <span>Master Invoice</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Log Out</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- NAVBAR END -->
-    
+    <script>
+        // Clear the search input on form submit (just before the reload)
+        function clearSearchInput() {
+            setTimeout(() => {
+                document.getElementById("search-input").value = "";
+            }, 100);
+        }
+      
+        // Also clear the search input when the page finishes loading
+        window.onload = function() {
+            document.getElementById("search-input").value = "";
+        }
+      </script>
+    {% endblock style %}
+
+    {% block content %}
     <div class="inventory-container">
         <div class="header">
             <h2><b><u>Inventory List</u></b></h2>
             <a href="{% url 'add_inventory' %}" class="btn btn-primary">Add New Product</a>
         </div>
-        
-        <!-- <form method="get" action="{% url 'inventory_list' %}" class="mb-3"> -->
-            <!-- <label for="search">Search:</label>
-            <input type="text" id="search" name="query" placeholder="Search by Product Name or ID" style="width: 300px;">
-            <button type="submit" class="btn btn-secondary">Search</button>
-        </form> -->
 
         <div class="section mb-3">
-            <form method="get" action="{% url 'inventory_list' %}">
+            <form method="get" action="/inventory/list/" onsubmit="clearSearchInput()">
               <div class="input-group" style="max-width: 400px;">
                 <input
                   type="text"
+                  id="search-input"
                   class="form-control"
                   name="query"
                   placeholder="Search by Product Name or ID"
-                  value="{{ request.GET.query|default_if_none:'' }}"
+                  value=""
                 />
                 <button class="btn btn-outline-secondary" 
                         style="background-color: #000000; color: white;" 
                         onmouseover="this.style.backgroundColor='#0056b3'; this.style.color='white';" 
-                        onmouseout="this.style.backgroundColor='#007bff'; this.style.color='white';" 
+                        onmouseout="this.style.backgroundColor='#007bff'; this.style.color='white';"
                         type="submit">
-                Search
+                    Search
                 </button>
               </div>
             </form>
@@ -143,5 +131,4 @@
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    {% endblock content %}

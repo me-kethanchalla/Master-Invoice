@@ -1,18 +1,6 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>Invoice</title>
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'user/Final.css' %}">
+  {% block style %}
   <style>
     /* Do not change any existing Final.css styles */
     body {
@@ -113,48 +101,19 @@
       margin-right: 5px;
     }
   </style>
-</head>
-<body>
-  <!-- NAVBAR (unchanged) -->
-  <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-    <div class="container px-1 px-lg-2">
-      <a class="navbar-brand" href="#page-top">
-        <img src="{% static 'images/master_invoice_logo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
-        <br>Master Invoice
-      </a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Inventory</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Inflow</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Supply Outflow</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Transactions</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Log Out</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!-- END NAVBAR -->
-
+  {% endblock style %}
+  {% block content %}
   <div class="invoice-container">
-    <!-- Header displaying manual form fields for bill number and date -->
     <div class="header">
       <h2><b>Supplier Invoice Bill</b></h2>
     </div>
-    
-    <!-- Wrap all input fields in a form -->
     <form id="invoice-form" method="POST" action="">
       {% csrf_token %}
       
       <div class="info">
         <p>
           Bill Number: {{ form.bill_number }}<br>
+          <br>
           Date of Issue: {{ form.date }}
         </p>
       </div>
@@ -163,21 +122,17 @@
           {{ form.bill_number.errors }}
         </div>
       {% endif %}
-
-      
-      <!-- Billed To: Supplier Dropdown -->
       <div class="section">
         <label for="billed-to">Billed To:</label>
-        <select id="billed-to" name="billed-to">
+        <select id="billed-to" name="billed-to" required>
+          <option value="" selected hidden>Select one</option>
           {% for supplier in suppliers %}
             <option value="{{ supplier.id }}">{{ supplier.firm_name }}</option>
           {% empty %}
-            <option value="">No suppliers available</option>
+            <option value="" disabled>No suppliers available</option>
           {% endfor %}
         </select>
-      </div>
-      
-      <!-- Invoice Table for Products -->
+      </div>         
       <table class="table" id="invoice-table">
         <thead>
           <tr>
@@ -189,18 +144,13 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Rows will be added dynamically by JS -->
         </tbody>
       </table>
-      
-      <!-- Buttons for Adding Rows and Submitting Invoice -->
       <div class="buttons">
         <button type="button" class="button" onclick="addRow()">Add Product</button>
         <button type="submit" class="button">Add Bill</button>
       </div>
     </form>
-    
-    <!-- Totals (calculated via JS) -->
     <div class="totals">
       <span id="subtotal">Subtotal: ₹0.00</span>
       <span id="tax-display">Tax: ₹0.00</span>
@@ -208,7 +158,7 @@
     </div>
     
     <div class="footer">
-      <p><strong>Terms:</strong><br><br>Authorized by: Username,Firmname</p>
+      <p><br>Authorized by:</p>
     </div>
     
     <div class="footer-button">
@@ -217,10 +167,7 @@
       </a>
     </div>
   </div>
-
-  <!-- JavaScript: Inject product data and add row functionality -->
   <script>
-    // Parse product JSON passed from the view
     const productData = JSON.parse('{{ productJSON|escapejs }}');
 
     function getProductById(productId) {
@@ -236,8 +183,6 @@
         let cellQuantity = newRow.insertCell(2);
         let cellAmount = newRow.insertCell(3);
         let cellAction = newRow.insertCell(4);
-
-        // Product dropdown with name "product_id[]"
         cellProduct.innerHTML = `
             <select name="product_id[]" class="form-control product-select" onchange="updateRow(this)" required>
                 <option value="">Select Product</option>
@@ -245,16 +190,9 @@
             </select>
         `;
 
-        // Unit Cost input (read-only)
         cellUnitCost.innerHTML = `<input type="number" name="unit_cost[]" class="form-control unit-cost" value="0" readonly>`;
-
-        // Quantity input (triggers recalculation on input)
         cellQuantity.innerHTML = `<input type="number" name="quantity[]" class="form-control quantity" value="1" min="1" oninput="updateAmount(this)" required>`;
-
-        // Amount input (read-only)
         cellAmount.innerHTML = `<input type="number" name="amount[]" class="form-control amount" value="0" readonly>`;
-
-        // Remove button
         cellAction.innerHTML = `<button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>`;
     }
 
@@ -321,8 +259,6 @@
             tax += sale_price * quantity * (gst / 100);
         }
       });
-    
-      // Bill total is subtotal plus tax
       let total = subtotal + tax;
     
       document.getElementById("subtotal").textContent = `Subtotal: ₹${subtotal.toFixed(2)}`;
@@ -340,5 +276,4 @@
 
   <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+  {% endblock content %}
