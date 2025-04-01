@@ -9,7 +9,7 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=255, blank=False, null=False, default="")
     phone = models.CharField(max_length=10, blank=False, null=False, default="")
     address = models.TextField(blank=False, null=False, default="")
-
+    GST_number = models.CharField(max_length=15, blank=False, null=False, default="")
     def __str__(self):
         return self.full_name or self.user.username
 

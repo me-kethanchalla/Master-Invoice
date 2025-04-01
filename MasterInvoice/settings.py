@@ -141,4 +141,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
+EMAIL_PORT = 587  # Port for TLS
+EMAIL_USE_TLS = True  # Use TLS for secure communication
+EMAIL_HOST_USER = 'master.invoice253@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'lapd xglt jmxz omup'  # App password (see below)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

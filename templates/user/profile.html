@@ -1,23 +1,12 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>Profile - Master Invoice</title>
-        <link rel="stylesheet" href="{% static 'Final.css' %}" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Add Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Add Bootstrap JavaScript (needed for dropdowns, toggles, etc.) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% extends "base.html" %}
+{% load static %} 
+    {% block style %}
 <style>
   body {
      background: linear-gradient(#616161, black);
       color: white; /* Light text for contrast */
     font-family: 'Arial', sans-serif;
-}
+  }
 .profile-section {
   display: flex;
   justify-content: center;
@@ -35,19 +24,6 @@
     margin: auto; /* Center horizontally */
 }
 
-.navbar {
-  background-color: white !important; /* White background */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
-}
-
-.navbar .nav-link {
-  color: black !important; /* Black text for contrast */
-}
-
-.navbar .navbar-brand {
-  color: black !important; /* Black text for the brand name */
-}
-
 .btn-primary {
     background-color: #00c896;
     border: none;
@@ -56,141 +32,10 @@
 .btn-primary:hover {
     background-color: #009a75;
 }
-
     </style>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- <!-- jQuery (Required for Bootstrap Dropdowns to Work) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap Bundle JS (Includes Popper.js for Dropdowns) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-   
-    </head>
+   {% endblock style %}
+   {% block content %}
     <body>
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8f9fa;">
-        <div class="container px-1 px-lg-2">
-          <!-- Brand/Logo -->
-          <a class="navbar-brand d-flex align-items-center" href="#page-top">
-            <img
-              src="{% static 'images/master_invoice_logo.png' %}"
-              alt="Logo"
-              width="80"
-              height="80"
-              class="d-inline-block align-text-top me-2"
-            />
-            <span class="ms-2">Master Invoice</span>
-          </a>
-          <!-- Navbar Toggler -->
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarResponsive"
-            aria-controls="navbarResponsive"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <!-- Collapsible Menu Items -->
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto">
-              <!-- Inventory Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="inventoryDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Inventory
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="inventoryDropdown">
-                  <li><a class="dropdown-item" href="#">View Inventory</a></li>
-                  <li><a class="dropdown-item" href="#">Manage Inventory</a></li>
-                </ul>
-              </li>
-              <!-- Supply Inflow Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="inflowDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Supply Inflow
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="inflowDropdown">
-                  <li><a class="dropdown-item" href="{% url 'add_supplier' %}">Add Supplier</a></li>
-                  <li><a class="dropdown-item" href="#">Enter Invoice Bill</a></li>
-                  <li><a class="dropdown-item" href="#">Transaction Inflow</a></li>
-                  <li>
-                    <a class="dropdown-item" href="{% url 'view_suppliers' %}">View Suppliers</a>
-                  </li>
-                </ul>
-              </li>
-              <!-- Supply Outflow Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="outflowDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Supply Outflow
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="outflowDropdown">
-                  <li><a class="dropdown-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
-                  <li><a class="dropdown-item" href="#">Billing to Retailer</a></li>
-                  <li><a class="dropdown-item" href="#">Transaction Outflow</a></li>
-                  <li><a class="dropdown-item" href="{% url 'view_retailers' %}">View Retailers</a></li>
-                </ul>
-              </li>
-              <!-- Transactions Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="transactionDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Transactions
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
-                  <li><a class="dropdown-item" href="#">Add Inward Transactions</a></li>
-                  <li><a class="dropdown-item" href="#">Add Outward Transactions</a></li>
-                  <li><a class="dropdown-item" href="#">View Transaction History</a></li>
-                  <li><a class="dropdown-item" href="#">Pending Transactions</a></li>
-                </ul>
-              </li>
-              <!-- Other Menu Items -->
-              <li class="nav-item">
-                <a class="nav-link" href="#" style="text-decoration: none;">Analysis</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" style="text-decoration: none;">Profile</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" style="text-decoration: none;">Log Out</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- NAVBAR END -->
-        <!-- Profile Section -->
         <section class="profile-section">
             <div class="container">
                 <div class="profile-card">
@@ -202,12 +47,12 @@
                         <p><strong>Full Name:</strong> {{ user.profile.full_name }}</p>
                         <p><strong>Email:</strong> {{ user.email }}</p>
                         <p><strong>Phone:</strong> {{ user.profile.phone }}</p>
-                        <p><strong>GST Number:</strong> {{ user.profile.gst }}</p>
+                        <p><strong>GST Number:</strong> {{ user.profile.GST_number }}</p>
                         <p><strong>Address:</strong> {{ user.profile.address }}</p>
-                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+                        <button href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</button>
                     </div>
                 </div>
             </div>
         </section>
     </body>
-</html>
+    {% endblock content %}

@@ -63,14 +63,14 @@
   </head>
 <body>
     <div class="container-box">
-        <h2 class="text-center"><b>Make your Profile</b></h2>
+        <h2 class="text-center"><b>Enter Details</b></h2>
         <br />
-    <section class="edit-profile-section">
-        <div class="edit-profile-card">
-            <form method="POST">
+    <section class="enter details">
+        <div class="enter details">
+            <form method="POST" action="{% url 'details' %}">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label">Firm Name</label>
+                    <label class="form-label" >Firm Name</label>
                     <input type="text" name="firm_name" class="form-control"
                            placeholder="Enter your firm name"
                            value="{{ user.profile.firm_name|default_if_none:'' }}" 
@@ -90,6 +90,15 @@
                     <input type="email" name="email" class="form-control"
                            value="{{ user.email }}" readonly>
                 </div>
+
+                <div class="mb-3">
+                  <label class="form-label">GST Number</label>
+                  <input type="text" name="GST_number" class="form-control"
+                         placeholder="Enter your GST number"
+                         value="{{ user.profile.GST_number|default_if_none:'' }}"
+                         maxlength="15" pattern="[0-9A-Z]{15}"
+                         title="GST Number must be exactly 15 Charcthers">
+              </div>
                 
                 <div class="mb-3">
                     <label class="form-label">Phone</label>
@@ -106,9 +115,9 @@
                            placeholder="Enter your address"
                            value="{{ user.profile.address|default_if_none:'' }}" required>
                 </div>
+
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    {% comment %} <a href="/profile" class="btn btn-secondary">Cancel</a> {% endcomment %}
+                    <button type="submit" name="" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
