@@ -155,6 +155,7 @@ input, label {
         
         <!-- Registration Form -->
         <div class="form-container sign-up">
+
             <form method="POST">
                 <h1>Sign In</h1>
                 {% csrf_token %}
@@ -172,42 +173,52 @@ input, label {
             <form method="POST">
                 <h1>Sign Up</h1>
                 <br>
+
                 {% csrf_token %}
-                
+        
                 <div>
+
                     <label for="id_username">Username :</label>
                     <input type="text" name="username" id="id_username" value="{{ register_form.username.value|default:'' }}" required> 
                     {% for error in register_form.username.errors %}
                         <span class="error">{{ error }}</span>
                     {% endfor %}
+
                 </div>
-            
+        
                 <div>
+
                     <label for="id_email">Email :</label>
                     <input type="email" name="email" id="id_email" value="{{ register_form.email.value|default:'' }}" required>
                     {% for error in register_form.email.errors %}
                         <span class="error">{{ error }}</span>
                     {% endfor %}
+
                 </div>
-            
+        
                 <div>
+
                     <label for="id_password1">Password :</label>
                     <input type="password" name="password1" id="id_password1"required>
                     {% for error in register_form.password1.errors %}
                         <span class="error">{{ error }}</span>
                     {% endfor %}
+
                 </div>
-            
+        
                 <div>
+
                     <label for="id_password2">Confirm Password :</label>
                     <input type="password" name="password2" id="id_password2" required>
                     {% for error in register_form.password2.errors %}
                         <span class="error">{{ error }}</span>
                     {% endfor %}
+
                 </div>
-            
+        
                 <button type="submit" name="register">Register</button>
             </form>
+
         </div>
 
         <!-- Toggle Container -->
