@@ -73,12 +73,18 @@
       .footer-button i {
         margin-right: 5px;
       }
+      a{
+        text-decoration: none;
+      }
     </style>
     {% endblock style %}
     {% block content %}
     <div class="retailer-container">
       <div class="header">
-        <h2><b><u>Add Retailer</u></b></h2>
+        <h2><b>Add Retailer</b></h2>
+        <div class="buttons">
+          <a href="{% url 'view_retailers' %}" class="button">View Retailers</a>
+      </div>
       </div>
       <br />
       {% if message %}

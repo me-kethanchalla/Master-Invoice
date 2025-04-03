@@ -73,7 +73,7 @@
           <!-- Brand/Logo -->
           <a class="navbar-brand d-flex align-items-center" href="#page-top">
             <img
-              src="{% static 'images/master_invoice_logo.png' %}"
+              src="{% static 'user/images/master_invoice_logo.png' %}"
               alt="Logo"
               width="80"
               height="80"
@@ -204,7 +204,7 @@
                         <p><strong>Phone:</strong> {{ user.profile.phone }}</p>
                         <p><strong>GST Number:</strong> {{ user.profile.gst }}</p>
                         <p><strong>Address:</strong> {{ user.profile.address }}</p>
-                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a> 
                     </div>
                 </div>
             </div>
