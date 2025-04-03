@@ -64,12 +64,15 @@ class CustomUserCreationForm(UserCreationForm):
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
 
-        if password1 and password2 and password1 != password2:
-            self.add_error('password2', "Passwords do not match!")
-            
-        if len(password1) < 8:
-            self.add_error('password1', "Password must be at least 8 characters long.")
-            
+        # Add null checks before using len()
+        if password1 is not None and password2 is not None:
+            if password1 != password2:
+                self.add_error('password2', "Passwords do not match!")
+            if len(password1) < 8:
+                self.add_error('password1', "Password must be at least 8 characters long.")
+        else:
+            self.add_error(None, "Password fields are required.")
+
         return cleaned_data
 
 

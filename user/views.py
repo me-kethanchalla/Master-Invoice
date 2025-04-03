@@ -1,6 +1,8 @@
 import secrets
 import hashlib
 import datetime
+from django.http import JsonResponse
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .models import Profile
@@ -10,6 +12,7 @@ from django.conf import settings
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, DetailsForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.views.decorators.cache import never_cache
 
 # OTP
 def generate_secure_otp(length=6):
@@ -27,7 +30,7 @@ def send_otp_email(to_email, otp):
     """Send an OTP via email."""
     subject = "Your OTP Code"
     message = f"Your One-Time Password (OTP) is: {otp}"
-    from_email = 'maste.invoice253@gmail.com'  # Replace with your email address
+    from_email = 'master.invoice253@gmail.com'  # Replace with your email address
 
     try:
         send_mail(subject, message, from_email, [to_email])
@@ -67,7 +70,8 @@ def user_login(request):
         'login_form': login_form
     })
 
-
+@login_required(login_url='/')
+@never_cache
 def home(request):
     return render(request, 'user/welcome.html')
 
@@ -106,6 +110,7 @@ def details(request):
             profile_form.save()
             messages.success(request, "Details saved successfully!")
             return redirect('home')
+        
     else:
         profile_form = DetailsForm(instance=user_profile)
 
@@ -116,13 +121,6 @@ def details(request):
 
 from django.utils.timezone import make_aware,now
 from django.contrib.auth.models import User
-
-
-
-
-
-
-
 
 def verify_otp(request):
     if request.method == "POST":
@@ -159,5 +157,80 @@ def verify_otp(request):
         else:
             messages.error(request, "Invalid OTP. Please try again.")
             return redirect("verify_otp")
-#resend OTP....
     return render(request, "user/verify_otp.html")
+
+
+
+def resend_otp(request):
+    if request.method == "POST":
+        user_data = request.session.get("register_data")
+        if user_data:
+            otp = generate_secure_otp()  # Generate new OTP
+            store_otp(request, otp, 5)  # Store OTP in session with a 5-minute expiry
+            send_otp_email(user_data["email"], otp)  # Send OTP via email
+            return JsonResponse({"message": "OTP resent successfully!"}, status=200)
+        else:
+            return JsonResponse({"error": "No registration data found. Please register again."}, status=400)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+from django.contrib.auth import logout
+
+@never_cache
+def user_logout(request):
+    logout(request)
+    messages.success(request, "Logged out successfully.")
+    request.session.flush()  # Clears all session data
+    return redirect('login2')
+
+
+
+def send_verify_mail(email,request):
+    otp=generate_secure_otp()
+    store_otp(request, otp, 5) 
+    send_otp_email(email, otp)  # Send OTP via email
+
+
+def verify_and_reset(request):
+    email = request.session.get('reset_email')
+
+    if not email:
+        return redirect('reset_password')  # Redirect if session expires
+
+    if request.method == "POST":
+        entered_otp = request.POST.get("otp")
+        new_password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        stored_otp =  request.session.get("otp")
+        entered_otp = hash_otp(entered_otp)
+        if stored_otp and entered_otp == stored_otp:
+            if new_password == confirm_password:
+                user = User.objects.get(email=email)
+                user.set_password(new_password)
+                user.save()
+                request.session.pop("otp", None)
+                request.session.pop("otp_expiry", None) 
+                messages.success(request, "Password reset successful. You can now log in.")
+                return redirect('login2')
+            else:
+                messages.error(request, "Passwords do not match.")
+        else:
+            messages.error(request, "Invalid OTP.")
+
+    return render(request, "user/verify_reset.html")
+
+def request_reset(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        if User.objects.filter(email=email).exists():
+            send_verify_mail(email,request=request)  # Send OTP to email
+            messages.success(request, "An OTP has been sent to your email for verification.")
+            request.session['reset_email'] = email  # Store email in session
+            return redirect('verify_reset')  # Redirect to OTP & password page
+        else:
+            messages.error(request, "No user with this Email")
+
+    return render(request, "user/forgot_password.html")
+
+    
+

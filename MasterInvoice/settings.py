@@ -16,6 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CACHE_CONTROL_NO_STORE = True  # Prevent cached pages after logout
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -78,7 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MasterInvoice.wsgi.application'
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
