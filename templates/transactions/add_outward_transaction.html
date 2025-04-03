@@ -179,6 +179,7 @@
     </script>
     {% endblock style %}
     {% block content %}
+
     <form method="POST" action="{% url 'update_transaction_supplier' %}">
         {% csrf_token %}
         <div class="invoice-container">

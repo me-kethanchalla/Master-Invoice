@@ -77,12 +77,18 @@
       .footer-button i {
         margin-right: 5px;
       }
+      a {
+        text-decoration: none;
+      }
     </style>
     {% endblock style %}
     {% block content %}
     <div class="retailer-container">
       <div class="header">
-        <h2><b><u>My Retailer</u></b></h2>
+        <h2><b>My Retailers</b></h2>
+        <div class="buttons">
+          <a href="{% url 'add_retailer' %}" class="button">Add Retailer</a>
+      </div>
       </div>
       <br />
       <div class="section">

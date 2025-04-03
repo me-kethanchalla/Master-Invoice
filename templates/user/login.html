@@ -5,104 +5,245 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="icon" href="{% static 'images/master_invoice_logo.png' %}" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'user/images/master_invoice_logo.png' %}" type="image/png">
     <title>Master-Invoice</title>
     <!-- Optionally include your CSS file -->
     <link rel="stylesheet" href="{% static 'user/login.css' %}">
+    <style>
+
+        
+    .form-container.sign-up form h1 {
+        font-family: "Poppins", sans-serif;
+        margin-bottom: 10px;
+        font-size: 26px;
+        position: relative;
+        margin-top: 5px;
+        /* margin-top: -30px; */
+    }
+    
+    .form-container.sign-in form h1 {
+        font-family: "Poppins", sans-serif;
+        font-size: 26px; 
+        position: relative;
+        margin-top: -30px;
+        margin-bottom: 10px;
+    }
+    
+    .form-container.sign-up form h1::after,
+.form-container.sign-in form h1::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* Distance of the line from the heading */
+    left: -10px; /* Move the line a little to the left */
+    width: calc(100% + 20px);  /* Make the underline span a little more than the heading width */
+    height: 2px;  /* Line thickness */
+    background-color: #5ab3ad; /* Line color */
+}
+
+    .form-container.sign-in form button {
+        font-family: "Poppins", sans-serif;
+        margin-top: 20px;
+    }
+    .form-container.sign-up form button {
+        font-family: "Poppins", sans-serif;
+        margin-top: -30px;
+    }
+    
+  
+
+    
+  
+
+    body {
+      font-family: "poppins", sans-serif;
+      background: linear-gradient(#616161, black);
+    }
+    .toggle-panel h1{
+        font-family: "Poppins", sans-serif;
+        margin-bottom: 15px;
+    }
+    /* Toggle panel buttons style */
+    .toggle-panel button {
+    margin-top: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .toggle-panel button:hover {
+    background-color: white;
+    color: #5ab3ad;
+}
+input, label {
+      font-size: 14px; /* Smaller font size for inputs and labels */
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      padding: 8px; /* Reduce padding inside inputs */
+      font-size: 14px;
+      width: 100%; /* Ensure inputs are full width */
+      box-sizing: border-box;
+    }
+    label {
+      margin-bottom: 5px; /* Slight margin for labels */
+    }
+    .error {
+    color: red;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+    padding: 8px 12px;
+    background-color: #ffe6e6;
+    border: 1px solid #ff9999;
+    border-radius: 5px;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}/* Forgot Password button default styling */
+.forgot-password-link {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #007bff;
+    text-decoration: none;
+    position: relative;
+    padding: 5px 12px;
+    transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+/* Lock (appears by default) */
+.forgot-password-link::before {
+    content: "🔒 ";
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Box appears around text */
+.forgot-password-link:hover {
+    color: #ff5722;
+    box-shadow: 0px 0px 8px rgba(255, 87, 34, 0.8);
+    border: 1px solid #ff5722;
+    border-radius: 8px;
+    padding: 5px 12px;
+    animation: pop 0.2s ease-in-out;
+}
+
+/* Lock unlocks */
+.forgot-password-link:hover::before {
+    content: "🔓 ";
+}
+
+/* Slight pop effect when hovering */
+@keyframes pop {
+    0% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+
+/* Shake animation (symbolizing confusion or "locked out") */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px); }
+    40% { transform: translate
+    }
+}
+
+    </style>
 </head> 
 <body>
     <div class="container" id="container">
-        <!-- Display Django messages -->
-        {% if messages %}
-            <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+     
         
         <!-- Registration Form -->
         <div class="form-container sign-up">
-            <form method="POST" id="registerForm">
+
+            <form method="POST">
+                <h1>Sign In</h1>
                 {% csrf_token %}
-        
-                <div>
-                    <label for="id_username">Username</label>
-                    <input type="text" name="username" id="id_username" value="{{ register_form.username.value|default:'' }}" required>
-                    {% if register_form.username.errors %}
-                        <span class="error">{{ register_form.username.errors.0 }}</span>
-                    {% endif %}
-                </div>
-        
-                <div>
-                    <label for="id_email">Email</label>
-                    <input type="email" name="email" id="id_email" value="{{ register_form.email.value|default:'' }}" required>
-                    {% if register_form.email.errors %}
-                        <span class="error">{{ register_form.email.errors.0 }}</span>
-                    {% endif %}
-                </div>
-        
-                <div>
-                    <label for="id_password1">Password</label>
-                    <input type="password" name="password1" id="id_password1" required>
-                    {% if register_form.password1.errors %}
-                        <span class="error">{{ register_form.password1.errors.0 }}</span>
-                    {% endif %}
-                </div>
-        
-                <div>
-                    <label for="id_password2">Confirm Password</label>
-                    <input type="password" name="password2" id="id_password2" required>
-                    {% if register_form.password2.errors %}
-                        <span class="error">{{ register_form.password2.errors.0 }}</span>
-                    {% endif %}
-                </div>
-        
-                <button type="submit" name="register">Register</button>
+                {{ login_form.as_p }}
+                <a href="#" class="forgot-password-link">Forgot Password?</a>
+                <p id="error1"></p>
+                <button type="submit" name="login">Sign In</button>
             </form>
+            
         </div>
-        
-        <style>
-            .error {
-                color: red;
-                font-size: 14px;
-                display: block;
-                margin-top: 5px;
-            }
-        </style>
         
 
         <!-- Sign-in Form -->
         <div class="form-container sign-in">
             <form method="POST">
-                <h1>Sign In</h1>
+                <h1>Sign Up</h1>
+                <br>
+
                 {% csrf_token %}
-                {{ login_form.as_p }}
-                <p id="error1"></p>
-                <a href="{% url 'forgot_passwordyyy' %}" class="forgot-password-link">Forgot Password?</a>
-                <button type="submit" name="login">Sign In</button>
+        
+                <div>
+
+                    <label for="id_username">Username :</label>
+                    <input type="text" name="username" id="id_username" value="{{ register_form.username.value|default:'' }}" required> 
+                    {% for error in register_form.username.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+        
+                <div>
+
+                    <label for="id_email">Email :</label>
+                    <input type="email" name="email" id="id_email" value="{{ register_form.email.value|default:'' }}" required>
+                    {% for error in register_form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+        
+                <div>
+
+                    <label for="id_password1">Password :</label>
+                    <input type="password" name="password1" id="id_password1"required>
+                    {% for error in register_form.password1.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+        
+                <div>
+
+                    <label for="id_password2">Confirm Password :</label>
+                    <input type="password" name="password2" id="id_password2" required>
+                    {% for error in register_form.password2.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+        
+                <button type="submit" name="register">Register</button>
             </form>
+
         </div>
 
         <!-- Toggle Container -->
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
-                    <img src="{% static 'images/master_invoice_logo.png' %}" alt="Master Invoice Logo" class="panel-image">
-                    <h1>Welcome To <br>Master Invoice</h1>
-                    <p>Already a family member?</p>
-                    <button class="hidden" id="login">Sign In</button>
+                    
+                    <h1>Join Master <br> Invoice Today!</h1>
+                    <img src="{% static 'user/images/master_invoice_logo.png' %}" alt="Master Invoice Logo" class="panel-image">
+                    
+                    <p>Don't have an account? Join Today</p>
+                    
+                    <button class="hidden" id="login">Register</button>
                 </div>
                 <div class="toggle-panel toggle-right">
-                    <img src="{% static 'images/master_invoice_logo.png' %}" alt="Master Invoice Logo" class="panel-image">
-                    <h1>Master-Invoice</h1>
-                    <p>Don't have an account? Join Today</p>
-                    <button class="hidden" id="register">Sign Up</button>
+                    <h1>Welcome to<br>Master Invoice</h1>
+                    <img src="{% static 'user/images/master_invoice_logo.png' %}" alt="Master Invoice Logo" class="panel-image">
+                    <p>Already a member?</p>
+                    <button class="hidden" id="register">Sign In</button>
                 </div>
             </div>
         </div>
     </div>
+    
 
-    <script src="{% static 'javascript/login.js' %}"></script>
+    <script src="{% static 'user/javascript/login.js' %}"></script>
 </body>
 </html>

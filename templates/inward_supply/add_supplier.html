@@ -73,12 +73,18 @@
       .footer-button i {
         margin-right: 5px;
       }
+      a{
+        text-decoration : none ;
+      }
     </style>
     {% endblock style %}
     {% block content %}
     <div class="supplier-container">
       <div class="header">
-        <h2><b><u>Add Supplier</u></b></h2>
+        <h2><b>Add Supplier</b></h2>
+        <div class="buttons">
+          <a href="{% url 'view_suppliers' %}" class="button">View Suppliers</a>
+      </div>
       </div>
       <br />
       {% if message %}
