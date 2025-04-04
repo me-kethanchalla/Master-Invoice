@@ -16,6 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CACHE_CONTROL_NO_STORE = True  # Prevent cached pages after logout
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -78,7 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MasterInvoice.wsgi.application'
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -141,4 +142,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
+EMAIL_PORT = 587  # Port for TLS
+EMAIL_USE_TLS = True  # Use TLS for secure communication
+EMAIL_HOST_USER = 'master.invoice253@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'lapd xglt jmxz omup'  # App password (see below)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

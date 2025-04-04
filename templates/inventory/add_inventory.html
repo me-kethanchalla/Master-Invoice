@@ -72,13 +72,18 @@
       .footer-button i {
         margin-right: 5px;
       }
+      a {
+    text-decoration: none; /* Removes underline */
+}
     </style>
   {% endblock style %}
   {% block content %}
     <div class="inventory-container">
         <div class="header">
             <h2><b><u>Add New Inventory Item</u></b></h2>
-            <a href="{% url 'inventory_list' %}" class="btn btn-primary">View Inventory</a>
+            <div class="buttons">
+              <a href="{% url 'inventory_list' %}" class="button">View Inventory</a>
+          </div>
         </div>
       
       <br />

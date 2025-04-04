@@ -5,15 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% load static %}
-    
+    {% block headcontent %} {% endblock %}
     <!-- Bootstrap CSS -->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'user/Final.css' %}">
-    <link rel="icon" href="{% static 'images/master_invoice_logo.png' %}" type="image/png">
+    <link rel="icon" href="{% static 'user/images/master_invoice_logo.png' %}" type="image/png">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Master Invoice</title>
     
     <style>
@@ -189,7 +193,7 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-1 px-lg-2">
             <a class="navbar-brand" href="#page-top">
-                <img src="{% static 'images/master_invoice_logo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
+                <img src="{% static 'user/images/master_invoice_logo.png' %}" alt="Logo" width="100" height="100" class="d-inline-block align-text-top" style="position: relative; left: 20px;">
                 <br>Master Invoice
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -226,16 +230,24 @@
                     <li class="nav-item dropdownn">
                         <a class="nav-link" href="#" id="transactionDropdown" style="text-decoration: none;">Transactions</a>
                         <ul class="dropdownn-menu" id="dropdownMenu4">
-                            <li><a class="dropdownn-item" href="{% url 'add_outward_transaction' %}">Add Inward Transaction</a></li>
-                            <li><a class="dropdownn-item" href="{% url 'add_inward_transaction' %}">Add Outward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_outward_transaction' %}">Add Outward Transaction</a></li>
+                            <li><a class="dropdownn-item" href="{% url 'add_inward_transaction' %}">Add Inward Transaction</a></li>
                             <li><a class="dropdownn-item" href="{% url 'view_transaction_history' %}">View Transaction History</a></li>
                             <li><a class="dropdownn-item" href="{% url 'pending' %}">Pending Transactions</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#" style="text-decoration: none;">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'analysis_graphs' %}" style="text-decoration: none;">Analysis</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}" style="text-decoration: none;">Home</a></li> 
                     <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}" style="text-decoration: none;">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/" style="text-decoration: none;">Log Out</a></li>
+                    <form id="logout-form" action="{% url 'logout2' %}" method="POST" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt" style="font-size:20px"></i> Logout
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -243,6 +255,9 @@
     {% block content%}{% endblock %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+     <!-- Add jQuery CDN before any script that uses $ -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

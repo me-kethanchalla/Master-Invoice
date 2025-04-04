@@ -1,0 +1,908 @@
+{% extends "base.html" %}
+{% load math_filters %}
+{% block headcontent %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+   
+
+
+    
+    <style>
+        body {
+            background-color:rgb(6, 6, 7);
+            color: black;
+        
+            font-family: Arial, sans-serif;
+        }
+
+        .container-box {
+           
+            margin-left: 50px;
+            margin-right: 50px;
+            position: relative;
+        }
+
+        .card {
+            
+            padding: 20px;
+            background-color:white;
+           
+        }
+
+        .chart-container {
+           top: 200px;
+        }
+        .chart-container.hide {
+            opacity: 0;
+    transform: translateX(-100%);
+    
+         }
+ 
+        .text-highlight {
+            color: #76e09a;
+        }
+
+        #zoom {
+            transition: transform 0.5s;
+          }
+          
+          #zoom:hover {
+            -ms-transform: scale(1.05); /* IE 9 */
+            -webkit-transform: scale(1.1); /* Safari 3-8 */
+            transform: scale(1.1); 
+          }
+          .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+        /* Alert Box Style */
+.alert-box {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: none;
+    max-width: 500px;
+    width: 100%;
+}
+
+/* Alert Content */
+.alert-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Alert Icon */
+.alert-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* Alert Text */
+.alert-text {
+    flex-grow: 1;
+}
+
+/* Close Button */
+.close-alert-btn {
+    background: transparent;
+    border: none;
+    color: #721c24;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+        
+    </style>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
+    <div id="errorAlert" class="alert-box" style="display: none;">
+        <div class="alert-content">
+            <span class="alert-icon">&#x26A0;</span>
+            <span id="error-message" class="alert-text">Please enter a valid date range: "From Date" should not be later than "To Date".</span>
+            <button id="close-alert" class="close-alert-btn">X</button>
+        </div>
+    </div>
+
+    <div class="container-box">
+        
+        <div class="row mb-3">
+            <div class="col-md-9">
+                <div class="card" style="gap: 10px;">
+                        <div class="d-flex justify-content-between" style="position:relative;">
+                                <div class="d-flex gap-3">
+                                    <button id="showProfits" class="btn rounded-pill btn-info py-2">Profits</button>
+                                    <button id="showSales" class="btn rounded-pill py-2">Sales</button>
+                                </div>
+                                <div class="d-flex gap-1">
+                                from: <input type="date" class="form-control" id="from_date" required/>
+                                to: <input type="date" class="form-control" id="to_date" required/>
+                                <button type="submit" class="btn btn-success py-2 rounded-pill">get</button>
+                                </div>
+                        </div>
+                        
+                        <div id="profitsSection" class="chart-container">
+                            <h4>Net Profit: ₹<span class="text-highlight" id="chart-total-profit">2,232.00</span> <small class="text-danger" id="profit-increment">-2.2%</small></h5>
+                            <canvas id="balanceChart"></canvas>
+                        </div>
+                        <div id="salesSection" class="chart-container" style="display: none;">
+                            <h4>Sales: <span class="text-highlight" id="chart-total-sales">2,846.00</span> <small class="text-danger" id="sales-increment">-2.2%</small></h5>
+                            <canvas id="salesStatisticChart"></canvas>
+                        </div>
+                </div>
+            </div> 
+
+            <div class="col-md-3">
+                
+                <div class="card" id="zoom"  style="font-family:Fantasy	Copperplate
+Papyrus; font-weight: bold;">
+                    <h2><b>SUMMARY</b></h2>
+                    <hr class="border border-dark border-5 opacity-75">
+                    <h5>From Date: <span class="text" id="summary-from-date">18/10/2025</span> </h5>
+                    <hr>
+                    <h5>To  Date  : <span class="text"  id="summary-to-date">24/01/2025</span></h5>
+                    <hr>
+                    <h5>Avg Profit: ₹<span class="text" id="summary-avg-profits">2,232.00</span> </h5>
+                    <hr>
+                    <h5>Max Profit: ₹<span class="text" id="summary-max-profits">2,232.00</span> </h5>
+                    <hr>
+                    <h5>Avg Sales: <span class="text" id="summary-avg-sales">2,232.00</span> </h5>
+                    <hr>
+                    <h5>Max Sales: <span class="text" id="summary-max-sales">2,232.00</span> </h5>
+                </div>
+
+            </div>
+            
+        </div>
+
+
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card d-flex flex-column" id="zoom">
+                    <h5>Bills Genrated</h5>
+                    <p class="fs-4 text-highlight" id="total-num-bills"><small>(+40.8%)</small></p>
+                    <canvas id="billsChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card d-flex flex-column" id="zoom">
+                    <h5>Inward Transactions</h5>
+                    
+                    <h4><p class="fs-4 text-highlight" id="transaction-payments">291.20 <small id="transaction-payments-increment">(+9.5%)</small></p> </h4>
+                   
+                    <canvas id="exchangeOfferChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card d-flex flex-column h-100 mt-n3" id="zoom">
+                
+                    <div class="d-flex gap-3">
+                        <h4>Top  5</h4>
+                        <button id="showRetailers" class="btn rounded-pill btn-info py-1">Retailers</button>
+                        <button id="showSuppliers" class="btn rounded-pill py-1">Suppliers</button>
+                    </div>
+                    <div id="retailersSection" class="chart-container">
+                        <p class="fs-4 text-highlight">Total: {{ total_num_retailers }}</p>
+                        <canvas id="retailersChart"></canvas>
+                    </div>
+                    <div id="suppliersSection" class="chart-container" style="display: none;">
+                        <p class="fs-4 text-highlight">Total: {{ total_num_suppliers }}</p>
+                        <canvas id="suppliersChart"></canvas>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card" style="gap:20px;">
+                    <div class="d-flex justify-content-between">
+                        <h4>Sales Per Product</h4>
+                        <div class="d-flex gap-2">
+                            <button id="month-sales" class="btn rounded-pill btn-info py-1"> 1 month </button>
+                            <button id="3-month-sales" class="btn rounded-pill  py-1"> 3 months </button>
+                            <button id="6-month-sales" class="btn rounded-pill  py-1"> 6 months </button>
+                        </div>
+                    </div>
+                <div  class="rounded" id="1-month-table">
+                   
+                    <table class="table text-black table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Total Sales</th>
+                                <th>Avg Sales</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for product_sale in one_month_sales%}
+                            <tr>
+                                <td> {{ product_sale.product_name }}</td>
+                                {% with price=product_sale.net_profit|divide:product_sale.product_sales  %}
+                                        <td> {{ price }}</td>
+                                {% endwith %}
+                                <td>{{  product_sale.product_sales }}</td>
+                                <td>{{ product_sale.average_sales }}</td>
+                                <td>{{ product_sale.net_profit }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div  class="rounded" id="3-month-table" style="display: none;">
+                  
+                    <table class="table text-black table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Total Sales</th>
+                                <th>Avg Sales</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_sale in three_month_sales%}
+                            <tr>
+                                <td> {{ product_sale.product_name }}</td>
+                                {% with price=product_sale.net_profit|divide:product_sale.product_sales  %}
+                                        <td> {{ price }}</td>
+                                {% endwith %}
+                                <td>{{  product_sale.product_sales }}</td>
+                                <td>{{ product_sale.average_sales }}</td>
+                                <td>{{ product_sale.net_profit }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div  class="rounded" id="6-month-table" style="display: none;">
+                   
+                    <table class="table text-black table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Total Sales</th>
+                                <th>Avg Sales</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_sale in six_month_sales%}
+                            <tr>
+                                <td> {{ product_sale.product_name }}</td>
+                                {% with price=product_sale.net_profit|divide:product_sale.product_sales  %}
+                                        <td> {{ price }}</td>
+                                {% endwith %}
+                                <td>{{  product_sale.product_sales }}</td>
+                                <td>{{ product_sale.average_sales }}</td>
+                                <td>{{ product_sale.net_profit }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="align-self-end ml-auto">
+              <a href={% url 'allsales'%}>  <button class="btn btn-outline-primary  rounded-pill" > View More </button> </a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+<script>
+
+ $(document).ready(function() {
+    const showErrorMessage = (message) => {
+        $('#error-message').text(message);  // Set the error message text
+        $('#errorAlert').fadeIn();  // Show the alert box
+    };
+
+     // Close the alert when the close button is clicked
+     $('#close-alert').click(function() {
+        $('#errorAlert').fadeOut();  // Hide the alert box
+    });
+
+    // Function to fetch and generate the chart based on selected dates
+    const generateChart = (fromDate, toDate) => {
+        // Validate date range
+        if (new Date(fromDate) > new Date(toDate)) {
+            // Display error message
+            showErrorMessage('Please enter a valid date range: "From Date" should not be later than "To Date".');
+            return;   // Prevent further execution if dates are invalid
+        }
+        // End points
+        var profitsEndpoint = `/analysis/get_profits_data/?from_date=${fromDate}&to_date=${toDate}`;
+        var salesEndpoint = `/analysis/get_sales_data/?from_date=${fromDate}&to_date=${toDate}`;
+        // print Endpoints
+        console.log(profitsEndpoint);
+        console.log(salesEndpoint)
+        // GET profit HTML Elements
+        const summary_avg_profits = document.getElementById('summary-avg-profits');
+        const summary_max_profits = document.getElementById('summary-max-profits');
+        const total_profit = document.getElementById('chart-total-profit');
+        const profit_increment = document.getElementById('profit-increment');
+        // GET SALES HTML ELEMENTS
+        const summary_avg_sales = document.getElementById('summary-avg-sales');
+        const summary_max_sales = document.getElementById('summary-max-sales');
+        const total_sales = document.getElementById('chart-total-sales');
+        const sales_increment = document.getElementById('sales-increment');
+
+        // Since there are two JS QUERYS to avoid conflicts
+        // this is used to avoid a confict ($.ajax is not a function error)
+
+        // PROFIT QUERY
+        var $jq = jQuery.noConflict();
+        $.ajax({
+            method: "GET",
+            url: profitsEndpoint,
+            success: function(data) {
+                const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+
+                // Check if a chart already exists and destroy it
+                if (window.balanceChartInstance) {
+                    window.balanceChartInstance.destroy();
+                }
+                // avg
+                summary_avg_profits.textContent = data['avg_profits']
+                // max
+                summary_max_profits.textContent = data['max_profits']
+                // total
+                total_profit.textContent = data['total_profits']
+                // increment with changing color.
+                if(data['percentage_increment'] >= 0) {
+                profit_increment.textContent = `+${data['percentage_increment']}%`
+                profit_increment.classList.remove('text-danger')
+                profit_increment.classList.add('text-highlight')
+                }
+                else {
+                profit_increment.textContent = `${data['percentage_increment']}%`
+                profit_increment.classList.remove('text-highlight')
+                profit_increment.classList.add('text-danger')
+                }
+                // Profits Chart
+                console.log("check whether profit chart is working")
+                window.balanceChartInstance = new Chart(balanceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data['dates'],
+                        datasets: [
+                            {
+                                label: 'Profit',
+                                data: data['profits'],
+                                borderColor: '#76e09a',
+                                backgroundColor: 'rgba(118, 224, 154, 0.2)',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+        
+                                grid: {
+                                    display: false,
+                                    drawTicks: false, // Don't draw ticks on the x-axis
+                                },
+                                ticks: {
+                                    display: false // Remove ticks (labels) for x-axis
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: true,
+                                    drawTicks: false, // Don't draw ticks on the x-axis
+                                },
+                                ticks: {
+                                    display: true // Remove ticks (labels) for x-axis
+                                }
+                                
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        pointBackgroundColor: "black",
+                    }
+                });
+            },
+            error: function(error_data) {
+                console.log("Error fetching data:", error_data);
+            }
+        })
+        
+        // SALES Query
+        var $jq1 = jQuery.noConflict();
+        $.ajax({
+            method: "GET",
+            url: salesEndpoint,
+            success: function(data) {
+                const salesCtx = document.getElementById('salesStatisticChart').getContext('2d');
+                console.log(data)
+                // Check if a chart already exists and destroy it
+                if (window.salesChartInstance) {
+                    window.salesChartInstance.destroy();
+                }
+                // avg
+                summary_avg_sales.textContent = data['avg_sales']
+                // max
+                summary_max_sales.textContent = data['max_sales']
+                // total
+                total_sales.textContent = data['total_sales']
+                // increment with changin color
+                if(data['percentage_increment'] >= 0) {
+                sales_increment.textContent = `+${data['percentage_increment']}%`
+                sales_increment.classList.remove('text-danger')
+                sales_increment.classList.add('text-highlight')
+                }
+                else {
+                sales_increment.textContent = `${data['percentage_increment']}%`
+                sales_increment.classList.remove('text-highlight')
+                sales_increment.classList.add('text-danger')
+                }
+                console.log("check whether sales is working")
+
+                window.salesChartInstance = new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data['dates'],
+                        datasets: [
+                            {
+                                
+                                label: 'Sales',
+                                data: data['sales'],
+                                backgroundColor: 'rgba(204, 50, 194, 0.2)',
+                                borderColor: '#764ce0',
+                                
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+        
+                                grid: {
+                                    display: false,
+                                    drawTicks: false, // Don't draw ticks on the x-axis
+                                },
+                                ticks: {
+                                    display: false // Remove ticks (labels) for x-axis
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: true,
+                                    drawTicks: false, // Don't draw ticks on the x-axis
+                                },
+                                ticks: {
+                                    display: true // Remove ticks (labels) for x-axis
+                                }
+                                
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        pointBackgroundColor: "black",
+                    }
+                });
+
+            
+            },
+            error: function(error_data) {
+                console.log("Error fetching data:", error_data);
+            }
+})
+
+
+
+    };
+
+    // Set default values for date range (Last week)
+    const today = new Date();
+    const lastWeek = new Date(today);
+    lastWeek.setDate(today.getDate() - 7); // Subtract 7 days for the last week's date
+    
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0'); 
+        return `${year}-${month}-${day}`;
+    };
+
+    // Set the date input fields
+    document.getElementById('from_date').value = formatDate(lastWeek);
+    document.getElementById('to_date').value = formatDate(today);
+
+    const summary_from_date = document.getElementById('summary-from-date');
+    summary_from_date.textContent = formatDate(lastWeek);
+    const summary_to_date = document.getElementById('summary-to-date');
+    summary_to_date.textContent = formatDate(today);
+    generateChart(formatDate(lastWeek), formatDate(today));
+
+    const getButton = document.querySelector('button[type="submit"]');
+    getButton.addEventListener('click', function(event){
+        const fromDate = document.getElementById('from_date').value;
+        const toDate = document.getElementById('to_date').value;
+        generateChart(fromDate, toDate);
+        
+    summary_from_date.textContent = (fromDate);
+
+    summary_to_date.textContent = (toDate);
+    });
+});
+
+
+var transaction_endpoint = "/analysis/get_transaction_data/"
+$.ajax({
+    method: "GET",
+    url: transaction_endpoint,
+    success: function(data) {
+        const exchangeCtx = document.getElementById('exchangeOfferChart').getContext('2d');
+        var total_payments = document.getElementById('transaction-payments')
+        total_payments.textContent = `₹${data['total_payments']}`;
+        new Chart(exchangeCtx, {
+            type: 'line',
+            data: {
+                labels: data['dates'],
+                datasets: [
+                    {
+                        label: 'transaction',
+                        data: data['payments'],
+                        borderColor: '#764ce0',
+                    backgroundColor: 'rgba(204, 50, 194, 0.2)',
+                    }
+                ]
+            },
+            
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+
+                        grid: {
+                            display: false,
+                            drawTicks: false, // Don't draw ticks on the x-axis
+                        },
+                        ticks: {
+                            display: false // Remove ticks (labels) for x-axis
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false,
+                            drawTicks: false, // Don't draw ticks on the x-axis
+                        },
+                        ticks: {
+                            display: true // Remove ticks (labels) for x-axis
+                        }
+                        
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                pointBackgroundColor: "black",
+            }
+        });
+    }
+})
+
+
+
+var bills_endpoint = "/analysis/get_bills_data/";
+$.ajax({
+    method: "GET",
+    url: bills_endpoint,
+    success: function(data) {
+
+        const total_num_bills = document.getElementById('total-num-bills');
+        total_num_bills.textContent = data['total_num_bills']
+        const billsCtx = document.getElementById('billsChart').getContext('2d');
+    new Chart(billsCtx, {
+        type: 'line',
+        data: {
+            labels: data['dates'],
+            datasets: [
+                {
+                    label: 'Bills',
+                    data: data['bill_count'],
+                    borderColor: '#764ce0',
+                    backgroundColor: 'rgba(204, 50, 194, 0.2)',
+                   
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+
+                    grid: {
+                        display: false,
+                        drawTicks: false, // Don't draw ticks on the x-axis
+                    },
+                    ticks: {
+                        display: false // Remove ticks (labels) for x-axis
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false,
+                        drawTicks: false, // Don't draw ticks on the x-axis
+                    },
+                    ticks: {
+                        display: true // Remove ticks (labels) for x-axis
+                    }
+                    
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            pointBackgroundColor: "black",
+        }
+    });
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+
+
+
+
+//////////// Retailers Chart /////////////////////////
+var retailer_endpoint = '/analysis/get_retailers_data/'
+$.ajax(
+    {
+        method: "GET",
+        url: retailer_endpoint,
+        success: function(data) {
+            const retailersCtx = document.getElementById('retailersChart').getContext('2d');
+    new Chart(retailersCtx, {
+        type: 'bar',
+        data: {
+            labels: data.retailers_name,
+            datasets: [
+                {
+                    data: data.retailers_total_sales,
+                }
+            ]
+        },
+        options: {
+            responsive: true, 
+            scales: {
+                x: {
+
+                    grid: {
+                        display: false,
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false,
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+            
+          },
+    });
+        }
+
+    }
+)
+
+
+
+
+
+
+
+////////////   Suppliers Chart ////////////////
+var supplier_endpoint = '/analysis/get_suppliers_data/';
+$.ajax(
+{
+method: "GET",
+
+url: supplier_endpoint,
+
+success: function(data) {
+    
+    const suppliersCtx = document.getElementById('suppliersChart').getContext('2d');
+    new Chart(suppliersCtx, {
+        type: 'bar',
+        data: {
+            labels: data.suppliers_name,
+            datasets: [
+                {
+                    data: data.suppliers_total_sales,
+                }
+            ]
+        },
+        options: {
+            responsive: true, 
+            scales: {
+                x: {
+
+                    grid: {
+                        display: false,
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false,
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+            
+          },
+    });
+},
+
+error: function(error_data) {
+    console.log("error")
+    console.log(error_data)
+}
+
+}
+)
+
+// toggling One month, three month, six month table
+
+/*
+   <button id="month-sales"> month </button>
+                        <button id="3-month-sales"> 3 months </button>
+                        <button id="6-month-sales"> 6 months </button>
+*/
+
+const one_month_btn = document.getElementById('month-sales')
+const three_month_btn = document.getElementById('3-month-sales')
+const six_month_btn = document.getElementById('6-month-sales')
+
+const one_month_table = document.getElementById('1-month-table')
+const three_month_table = document.getElementById('3-month-table')
+const six_month_table = document.getElementById('6-month-table')
+
+one_month_btn.addEventListener('click', ()=>{
+    one_month_table.style.display = 'block';
+    three_month_table.style.display = 'none';
+    six_month_table.style.display = 'none';
+    one_month_btn.classList.add('btn-info');
+    three_month_btn.classList.remove('btn-info');
+    six_month_btn.classList.remove('btn-info');
+})
+
+three_month_btn.addEventListener('click',()=>{
+    one_month_table.style.display = 'none';
+    three_month_table.style.display = 'block';
+    six_month_table.style.display = 'none';
+    one_month_btn.classList.remove('btn-info');
+    three_month_btn.classList.add('btn-info');
+    six_month_btn.classList.remove('btn-info');
+})
+
+
+six_month_btn.addEventListener('click', ()=>{
+    one_month_table.style.display = 'none';
+    three_month_table.style.display = 'none';
+    six_month_table.style.display = 'block';
+    one_month_btn.classList.remove('btn-info');
+    three_month_btn.classList.remove('btn-info');
+    six_month_btn.classList.add('btn-info');
+})
+
+
+
+
+
+    const profitsButton = document.getElementById('showProfits');
+    const salesButton = document.getElementById('showSales');
+    const profitsSection = document.getElementById('profitsSection');
+    const salesSection = document.getElementById('salesSection');
+
+    // Add event listeners to buttons
+    profitsButton.addEventListener('click', () => {
+        profitsSection.style.display = 'block';  // Show profits chart
+        salesSection.style.display = 'none';    // Hide sales chart
+        profitsButton.classList.add('btn-info');
+        salesButton.classList.remove('btn-info');
+        
+    });
+
+    salesButton.addEventListener('click', () => {
+        profitsSection.style.display = 'none';  // Hide profits chart
+        salesSection.style.display = 'block';   // Show sales chart
+        salesButton.classList.add('btn-info');
+        profitsButton.classList.remove('btn-info');
+       
+    });
+
+
+    const retailersButton = document.getElementById('showRetailers');
+    const suppliersButton = document.getElementById('showSuppliers');
+    const retailersSection = document.getElementById('retailersSection');
+    const suppliersSection = document.getElementById('suppliersSection');
+
+    // Add event listeners to buttons
+    retailersButton.addEventListener('click', () => {
+        retailersSection.style.display = 'block';  // Show profits chart
+        suppliersSection.style.display = 'none';    // Hide sales chart
+        retailersButton.classList.add('btn-info');
+        suppliersButton.classList.remove('btn-info');
+        
+    });
+
+    suppliersButton.addEventListener('click', () => {
+        retailersSection.style.display = 'none';  // Hide profits chart
+        suppliersSection.style.display = 'block';   // Show sales chart
+        suppliersButton.classList.add('btn-info');
+        retailersButton.classList.remove('btn-info');
+       
+    });
+</script>
+
+
+
+
+
+{% endblock %}

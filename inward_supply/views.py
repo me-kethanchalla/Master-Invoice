@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.db import IntegrityError
+from django.views.decorators.cache import never_cache
 
 @login_required
 def add_supplier(request):
@@ -18,15 +19,15 @@ def add_supplier(request):
             supplier.user = request.user
             supplier.save()
             message = "Supplier added successfully!"
-            # Reset the form by creating a new instance
-            form = SupplierForm()
+            return redirect('view_suppliers')
         else:
             print("Form errors:", form.errors)
     else:
         form = SupplierForm()
     return render(request, 'inward_supply/add_supplier.html', {'form': form, 'message': message})
 
-@login_required
+@login_required(login_url='/')
+@never_cache
 def view_suppliers(request):
     query = request.GET.get('query', '')
     if query:

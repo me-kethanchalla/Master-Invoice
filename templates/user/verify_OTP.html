@@ -1,28 +1,195 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="{% static 'user/images/master_invoice_logo.png' %}" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .image-column {
+            flex: 1;
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px 0 0 8px;
+        }
+        .image-column img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        .otp-column {
+            flex: 1;
+            padding: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .time-display {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-<h2>Enter OTP</h2>
-<form method="POST">
-    {% csrf_token %}
-    <label for="otp">Enter OTP:</label>
-    <input type="text" name="otp" required>
-    <button type="submit" name="details">Verify</button>
-</form>
-
-<p>Didn't receive the OTP? <a>Register Again</a></p>
-
+    <div class="container">
+        <!-- Image on the Left -->
+        <div class="image-column">
+            <img src="{% static 'user/images/master_invoice_logo.png' %}" alt="Master Invoice Logo">
+        </div>
+        <div class="otp-column">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <h2>Enter OTP</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="otp">Enter OTP:</label>
+                <input type="text" name="otp" required>
+                <button type="submit" name="details">Verify</button>
+                <button type="button" id="resend-otp-btn">Resend OTP</button>
+                <div id="response-message"></div>
+                <!-- Display the persistent countdown timer -->
+                <p class="time-display" id="timer-display"></p>
+                <p>Didn't receive the OTP? <a href="{% url 'login2' %}">Register Again</a></p>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Function to get CSRF token from the cookie
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('csrftoken=')) {
+                        cookieValue = cookie.substring('csrftoken='.length, cookie.length);
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Set OTP validity duration (in seconds, 4 minutes = 240 seconds)
+        const OTP_VALIDITY_DURATION = 240;
+        const timerDisplay = document.getElementById('timer-display');
+        const resendButton = document.getElementById('resend-otp-btn');
+        
+        // Initialize or retrieve OTP expiry timestamp from localStorage
+        function initTimer() {
+            let expiryTimestamp = localStorage.getItem('otpExpiry');
+            const now = Math.floor(Date.now() / 1000);
+            if (!expiryTimestamp || now >= expiryTimestamp) {
+                // If no expiry exists or it's expired, set a new one
+                expiryTimestamp = now + OTP_VALIDITY_DURATION;
+                localStorage.setItem('otpExpiry', expiryTimestamp);
+            }
+            return parseInt(expiryTimestamp);
+        }
+        
+        // Calculate and update the timer display
+        function updateTimer() {
+            const now = Math.floor(Date.now() / 1000);
+            let expiryTimestamp = parseInt(localStorage.getItem('otpExpiry'));
+            let timeLeft = expiryTimestamp - now;
+            
+            if (timeLeft > 0) {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                timerDisplay.textContent = `OTP valid till: ${minutes}:${seconds}`;
+                resendButton.disabled = true;
+            } else {
+                timerDisplay.textContent = "OTP has expired.";
+                resendButton.disabled = false;
+            }
+        }
+        
+        // Update the timer every second
+        initTimer(); // Initialize expiry timestamp on page load
+        updateTimer();
+        setInterval(updateTimer, 1000);
+        
+        // Resend OTP button click handler
+        resendButton.addEventListener('click', function () {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch("{% url 'resend_otp' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById("response-message");
+                if (data.message) {
+                    messageDiv.textContent = data.message;
+                    messageDiv.style.color = "green";
+                    
+                    // Reset the timer by setting a new expiry in localStorage
+                    const now = Math.floor(Date.now() / 1000);
+                    const newExpiry = now + OTP_VALIDITY_DURATION;
+                    localStorage.setItem('otpExpiry', newExpiry);
+                } else if (data.error) {
+                    messageDiv.textContent = data.error;
+                    messageDiv.style.color = "red";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
 </body>
 </html>
