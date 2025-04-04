@@ -25,9 +25,9 @@ CACHE_CONTROL_NO_STORE = True  # Prevent cached pages after logout
 SECRET_KEY = 'django-insecure-j9$idpufj!%on@27d-m=x+xa#%5$8+0@8l!^-plmo-o0&se^h+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["master-invoice.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -132,7 +133,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static") # this is your static folder
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR,'assets') #this is you assets folder.
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles') #this is you assets folder.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
