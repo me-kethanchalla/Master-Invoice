@@ -25,7 +25,7 @@ CACHE_CONTROL_NO_STORE = True  # Prevent cached pages after logout
 SECRET_KEY = 'django-insecure-j9$idpufj!%on@27d-m=x+xa#%5$8+0@8l!^-plmo-o0&se^h+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["master-invoice.onrender.com", "localhost", "127.0.0.1"]
 
