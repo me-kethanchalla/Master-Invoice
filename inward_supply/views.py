@@ -5,9 +5,10 @@ from decimal import Decimal
 import json
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, date
 from django.db import IntegrityError
 from django.views.decorators.cache import never_cache
+
 
 @login_required
 def add_supplier(request):
@@ -73,6 +74,11 @@ def add_invoice(request):
             print("Form is valid")
 
             bill_number = form.cleaned_data['bill_number']
+            invoice_date = form.cleaned_data['date']
+            if invoice_date > date.today():
+                form.add_error('date', "Invalid date entered. Future dates are not allowed.")
+                return render(request, "inward_supply/invoice_form.html", {"form": form, "suppliers": suppliers, "productJSON": productJSON, "message": "Error: Invalid Date"})
+
             
             # **Check if bill_number already exists**
             if InvoiceBill.objects.filter(user=request.user, bill_number=bill_number).exists():
@@ -204,3 +210,10 @@ def delete_supplier(request, id):
     supp = get_object_or_404(Supplier, id=id, user=request.user)
     supp.delete()
     return redirect('view_suppliers')
+
+@login_required
+def delete_selected_suppliers(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist("selected_suppliers")
+        Supplier.objects.filter(id__in=selected_ids, user=request.user).delete()
+    return redirect("view_suppliers")

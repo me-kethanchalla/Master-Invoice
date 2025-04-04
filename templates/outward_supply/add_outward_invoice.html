@@ -123,7 +123,11 @@
           {{ form.bill_number.errors }}
         </div>
       {% endif %}
-
+      {% if form.date.errors %}
+        <div class="alert alert-danger">
+          {{ form.date.errors }}
+        </div>
+{     % endif %}
       
       <!-- Add Discount Field -->
       <div class="section">

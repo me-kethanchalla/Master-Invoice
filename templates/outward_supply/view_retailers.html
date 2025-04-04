@@ -85,7 +85,7 @@
     {% block content %}
     <div class="retailer-container">
       <div class="header">
-        <h2><b>My Retailers</b></h2>
+        <h2><b><u>My Retailers</u></b></h2>
         <div class="buttons">
           <a href="{% url 'add_retailer' %}" class="button">Add Retailer</a>
       </div>
@@ -108,41 +108,54 @@
 
       <table class="table">
         <thead>
-          <tr>
-            <th>Retailer Name</th>
-            <th>Firm Name</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Credit</th>
-            <th>Edit</th>
-          </tr>
+            <tr>
+                <th><input type="checkbox" id="select-all" /></th>
+                <th>Retailer Name</th>
+                <th>Firm Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Credit</th>
+                <th>Edit</th>
+            </tr>
         </thead>
         <tbody>
-          {% for retailer in retailers %}
-          <tr>
-            <td>{{ retailer.person_name }}</td>
-            <td>{{ retailer.firm_name }}</td>
-            <td>{{ retailer.phone_number }}</td>
-            <td>{{ retailer.email_id }}</td>
-            <td>{{ retailer.address }}</td>
-            <td>{{ retailer.credit }}</td>
-            <td>
-              <a href="{% url 'edit_retailer' retailer.id %}" class="btn btn-sm btn-primary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-              <a href="{% url 'delete_retailer' retailer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Retailer?');">
-                <i class="fas fa-trash"></i> Delete
-            </a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7">No retailers found.</td>
-          </tr>
-          {% endfor %}
+            <form id="bulk-delete-form" method="post" action="{% url 'bulk_delete_retailers' %}">
+                {% csrf_token %}
+                {% for retailer in retailers %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selected_retailers" value="{{ retailer.id }}" class="select-checkbox" />
+                    </td>
+                    <td>{{ retailer.person_name }}</td>
+                    <td>{{ retailer.firm_name }}</td>
+                    <td>{{ retailer.phone_number }}</td>
+                    <td>{{ retailer.email_id }}</td>
+                    <td>{{ retailer.address }}</td>
+                    <td>{{ retailer.credit }}</td>
+                    <td>
+                        <a href="{% url 'edit_retailer' retailer.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'delete_retailer' retailer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Retailer?');">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">No retailers found.</td>
+                </tr>
+                {% endfor %}
+            </form>
         </tbody>
-      </table>
+    </table>
+    
+    <!-- Bulk Delete Button -->
+    <button type="submit" form="bulk-delete-form" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete selected retailers?');">
+        Delete Selected
+    </button>
+    
     </div>
 
     <div class="footer-button">
@@ -155,5 +168,43 @@
     </div>
 
     <!-- Bootstrap JS (necessary for dropdowns to function) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const selectAllCheckbox = document.getElementById("select-all");
+          const checkboxes = document.querySelectorAll(".select-checkbox");
+          let lastChecked = null;
+  
+          // Select all checkboxes when "Select All" is clicked
+          selectAllCheckbox.addEventListener("change", function () {
+              checkboxes.forEach((checkbox) => {
+                  checkbox.checked = this.checked;
+              });
+          });
+  
+          // Implement Shift+Click selection
+          checkboxes.forEach((checkbox) => {
+              checkbox.addEventListener("click", function (event) {
+                  if (!lastChecked) {
+                      lastChecked = this;
+                      return;
+                  }
+  
+                  if (event.shiftKey) {
+                      let inBetween = false;
+                      checkboxes.forEach((cb) => {
+                          if (cb === this || cb === lastChecked) {
+                              inBetween = !inBetween;
+                          }
+                          if (inBetween) {
+                              cb.checked = lastChecked.checked;
+                          }
+                      });
+                  }
+  
+                  lastChecked = this;
+              });
+          });
+      });
+  </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     {% endblock content %}
