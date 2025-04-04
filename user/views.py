@@ -234,3 +234,11 @@ def request_reset(request):
 
     
 
+# views.py
+from django.conf import settings
+from django.http import JsonResponse
+
+def db_info(request):
+    db_settings = settings.DATABASES.get('default', {})
+    engine = db_settings.get('ENGINE', 'Not Found')
+    return JsonResponse({'database_engine': engine})
