@@ -5,7 +5,7 @@ from .models import Retailer, Inventory, Outward_Invoice, ProductEntry
 from django.db.models import Q
 from decimal import Decimal
 import json
-from datetime import datetime
+from datetime import datetime, date
 
 @login_required
 def add_retailer(request):
@@ -117,6 +117,9 @@ def add_out_invoice(request):
                 retailer=retailer_obj,
                 discount=form.cleaned_data['discount']
             )
+            if date > date.today():
+                form.add_error('date', "Invalid date entered. Future dates are not allowed.")
+                return render(request, "outward_supply/add_outward_invoice.html", {"form": form, "retailers": retailers, "productJSON": productJSON, "message": "Error: Invalid Date"})
             
             invoice_total = Decimal('0.00')
             invoice_profit = Decimal('0.00')
@@ -217,3 +220,11 @@ def delete_retailer(request, id):
     ret = get_object_or_404(Retailer, id=id, user=request.user)
     ret.delete()
     return redirect('view_retailers')
+
+@login_required
+def bulk_delete_retailers(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist('selected_retailers')
+        Retailer.objects.filter(id__in=selected_ids).delete()
+    return redirect('view_retailers')
+

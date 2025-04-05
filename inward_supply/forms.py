@@ -1,9 +1,19 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 from .models import Supplier
 
 class InvoiceForm(forms.Form):
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Enter Date'}))
-    bill_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'}))
+    date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'Enter Date'})
+    )
+    bill_number = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'})
+    )
+
+    
 
 
 class SupplierForm(forms.ModelForm):
