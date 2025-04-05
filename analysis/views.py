@@ -334,7 +334,7 @@ def inward_transaction(request):
     one_year_date = AddMonths(today_date, -2)
     try: 
         inward_transaction_query_set = Transaction.objects\
-            .filter(user=request.user, add_date__range=[one_year_date, today_date], type=0).values('add_date')\
+            .filter(user=request.user, add_date__range=[one_year_date, today_date], type=1).values('add_date')\
             .annotate(payment=Sum('payment'))\
             .order_by('add_date')
         dates = [entry['add_date']  for entry in inward_transaction_query_set]
