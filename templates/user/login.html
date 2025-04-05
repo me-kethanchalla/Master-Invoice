@@ -160,7 +160,7 @@ input, label {
                 <h1>Sign In</h1>
                 {% csrf_token %}
                 {{ login_form.as_p }}
-                <a href="#" class="forgot-password-link">Forgot Password?</a>
+                <a href="{% url 'forgot_password' %}" class="forgot-password-link">Forgot Password?</a>
                 <p id="error1"></p>
                 <button type="submit" name="login">Sign In</button>
             </form>

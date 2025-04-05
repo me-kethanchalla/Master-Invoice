@@ -5,7 +5,7 @@ from .models import Inventory
 from django.db.models import Q
 from .forms import InventoryForm
 
-@login_required
+
 def inventory_list(request):
     query = request.GET.get('query', '')
     if query:
@@ -21,7 +21,7 @@ def inventory_list(request):
     # inventory = Inventory.objects.filter(user=request.user)
     # return render(request, 'inventory/inventory.html', {'inventory': inventory})
 
-@login_required
+
 def add_inventory(request):
     message = ""
     message_type = ""

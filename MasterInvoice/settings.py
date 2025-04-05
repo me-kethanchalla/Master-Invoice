@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-j9$idpufj!%on@27d-m=x+xa#%5$8+0@8l!^-plmo-o0&se^h+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["master-invoice.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -53,7 +54,9 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -85,12 +88,10 @@ LOGIN_URL = '/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -132,7 +133,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static") # this is your static folder
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR,'assets') #this is you assets folder.
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles') #this is you assets folder.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
@@ -148,6 +150,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
 EMAIL_PORT = 587  # Port for TLS
 EMAIL_USE_TLS = True  # Use TLS for secure communication
-EMAIL_HOST_USER = 'master.invoice253@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'lapd xglt jmxz omup'  # App password (see below)
+EMAIL_HOST_USER = 'master.invoice.while1@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'sbyf notk qmqb mtyk'  # App password (see below)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

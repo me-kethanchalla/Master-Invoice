@@ -16,4 +16,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout2'),
     path('forgot_password/', views.request_reset, name='forgot_password'),
     path('verify_reset/', views.verify_and_reset, name='verify_reset'),
+    path('db-info/', views.db_info, name='db_info'),
 ]  
