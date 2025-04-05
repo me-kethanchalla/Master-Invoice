@@ -1,3 +1,5 @@
+import sys
+import os
 import secrets
 import hashlib
 import datetime
@@ -30,7 +32,7 @@ def send_otp_email(to_email, otp):
     """Send an OTP via email."""
     subject = "Your OTP Code"
     message = f"Your One-Time Password (OTP) is: {otp}"
-    from_email = 'master.invoice253@gmail.com'  # Replace with your email address
+    from_email = 'master.invoice.while1@gmail.com'  # Replace with your email address
 
     try:
         send_mail(subject, message, from_email, [to_email])

@@ -93,8 +93,6 @@ DATABASES = {
     )
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -152,6 +150,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
 EMAIL_PORT = 587  # Port for TLS
 EMAIL_USE_TLS = True  # Use TLS for secure communication
-EMAIL_HOST_USER = 'master.invoice253@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'lapd xglt jmxz omup'  # App password (see below)
+EMAIL_HOST_USER = 'master.invoice.while1@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'sbyf notk qmqb mtyk'  # App password (see below)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
