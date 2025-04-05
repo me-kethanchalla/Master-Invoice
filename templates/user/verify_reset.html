@@ -2,27 +2,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify OTP & Reset Password</title>
+    <!-- Fetch Poppins from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styling */
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(#616161, black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Container with two columns */
+        .container {
+            display: flex;
+            width: 800px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Left Panel (Logo/Branding) */
+        .left-panel {
+            flex: 1;
+            background-color: #5ab3ad;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .left-panel img {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        .left-panel h1 {
+            color: #fff;
+            font-size: 26px;
+            margin: 0;
+            position: relative;
+        }
+        .left-panel h1::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #fff;
+        }
+        /* Right Panel (Form) */
+        .right-panel {
+            flex: 1;
+            padding: 30px;
+        }
+        .right-panel h2 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .right-panel h2::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #5ab3ad;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        form input {
+            padding: 8px;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        form button {
+            padding: 10px;
+            font-family: "Poppins", sans-serif;
+            background-color: #5ab3ad;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        form button:hover {
+            background-color: #429a93;
+        }
+        /* Message styling */
+        .messages p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: #ffe6e6;
+            border: 1px solid #ff9999;
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h2>Verify OTP & Reset Password</h2>
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-    <form method="POST">
-        {% csrf_token %}
-        <label for="otp">Enter OTP:</label>
-        <input type="text" name="otp" required>
+    <div class="container">
+        <!-- Left Panel with Logo and Branding -->
+        <div class="left-panel">
+            <img src="{% static 'user/images/master_invoice_logo.png' %}" alt="Master Invoice Logo">
+            <h1>Master Invoice</h1>
+        </div>
+        <!-- Right Panel with Verify OTP & Reset Password Form -->
+        <div class="right-panel">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <h2>Verify OTP &amp; Reset Password</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp" required>
 
-        <label for="password">New Password:</label>
-        <input type="password" name="password" required>
+                <label for="password">New Password:</label>
+                <input type="password" id="password" name="password" required>
 
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" name="confirm_password" required>
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
 
-        <button type="submit">Reset Password</button>
-    </form>
+                <button type="submit">Reset Password</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

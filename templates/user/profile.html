@@ -1,58 +1,110 @@
 {% extends "base.html" %}
 {% load static %} 
-    {% block style %}
+{% block style %}
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
   body {
-     background: linear-gradient(#616161, black);
-      color: white; /* Light text for contrast */
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #434343, #000000);
+    color: #333;
   }
-.profile-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 90vh; /* Full height to center vertically */
-}
-.profile-card {
-    background: white; /* Dark card background */
-    color: black ; /* Text color */
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Soft shadow */
-    border-radius: 10px;
-    width: 50%;
-    text-align: center;
-    margin: auto; /* Center horizontally */
-}
 
-.btn-primary {
-    background-color: #00c896;
+  .profile-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 60px; 
+    padding-bottom: 40px;
+  }
+
+  .profile-card {
+    background-color: #fff;
+    color: #222;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    text-align: center; /* ✨ Center content */
+  }
+
+  .profile-card h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    border-bottom: 4px solid #5ab3ad;
+    display: inline-block;
+    padding-bottom: 8px;
+  }
+
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ✨ Center each item */
+    gap: 10px;
+  }
+
+  .profile-details p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .profile-details strong {
+    font-weight: 500;
+    color: #111;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background-color: #5ab3ad;
+    color: white;
+    padding: 12px 20px;
+    margin-top: 30px;
     border: none;
-}
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-.btn-primary:hover {
-    background-color: #009a75;
-}
-    </style>
-   {% endblock style %}
-   {% block content %}
-    <body>
-        <section class="profile-section">
-            <div class="container">
-                <div class="profile-card">
-                  <div style="text-align: center; font-weight: bold; font-size: 24px; margin-bottom: 10px;">
-                    PROFILE
-                </div>
-                    <div class="profile-details">
-                        <p><strong>Firm Name:</strong> {{ user.profile.firm_name }}</p>
-                        <p><strong>Full Name:</strong> {{ user.profile.full_name }}</p>
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Phone:</strong> {{ user.profile.phone }}</p>
-                        <p><strong>GST Number:</strong> {{ user.profile.GST_number }}</p>
-                        <p><strong>Address:</strong> {{ user.profile.address }}</p>
-                        <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Edit Profile</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </body>
-    {% endblock content %}
+  .btn-primary:hover {
+    background-color: #429a93;
+  }
+
+  @media (max-width: 480px) {
+    .profile-card {
+      padding: 25px;
+    }
+
+    .profile-details p {
+      font-size: 15px;
+    }
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<section class="profile-section">
+  <div class="profile-card">
+    <h1>Profile</h1>
+    <div class="profile-details">
+      <p><strong>Firm Name:</strong> {{ user.profile.firm_name }}</p>
+      <p><strong>Full Name:</strong> {{ user.profile.full_name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Phone:</strong> {{ user.profile.phone }}</p>
+      <p><strong>GST Number:</strong> {{ user.profile.GST_number }}</p>
+      <p><strong>Address:</strong> {{ user.profile.address }}</p>
+    </div>
+    <a href="{% url 'edit_profile' %}" class="btn-primary">Edit Profile</a>
+  </div>
+</section>
+{% endblock content %}

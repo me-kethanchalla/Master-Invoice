@@ -68,3 +68,10 @@ def delete_inventory(request, id):
     item = get_object_or_404(Inventory, id=id, user=request.user)
     item.delete()
     return redirect('inventory_list')
+
+@login_required
+def bulk_delete(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist('selected_inventory')
+        Inventory.objects.filter(id__in=selected_ids).delete()
+    return redirect('inventory_list')

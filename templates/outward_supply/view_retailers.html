@@ -1,210 +1,239 @@
 {% extends "base.html" %}
 {% load static %}
-    {% block style %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'Final.css' %}" />
-    <style>
-      /* Your existing custom styles */
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(#616161, black);
-        min-height: 100vh;
-      }
-      .retailer-container {
-        width: 83%;
-        margin: 30px auto;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-      .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-      .form-group label {
-        width: 15%;
-        text-align: right;
-        margin-right: 20px;
-      }
-      .form-group input,
-      .form-group textarea {
-        flex-grow: 1;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-right: 120px;
-      }
-      .buttons {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .button {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .button:hover {
-        background-color: #0056b3;
-      }
-      .footer-button {
-        position: fixed;
-        bottom: 20px;
-        right: 10px;
-        color: white;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-      }
-      .footer-button i {
-        margin-right: 5px;
-      }
-      a {
-        text-decoration: none;
-      }
-    </style>
-    {% endblock style %}
-    {% block content %}
-    <div class="retailer-container">
-      <div class="header">
-        <h2><b><u>My Retailers</u></b></h2>
-        <div class="buttons">
-          <a href="{% url 'add_retailer' %}" class="button">Add Retailer</a>
-      </div>
-      </div>
-      <br />
-      <div class="section">
-        <form method="get" action="{% url 'view_retailers' %}">
-          <label for="search">Search:</label>
-          <input 
-              type="text" 
-              id="search" 
-              name="query" 
-              style="width: 350px;" 
-              placeholder="Search Retailer with Name or Firm"
-              value="{{ request.GET.query|default_if_none:'' }}"
-          >
-          <button type="submit">Search</button>
-      </form>
-      </div>
 
-      <table class="table">
+{% block style %}
+<style>
+  /* Import Poppins Font */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+  /* Global styling */
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#616161, black);
+    min-height: 100vh;
+  }
+
+  /* Retailers Container */
+  .retailer-container {
+    width: 83%;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+  }
+  /* When in select-mode, show checkboxes & bulk-delete */
+  .retailer-container .select-col { display: none; }
+  .retailer-container #bulk-delete-btn { display: none; }
+  .retailer-container.select-mode .select-col { display: table-cell; }
+  .retailer-container.select-mode #bulk-delete-btn { display: inline-block; }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .header h2 {
+    font-size: 25px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #5ab3ad;
+  }
+
+  /* Buttons */
+  .btn-custom, .btn-toggle {
+    background-color: #5ab3ad;
+    color: #fff;
+    padding: 8px 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;        
+    transition: background-color 0.3s;
+    font-size: 15px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn-custom:hover, .btn-toggle:hover {
+    background-color: #429a93;
+  }
+
+  /* Search */
+  .search-group {
+    max-width: 600px;
+    margin-bottom: 20px;
+  }
+  .search-group .input-group {
+    display: flex;
+    width: 100%;
+  }
+  .search-group .form-control {
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    padding: 8px;
+    font-size: 15px;
+    flex: 1;
+  }
+  .search-group .btn-search {
+    border-radius: 0 4px 4px 0;
+    background-color: #5fc3af;
+    color: #fff;
+    border: none;
+    padding: 8px 13px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+  }
+  .search-group .btn-search:hover {
+    background-color: #429a93;
+  }
+
+  /* Table */
+  .table-responsive {
+    margin-top: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  table thead {
+    background-color: #5ab3ad;
+    color: #fff;
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  /* Action buttons side‑by‑side */
+  td.actions a {
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .retailer-container { width: 90%; padding: 15px 20px; }
+    .header h2 { font-size: 22px; }
+    table th, table td { font-size: 13px; padding: 8px; }
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="retailer-container" id="retailer-container">
+  <div class="header">
+    <h2><b>My Retailers</b></h2>
+    <div>
+      <a href="{% url 'add_retailer' %}" class="btn-custom">Add Retailer</a>
+      <button id="toggle-select" class="btn-toggle">Delete Multiple</button>
+    </div>
+  </div>
+
+  <div class="search-group">
+    <form method="get" action="{% url 'view_retailers' %}">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="query"
+          placeholder="Search Retailer by Name or Firm"
+          value="{{ request.GET.query|default_if_none:'' }}"
+        />
+        <button class="btn-search" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <form method="post" action="{% url 'bulk_delete_retailers' %}">
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table>
         <thead>
-            <tr>
-                <th><input type="checkbox" id="select-all" /></th>
-                <th>Retailer Name</th>
-                <th>Firm Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Credit</th>
-                <th>Edit</th>
-            </tr>
+          <tr>
+            <th class="select-col"><input type="checkbox" id="select-all"></th>
+            <th>Retailer Name</th>
+            <th>Firm Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Credit</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-            <form id="bulk-delete-form" method="post" action="{% url 'bulk_delete_retailers' %}">
-                {% csrf_token %}
-                {% for retailer in retailers %}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="selected_retailers" value="{{ retailer.id }}" class="select-checkbox" />
-                    </td>
-                    <td>{{ retailer.person_name }}</td>
-                    <td>{{ retailer.firm_name }}</td>
-                    <td>{{ retailer.phone_number }}</td>
-                    <td>{{ retailer.email_id }}</td>
-                    <td>{{ retailer.address }}</td>
-                    <td>{{ retailer.credit }}</td>
-                    <td>
-                        <a href="{% url 'edit_retailer' retailer.id %}" class="btn btn-sm btn-primary">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="{% url 'delete_retailer' retailer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Retailer?');">
-                            <i class="fas fa-trash"></i> Delete
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="8">No retailers found.</td>
-                </tr>
-                {% endfor %}
-            </form>
+          {% for retailer in retailers %}
+          <tr>
+            <td class="select-col">
+              <input type="checkbox" name="selected_retailers" value="{{ retailer.id }}">
+            </td>
+            <td>{{ retailer.person_name }}</td>
+            <td>{{ retailer.firm_name }}</td>
+            <td>{{ retailer.phone_number }}</td>
+            <td>{{ retailer.email_id }}</td>
+            <td>{{ retailer.address }}</td>
+            <td>{{ retailer.credit }}</td>
+            <td class="actions">
+              <a href="{% url 'edit_retailer' retailer.id %}" class="btn-custom" style="font-size:13px; padding:5px 8px;">
+                <i class="fas fa-edit"></i> Edit
+              </a>
+              <a href="{% url 'delete_retailer' retailer.id %}" class="btn-custom" style="background:#e40000;font-size:13px; padding:5px 8px;"
+                 onclick="return confirm('Delete this retailer?');">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center">No retailers found.</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
-    
-    <!-- Bulk Delete Button -->
-    <button type="submit" form="bulk-delete-form" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete selected retailers?');">
-        Delete Selected
+      </table>
+    </div>
+
+    <button id="bulk-delete-btn" type="submit" class="btn-custom" style="background:#e40000; margin-top:15px;"
+            onclick="return confirm('Delete selected retailers?');">
+      <i class="fas fa-trash"></i> Delete Selected
     </button>
-    
-    </div>
+  </form>
+</div>
 
-    <div class="footer-button">
-      <a class="nav-link" href="#">
-        <i
-          class="far fa-arrow-alt-circle-up"
-          style="font-size: 35px; color: aliceblue; padding-right: 20px;"
-        ></i>
-      </a>
-    </div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container   = document.getElementById('retailer-container');
+    const toggleBtn   = document.getElementById('toggle-select');
+    const selectAll   = document.getElementById('select-all');
 
-    <!-- Bootstrap JS (necessary for dropdowns to function) -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-          const selectAllCheckbox = document.getElementById("select-all");
-          const checkboxes = document.querySelectorAll(".select-checkbox");
-          let lastChecked = null;
-  
-          // Select all checkboxes when "Select All" is clicked
-          selectAllCheckbox.addEventListener("change", function () {
-              checkboxes.forEach((checkbox) => {
-                  checkbox.checked = this.checked;
-              });
-          });
-  
-          // Implement Shift+Click selection
-          checkboxes.forEach((checkbox) => {
-              checkbox.addEventListener("click", function (event) {
-                  if (!lastChecked) {
-                      lastChecked = this;
-                      return;
-                  }
-  
-                  if (event.shiftKey) {
-                      let inBetween = false;
-                      checkboxes.forEach((cb) => {
-                          if (cb === this || cb === lastChecked) {
-                              inBetween = !inBetween;
-                          }
-                          if (inBetween) {
-                              cb.checked = lastChecked.checked;
-                          }
-                      });
-                  }
-  
-                  lastChecked = this;
-              });
-          });
+    toggleBtn.addEventListener('click', e => {
+      e.preventDefault();
+      container.classList.toggle('select-mode');
+      toggleBtn.textContent = container.classList.contains('select-mode')
+        ? 'Cancel'
+        : 'Delete Multiple';
+    });
+
+    if (selectAll) {
+      selectAll.addEventListener('click', () => {
+        document.querySelectorAll("input[name='selected_retailers']").forEach(cb => {
+          cb.checked = selectAll.checked;
+        });
       });
-  </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% endblock content %}
+    }
+  });
+</script>
+
+<!-- FontAwesome for icons -->
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+{% endblock content %}

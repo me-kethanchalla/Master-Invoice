@@ -1,153 +1,195 @@
 {% extends "base.html" %}
 {% load static %}
-  {% block style %}
-  <style>
-    /* Do not change any existing Final.css styles */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(#616161, black);
-      min-height: 100vh;
-    }
-    .invoice-container {
-      width: 83%;
-      margin: 30px auto;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-    }
-    .header h2 {
-      border-bottom: 2px solid black;
-      margin-bottom: 0;
-      padding-bottom: 4px;
-    }
-    .header .info {
-      text-align: right;
-    }
-    .section {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      align-items: center;
-    }
-    .section label {
-      margin-right: 10px;
-      font-weight: bold;
-    }
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    .table th, .table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    .table th {
-      background-color: #f2f2f2;
-    }
-    .totals {
-      text-align: right;
-      margin-top: 10px;
-    }
-    .totals span {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .footer {
-      text-align: left;
-      margin-top: 20px;
-    }
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-    .button {
-      background-color: #007bff;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .button:hover {
-      background-color: #0056b3;
-    }
-    .footer-button {
-      position: fixed;
-      bottom: 20px;
-      right: 10px;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-    .footer-button i {
-      margin-right: 5px;
-    }
-  </style>
-  {% endblock style %}
-  {% block content %}
-  <div class="invoice-container">
-    <div class="header">
-      <h2><b>Retailer Invoice Bill</b></h2>
+{% block style %}
+<style>
+  /* Import Poppins Font */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+  /* Global styling */
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#616161, black);
+    min-height: 100vh;
+  }
+
+  /* Invoice Container styling */
+  .invoice-container {
+    width: 75%;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 40px; /* Increased padding for more spacious layout */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Responsive table wrapper */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Header styling */
+  .header {
+    margin-bottom: 20px;
+  }
+  .header h2 {
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #5ab3ad;
+  }
+  
+  /* Invoice info (Bill Number & Date) placed below heading */
+  .info {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Section and form element styling */
+  .section {
+    margin-bottom: 25px; /* Increased margin for better spacing */
+  }
+  .section label {
+    font-size: 15px;
+    color: #333;
+    margin-right: 10px;
+  }
+  select, input {
+    font-size: 15px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  /* Table styling */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Increased padding for clarity */
+    text-align: left;
+  }
+  .table th {
+    background-color: #5ab3ad;
+    color: #fff;
+  }
+
+  /* Totals styling */
+  .totals {
+    text-align: right;
+    margin-top: 15px;
+    font-size: 15px;
+    color: #333;
+  }
+  .totals span, .totals strong {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  /* Footer styling */
+  .footer {
+    text-align: left;
+    margin-top: 20px;
+    font-size: 15px;
+    color: #333;
+  }
+
+  /* Buttons styling */
+  .buttons {
+    margin-top: 25px; /* Increased gap above buttons */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+  }
+  .button {
+    background-color: #5ab3ad;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 15px;
+  }
+  .button:hover {
+    background-color: #429a93;
+  }
+
+  /* Footer button styling */
+  .footer-button {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    color: white;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  .footer-button i {
+    margin-right: 5px;
+  }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="invoice-container">
+  <div class="header">
+    <h2><b>Retailer Invoice Bill</b></h2>
+  </div>
+  
+  <!-- Wrap all input fields in a form -->
+  <form id="invoice-form" method="POST" action="">
+    {% csrf_token %}
+    
+    <div class="info">
+      <p>
+        Bill Number: {{ form.bill_number }}<br>
+        Date of Issue: {{ form.date }}
+      </p>
+    </div>
+    {% if form.bill_number.errors %}
+      <div class="alert alert-danger">
+        {{ form.bill_number.errors }}
+      </div>
+    {% endif %}
+    {% if form.date.errors %}
+      <div class="alert alert-danger">
+        {{ form.date.errors }}
+      </div>
+    {% endif %}
+    
+    <!-- Add Discount Field -->
+    <div class="section">
+      <label for="id_discount">Discount (%):</label>
+      {{ form.discount }}
     </div>
     
-    <!-- Wrap all input fields in a form -->
-    <form id="invoice-form" method="POST" action="">
-      {% csrf_token %}
-      
-      <div class="info">
-        <p>
-          Bill Number: {{ form.bill_number }}<br>
-          <br>
-          Date of Issue: {{ form.date }}
-        </p>
-      </div>
-      {% if form.bill_number.errors %}
-        <div class="alert alert-danger">
-          {{ form.bill_number.errors }}
-        </div>
-      {% endif %}
-      {% if form.date.errors %}
-        <div class="alert alert-danger">
-          {{ form.date.errors }}
-        </div>
-{     % endif %}
-      
-      <!-- Add Discount Field -->
-      <div class="section">
-        <label for="id_discount">Discount (%):</label>
-        {{ form.discount }}
-      </div>
-      
-      <div class="section">
-        <label for="billed-to">Billed To:</label>
-        <select id="billed-to" name="billed-to" required>
-          <option value="" selected hidden>Select one</option>
-          {% for supplier in suppliers %}
-            <option value="{{ supplier.id }}">{{ supplier.firm_name }}</option>
-          {% empty %}
-            <option value="" disabled>No Retailers available</option>
-          {% endfor %}
-        </select>
-      </div>   
-      
-      <!-- Invoice Table for Products -->
+    <div class="section">
+      <label for="billed-to">Billed To:</label>
+      <select id="billed-to" name="billed-to" required>
+        <option value="" selected hidden>Select one</option>
+        {% for retailer in retailers %}
+          <option value="{{ retailer.id }}">{{ retailer.firm_name }}</option>
+        {% empty %}
+          <option value="" disabled>No Retailers available</option>
+        {% endfor %}
+      </select>
+    </div>   
+    
+    <!-- Invoice Table for Products wrapped in a responsive container -->
+    <div class="table-responsive">
       <table class="table" id="invoice-table">
         <thead>
           <tr>
@@ -162,58 +204,74 @@
           <!-- Rows will be added dynamically by JS -->
         </tbody>
       </table>
-      
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
+    </div>
     
-      
-      <!-- Buttons for Adding Rows and Submitting Invoice -->
-      <div class="buttons">
-        <button type="button" class="button" onclick="addRow()">Add Product</button>
-        <button type="submit" class="button">Add Bill</button>
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
       </div>
-    </form>
-    
-    <!-- Totals (calculated via JS) -->
-    <div class="totals">
-      <span id="subtotal">Subtotal: ₹0.00</span>
-      <span id="tax-display">Tax: ₹0.00</span>
-      <span id="disc">Discount: 0%</span>
-      <strong id="bill-total">Bill Total: ₹0.00</strong>
+    {% endif %}
+  
+    <!-- Buttons for Adding Rows and Submitting Invoice -->
+    <div class="buttons">
+      <button type="button" class="button" onclick="addRow()">Add Product</button>
+      <button type="submit" class="button">Add Bill</button>
     </div>
-    
-    <div class="footer">
-      <p><br><br>Authorized by:</p>
-    </div>
-    
-    <div class="footer-button">
-      <a class="nav-link" href="#">
-        <i class="far fa-arrow-alt-circle-up" style="font-size: 35px; color: aliceblue; padding-right: 20px;"></i>
-      </a>
-    </div>
+  </form>
+  
+  <!-- Totals (calculated via JS) -->
+  <div class="totals">
+    <span id="subtotal">Subtotal: ₹0.00</span>
+    <span id="tax-display">Tax: ₹0.00</span>
+    <span id="disc">Discount: 0%</span>
+    <strong id="bill-total">Bill Total: ₹0.00</strong>
   </div>
+  
+  <div class="footer">
+    <p><br><br>Authorized by:</p>
+  </div>
+  
+  <div class="footer-button">
+    <a class="nav-link" href="#">
+      <i class="far fa-arrow-alt-circle-up" style="font-size: 35px; color: aliceblue; padding-right: 20px;"></i>
+    </a>
+  </div>
+</div>
 
-  <!-- JavaScript: Inject product data and add row functionality -->
-  <script>
-    // Parse product JSON passed from the view
-    const productData = JSON.parse('{{ productJSON|escapejs }}');
-  
-    // Helper: find product object by its id
-    function getProductById(productId) {
+<!-- JavaScript: Inject product data and add row functionality -->
+<script>
+  const productData = JSON.parse('{{ productJSON|escapejs }}');
+
+  function getProductById(productId) {
       return productData.find(p => p.id == productId);
-    }
-  
-    // Get discount value from discount field (assumed id="id_discount")
-    function getDiscount() {
-      const discountField = document.getElementById("id_discount");
-      return discountField ? parseFloat(discountField.value) || 0 : 0;
-    }
-  
-    // Update a row when a product is selected
-    function updateRow(selectEl) {
+  }
+
+  function addRow() {
+      const tbody = document.getElementById("invoice-table").getElementsByTagName("tbody")[0];
+      let newRow = tbody.insertRow();
+
+      let cellProduct = newRow.insertCell(0);
+      let cellUnitCost = newRow.insertCell(1);
+      let cellQuantity = newRow.insertCell(2);
+      let cellAmount = newRow.insertCell(3);
+      let cellAction = newRow.insertCell(4);
+      cellProduct.innerHTML = `<select name="product_id[]" class="form-control product-select" onchange="updateRow(this)" required>
+                                  <option value="">Select Product</option>
+                                  ${productData.map(prod => `<option value="${prod.id}">${prod.name}</option>`).join('')}
+                               </select>`;
+      cellUnitCost.innerHTML = `<input type="number" name="unit_cost[]" class="form-control unit-cost" value="0" readonly>`;
+      cellQuantity.innerHTML = `<input type="number" name="quantity[]" class="form-control quantity" value="1" min="1" oninput="updateAmount(this)" required>`;
+      cellAmount.innerHTML = `<input type="number" name="amount[]" class="form-control amount" value="0" readonly>`;
+      cellAction.innerHTML = `<button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>`;
+  }
+
+  function removeRow(btn) {
+      let row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+      updateTotals();
+  }
+
+  function updateRow(selectEl) {
       let row = selectEl.parentNode.parentNode;
       let productId = selectEl.value;
       let unitCostInput = row.querySelector(".unit-cost");
@@ -221,146 +279,68 @@
       let amountInput = row.querySelector(".amount");
 
       if (productId) {
-        let prod = getProductById(productId);
-        if (prod) {
-          unitCostInput.value = prod.sale_price;
-          // Set the max attribute to the product's available quantity
-          quantityInput.max = prod.available;
-          // Optionally, if the current quantity is greater than available, reset it
-          let currentQty = parseInt(quantityInput.value) || 1;
-          if (currentQty > prod.available) {
-            quantityInput.value = prod.available;
+          let prod = getProductById(productId);
+          if (prod) {
+              unitCostInput.value = prod.sale_price;
+              let quantity = parseInt(quantityInput.value) || 1;
+              let total = (prod.sale_price * quantity);
+              amountInput.value = total.toFixed(2);
           }
-          let quantity = parseInt(quantityInput.value) || 1;
-          let total = (prod.sale_price * quantity) * (1 + (prod.gst / 100));
-          amountInput.value = total.toFixed(2);
-        }
       } else {
-        unitCostInput.value = 0;
-        amountInput.value = 0;
+          unitCostInput.value = 0;
+          amountInput.value = 0;
       }
       updateTotals();
-    }
+  }
 
-  
-    // Update row when quantity changes
-    function updateAmount(quantityEl) {
+  function updateAmount(quantityEl) {
       let row = quantityEl.parentNode.parentNode;
       let productSelect = row.querySelector(".product-select");
       let productId = productSelect.value;
       let unitCostInput = row.querySelector(".unit-cost");
       let amountInput = row.querySelector(".amount");
-      let discount = getDiscount();
-    
+
       if (productId) {
-        let prod = getProductById(productId);
-        if (prod) {
-          let quantity = parseInt(quantityEl.value) || 1;
-          let sale_price = parseFloat(prod.sale_price);
-          let gst = parseFloat(prod.gst);
-          let rowTotal = sale_price * quantity * (1 + (gst / 100)) * (1 - discount / 100);
-          amountInput.value = rowTotal.toFixed(2);
-        }
+          let prod = getProductById(productId);
+          if (prod) {
+              let quantity = parseInt(quantityEl.value) || 1;
+              let total = (prod.sale_price * quantity) * (1 + (prod.gst / 100));
+              amountInput.value = total.toFixed(2);
+          }
       }
       updateTotals();
-    }
-    
-    // Recalculate and update invoice totals
-    function updateTotals() {
+  }
+
+  function updateTotals() {
       let rows = document.querySelectorAll("#invoice-table tbody tr");
-      let globalSubtotal = 0;
-      let globalTax = 0;
-      let globalTotal = 0;
-      let discount = getDiscount();
-    
+      let subtotal = 0;
+      let tax = 0;
+      
       rows.forEach(row => {
-        let productSelect = row.querySelector(".product-select");
-        let quantityInput = row.querySelector(".quantity");
-        if (productSelect && quantityInput) {
-          let productId = productSelect.value;
-          let quantity = parseInt(quantityInput.value) || 1;
-          if (productId) {
-            let prod = getProductById(productId);
-            if (prod) {
+          let productSelect = row.querySelector(".product-select");
+          let quantityEl = row.querySelector(".quantity");
+          if (productSelect && quantityEl && productSelect.value) {
+              let prod = getProductById(productSelect.value);
+              let quantity = parseInt(quantityEl.value) || 1;
               let sale_price = parseFloat(prod.sale_price);
               let gst = parseFloat(prod.gst);
-              let rowSubtotal = sale_price * quantity;
-              let rowTax = rowSubtotal * (gst / 100);
-              let rowTotal = rowSubtotal * (1 + (gst / 100)) * (1 - discount / 100);
-    
-              globalSubtotal += rowSubtotal;
-              globalTax += rowTax;
-              globalTotal += rowTotal;
-            }
+              subtotal += sale_price * quantity;
+              tax += sale_price * quantity * (gst / 100);
           }
-        }
       });
-      document.getElementById("subtotal").textContent = `Subtotal: ₹${globalSubtotal.toFixed(2)}`;
-      document.getElementById("tax-display").textContent = `Tax: ₹${globalTax.toFixed(2)}`;
-      document.getElementById("disc").textContent = `Discount: ${discount.toFixed(2)}%`;
-      document.getElementById("bill-total").textContent = `Bill Total: ₹${globalTotal.toFixed(2)}`;
-    }
-    
-    // Function to add a new product row
-    function addRow() {
-      const tbody = document.getElementById("invoice-table").getElementsByTagName("tbody")[0];
-      let newRow = tbody.insertRow();
-    
-      // Create cells for Product, Unit Cost, Quantity, Amount, and Action
-      let cellProduct = newRow.insertCell(0);
-      let cellUnitCost = newRow.insertCell(1);
-      let cellQuantity = newRow.insertCell(2);
-      let cellAmount = newRow.insertCell(3);
-      let cellAction = newRow.insertCell(4);
-    
-      // Product dropdown with name "product_id[]"
-      cellProduct.innerHTML = `
-        <select name="product_id[]" class="form-control product-select" onchange="updateRow(this)" required>
-          <option value="">Select Product</option>
-          ${productData.map(prod => `<option value="${prod.id}">${prod.name}</option>`).join('')}
-        </select>
-      `;
-    
-      // Unit Cost (read-only)
-      cellUnitCost.innerHTML = `<input type="number" name="unit_cost[]" class="form-control unit-cost" value="0" readonly>`;
+      let total = subtotal + tax;
       
-      // Quantity input
-      cellQuantity.innerHTML = `<input type="number" name="quantity[]" class="form-control quantity" value="1" min="1" oninput="updateAmount(this)" required>`;
-      
-      // Amount input (read-only)
-      cellAmount.innerHTML = `<input type="number" name="amount[]" class="form-control amount" value="0" readonly>`;
-      
-      // Remove button
-      cellAction.innerHTML = `<button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>`;
-    }
-    
-    // Remove a row and update totals
-    function removeRow(btn) {
-      let row = btn.parentNode.parentNode;
-      row.parentNode.removeChild(row);
-      updateTotals();
-    }
-    
-    // When page loads, add an initial row and set discount event listener
-    window.onload = function() {
+      document.getElementById("subtotal").textContent = `Subtotal: ₹${subtotal.toFixed(2)}`;
+      document.getElementById("tax-display").textContent = `Tax: ₹${tax.toFixed(2)}`;
+      document.getElementById("disc").textContent = `Discount: ${parseFloat(document.getElementById("id_discount").value || 0).toFixed(2)}%`;
+      document.getElementById("bill-total").textContent = `Bill Total: ₹${total.toFixed(2)}`;
+  }
+
+  window.onload = function() {
       addRow();
       updateTotals();
-    
-      let discountField = document.getElementById("id_discount");
-      if (discountField) {
-        discountField.addEventListener("input", function() {
-          let rows = document.querySelectorAll("#invoice-table tbody tr");
-          rows.forEach(row => {
-            let quantityEl = row.querySelector(".quantity");
-            if (quantityEl) {
-              updateAmount(quantityEl);
-            }
-          });
-          updateTotals();
-        });
-      }
-    }
-  </script>
-  <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  {% endblock content %}
+  }
+</script>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

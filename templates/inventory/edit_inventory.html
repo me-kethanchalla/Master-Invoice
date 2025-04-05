@@ -1,108 +1,133 @@
 {% extends "base.html" %}
 {% load static %}
-  {% block style %}
-     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(#616161, black);
-        min-height: 100vh;
-      }
-      .container-box {
-        width: 85%;
-        margin: 30px auto;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .form-label {
-        font-weight: bold;
-        white-space: nowrap;
-      }
-      .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      .form-group label {
-        flex: 0 0 140px;
-        text-align: right;
-        margin-right: 10px;
-      }
-      .form-group input,
-      .form-group textarea {
-        flex: 1;
-      }
-      .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .button {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .button:hover {
-        background-color: #0056b3;
-      }
-    </style>
-    {% endblock style %}
-    {% block content %}
-    <div class="container-box">
-      <h2 class="text-center"><b>Edit Inventory Item</b></h2>
-      <br />
+{% block style %}
+<style>
+  /* Import Poppins Font */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-      <form method="POST">
-        {% csrf_token %}
-        
-        <div class="form-group">
-          <label for="product_name">Product Name:</label>
-          <input type="text" class="form-control" id="product_name" name="product_name" value="{{ item.product_name }}" required />
-        </div>
-
-        <div class="form-group">
-          <label for="item_id">Item ID:</label>
-          <input type="text" class="form-control" id="item_id" name="item_id" value="{{ item.item_id }}" required />
-        </div>
-
-        <div class="form-group">
-          <label for="quantity">Quantity:</label>
-          <input type="number" class="form-control" id="quantity" name="quantity" value="{{ item.quantity }}" required />
-        </div>
-
-        <div class="form-group">
-          <label for="cost_price">Cost Price:</label>
-          <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ item.cost_price }}" required step="0.01" />
-        </div>
-
-        <div class="form-group">
-          <label for="sale_price">Sale Price:</label>
-          <input type="number" class="form-control" id="sale_price" name="sale_price" value="{{ item.sale_price }}" required step="0.01" />
-        </div>
-
-        <div class="form-group">
-          <label for="max_retail_price">Max Retail Price:</label>
-          <input type="number" class="form-control" id="max_retail_price" name="max_retail_price" value="{{ item.max_retail_price }}" required step="0.01" />
-        </div>
-
-        <div class="form-group">
-          <label for="gst">GST (%):</label>
-          <input type="number" class="form-control" id="gst" name="gst" value="{{ item.gst }}" required step="0.01" />
-        </div>
-
-        <div class="buttons">
-          <button type="submit" class="button">Save Changes</button>
-          <a href="{% url 'inventory_list' %}" class="button" style="background-color: red;">Cancel</a>
-        </div>
-      </form>
+  /* Global styling */
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#616161, black);
+    min-height: 100vh;
+  }
+  
+  /* Container styling matching our consistent look */
+  .container-box {
+    width: 75%;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px 30px;
+  }
+  
+  /* Header styling */
+  /* .container-box h2 {
+    font-size: 25px;
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: center;
+    margin: 0 0 15px;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #5ab3ad;
+  } */
+  .container-box h2 {
+  font-size: 25px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: center;
+  margin: 0 0 15px;
+  display: inline-block;  /* Important */
+  border-bottom: 3px solid #5ab3ad;  /* Accent line only under text */
+  padding-bottom: 10px;
+}
+  
+  /* Form group styling */
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .form-group label {
+    width: 25%;
+    text-align: right;
+    margin-right: 15px;
+    font-size: 15px;
+    color: #333;
+  }
+  .form-group input,
+  .form-group textarea {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+  }
+  
+  /* Buttons styling */
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .button {
+    background-color: #5ab3ad;
+    color: #fff;
+    padding: 8px 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .button:hover {
+    background-color: #429a93;
+  }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-box">
+  <h2><b>Edit Inventory Item</b></h2>
+  <br />
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="product_name">Product Name:</label>
+      <input type="text" class="form-control" id="product_name" name="product_name" value="{{ item.product_name }}" required />
     </div>
-    {% endblock content %}
+    <div class="form-group">
+      <label for="item_id">Item ID:</label>
+      <input type="text" class="form-control" id="item_id" name="item_id" value="{{ item.item_id }}" required />
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity:</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="{{ item.quantity }}" required />
+    </div>
+    <div class="form-group">
+      <label for="cost_price">Cost Price:</label>
+      <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ item.cost_price }}" required step="0.01" />
+    </div>
+    <div class="form-group">
+      <label for="sale_price">Sale Price:</label>
+      <input type="number" class="form-control" id="sale_price" name="sale_price" value="{{ item.sale_price }}" required step="0.01" />
+    </div>
+    <div class="form-group">
+      <label for="max_retail_price">Max Retail Price:</label>
+      <input type="number" class="form-control" id="max_retail_price" name="max_retail_price" value="{{ item.max_retail_price }}" required step="0.01" />
+    </div>
+    <div class="form-group">
+      <label for="gst">GST (%):</label>
+      <input type="number" class="form-control" id="gst" name="gst" value="{{ item.gst }}" required step="0.01" />
+    </div>
+    <div class="buttons">
+      <button type="submit" class="button" >Save Changes</button>
+      <a href="{% url 'inventory_list' %}" class="button" style="background-color: red;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock content %}

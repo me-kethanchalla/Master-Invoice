@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
+from django.core.validators import MinValueValidator
 
 
 class Inventory(models.Model):
@@ -8,9 +9,9 @@ class Inventory(models.Model):
     product_name = models.CharField(max_length=255)
     item_id = models.CharField(max_length=50)  
     quantity = models.PositiveIntegerField()  
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2)  
-    sale_price = models.DecimalField(max_digits=10, decimal_places=2)  
-    max_retail_price = models.DecimalField(max_digits=10, decimal_places=2)  
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])  
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])  
+    max_retail_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])  
     gst = models.DecimalField(max_digits=5, decimal_places=2)  
     profit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  
     total_qty_sold = models.PositiveIntegerField(default=0)  

@@ -80,7 +80,30 @@ def add_out_invoice(request):
         print("POST received")
         form = OutwardInvoiceForm(request.POST)
         if form.is_valid():
-            # Pre-check: Validate that for each product the requested quantity does not exceed available stock
+            bill_number = form.cleaned_data['bill_number']
+            invoice_date = form.cleaned_data['date']
+
+            # Check for future date
+            if invoice_date > date.today():
+                form.add_error('date', "Invalid date entered. Future dates are not allowed.")
+                return render(request, "outward_supply/add_outward_invoice.html", {
+                    "form": form,
+                    "retailers": retailers,
+                    "productJSON": productJSON,
+                    "message": "Error: Invalid Date"
+                })
+
+            #  Check for duplicate bill number BEFORE saving
+            if Outward_Invoice.objects.filter(user=request.user, bill_number=bill_number).exists():
+                form.add_error('bill_number', "Bill number already exists. Please use a unique bill number.")
+                return render(request, "outward_supply/add_outward_invoice.html", {
+                    "form": form,
+                    "retailers": retailers,
+                    "productJSON": productJSON,
+                    "message": "Error: Duplicate Bill Number"
+                })
+
+            # Pre-check: Validate stock
             product_ids = request.POST.getlist('product_id[]')
             quantities = request.POST.getlist('quantity[]')
             stock_errors = []
@@ -95,32 +118,28 @@ def add_out_invoice(request):
                         stock_errors.append(
                             f"Not enough stock for {product_obj.product_name} (Available: {product_obj.quantity}, requested: {quantity_val})."
                         )
+
             if stock_errors:
-                # If there are errors, add them to the form's non-field errors and re-render
                 form.add_error(None, " ".join(stock_errors))
-                return render(request, "outward_supply/add_out_invoice.html", {
+                return render(request, "outward_supply/add_outward_invoice.html", {
                     "form": form,
-                    "suppliers": retailers,
+                    "retailers": retailers,
                     "productJSON": productJSON,
                     "message": "Error: " + " ".join(stock_errors)
                 })
-            
-            # If no stock errors, continue with invoice creation
-            print("Form is valid")
+
+            # Passed all checks, now create invoice
             retailer_id = request.POST.get('billed-to')
             retailer_obj = get_object_or_404(Retailer, id=retailer_id, user=request.user) if retailer_id else None
-            
+
             invoice = Outward_Invoice.objects.create(
                 user=request.user,
-                date=form.cleaned_data['date'],
-                bill_number=form.cleaned_data['bill_number'],
+                date=invoice_date,
+                bill_number=bill_number,
                 retailer=retailer_obj,
                 discount=form.cleaned_data['discount']
             )
-            if date > date.today():
-                form.add_error('date', "Invalid date entered. Future dates are not allowed.")
-                return render(request, "outward_supply/add_outward_invoice.html", {"form": form, "retailers": retailers, "productJSON": productJSON, "message": "Error: Invalid Date"})
-            
+
             invoice_total = Decimal('0.00')
             invoice_profit = Decimal('0.00')
             total_items = 0
@@ -184,7 +203,7 @@ def add_out_invoice(request):
     
     return render(request, "outward_supply/add_outward_invoice.html", {
         "form": form,
-        "suppliers": retailers,
+        "retailers": retailers,
         "productJSON": productJSON,
         "message": message
     })

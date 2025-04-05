@@ -5,123 +5,116 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Edit Profile</title>
+    <!-- Fetch Poppins from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Optionally keep Bootstrap if needed -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
         background: linear-gradient(#616161, black);
         min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .container-box {
         width: 50%;
-        margin: 30px auto;
+        max-width: 600px;
         background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
+        border-radius: 16px;
+        padding: 30px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
-      .form-label {
-        font-weight: bold;
-        white-space: nowrap;
+      h2 {
+        font-size: 26px;
+        text-align: center;
+        position: relative;
+        margin-bottom: 20px;
+      }
+      h2::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%;
+        height: 2px;
+        background-color: #5ab3ad;
       }
       .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
       .form-group label {
-        flex: 0 0 140px;
-        text-align: right;
-        margin-right: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 5px;
       }
       .form-group input,
       .form-group textarea {
-        flex: 1;
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
       }
-      .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .button {
-        background-color: #007bff;
-        color: #fff;
+      .btn-primary {
+        background-color: #5ab3ad;
+        border-color: #5ab3ad;
         padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+        font-size: 14px;
+        border-radius: 5px;
       }
-      .button:hover {
-        background-color: #0056b3;
+      .btn-primary:hover {
+        background-color: #429a93;
+        border-color: #000000;
       }
     </style>
   </head>
-<body>
+  <body>
     <div class="container-box">
-        <h2 class="text-center"><b>Enter Details</b></h2>
-        <br />
-    <section class="enter details">
-        <div class="enter details">
-            <form method="POST" action="{% url 'details' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label" >Firm Name</label>
-                    <input type="text" name="firm_name" class="form-control"
-                           placeholder="Enter your firm name"
-                           value="{{ user.profile.firm_name|default_if_none:'' }}" 
-                           maxlength="255" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="full_name" class="form-control"
-                           placeholder="Enter your full name"
-                           value="{{ user.profile.full_name|default_if_none:'' }}" 
-                           maxlength="255" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control"
-                           value="{{ user.email }}" readonly>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label">GST Number</label>
-                  <input type="text" name="GST_number" class="form-control"
-                         placeholder="Enter your GST number"
-                         value="{{ user.profile.GST_number|default_if_none:'' }}"
-                         maxlength="15" pattern="[0-9A-Z]{15}"
-                         title="GST Number must be exactly 15 Charcthers">
-              </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Phone</label>
-                    <input type="tel" name="phone" class="form-control"
-                           placeholder="Enter your phone number"
-                           value="{{ user.profile.phone|default_if_none:'' }}"
-                           maxlength="10" pattern="[0-9]{10}"
-                           title="Phone number must be exactly 10 digits">
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Address</label>
-                    <input type="text" name="address" class="form-control"
-                           placeholder="Enter your address"
-                           value="{{ user.profile.address|default_if_none:'' }}" required>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" name="" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+      <h2><b>Enter Details</b></h2>
+      <form method="POST" action="{% url 'details' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="firm_name">Firm Name</label>
+          <input type="text" id="firm_name" name="firm_name" placeholder="e.g., TCS Pvt Ltd"
+                 value="{{ user.profile.firm_name|default_if_none:'' }}" maxlength="255" required>
         </div>
-    </section>
-</body>
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" placeholder="e.g., Ratan Tata"
+                 value="{{ user.profile.full_name|default_if_none:'' }}" maxlength="255" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+        </div>
+        <div class="form-group">
+          <label for="GST_number">GST Number</label>
+          <input type="text" id="GST_number" name="GST_number" placeholder="Enter 15-digit alphanumeric GSTIN"
+                 value="{{ user.profile.GST_number|default_if_none:'' }}" maxlength="15" pattern="[0-9A-Z]{15}"
+                 title="GST Number must be exactly 15 alphanumeric characters">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit mobile number"
+                 value="{{ user.profile.phone|default_if_none:'' }}" maxlength="10" pattern="[0-9]{10}"
+                 title="Phone number must be exactly 10 digits">
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" placeholder="Enter your full address"
+                 value="{{ user.profile.address|default_if_none:'' }}" required>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </body>
 </html>
-

@@ -1,143 +1,162 @@
 {% extends "base.html" %}
-{% load static %} 
-    {% block style %}
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(#616161, black);
-        min-height: 100vh;
-      }
-      .retailer-container {
-        width: 83%;
-        margin: 30px auto;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-      .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-      .form-group label {
-        width: 15%;
-        text-align: right;
-        margin-right: 20px;
-      }
-      .form-group input,
-      .form-group textarea {
-        flex-grow: 1;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-right: 120px;
-      }
-      .buttons {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .button {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .button:hover {
-        background-color: #0056b3;
-      }
-      .footer-button {
-        position: fixed;
-        bottom: 20px;
-        right: 10px;
-        color: white;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-      }
-      .footer-button i {
-        margin-right: 5px;
-      }
-      a{
-        text-decoration: none;
-      }
-    </style>
-    {% endblock style %}
-    {% block content %}
-    <div class="retailer-container">
-      <div class="header">
-        <h2><b>Add Retailer</b></h2>
-        <div class="buttons">
-          <a href="{% url 'view_retailers' %}" class="button">View Retailers</a>
-      </div>
-      </div>
-      <br />
-      {% if message %}
-      <div
-        class="alert alert-success"
-        style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 20px;"
-      >
-        {{ message }}
-      </div>
-      {% endif %}
-      <div class="section">
-        <form action="{% url 'add_retailer' %}" method="post">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="retailerName">Firm Name:</label>
-            {{ form.firm_name }}
-          </div>
-          <div class="form-group">
-            <label for="retailerName">Person Name:</label>
-            {{ form.person_name }}
-          </div>
-          <div class="form-group">
-            <label for="phoneNumber">Phone Number:</label>
-            {{ form.phone_number }}
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            {{ form.email_id }}
-          </div>
-          <div class="form-group">
-            <label for="address">Address:</label>
-            {{ form.address }}
-          </div>
-          <!-- 'Credit' field removed per request -->
-          <div class="buttons">
-            <button type="submit" class="button">Add Retailer</button>
-            <button type="reset" class="button">Reset</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="footer-button">
-      <a class="nav-link" href="#">
-        <i
-          class="far fa-arrow-alt-circle-up"
-          style="font-size: 35px; color: aliceblue; padding-right: 20px;"
-        ></i>
-      </a>
-    </div>
+{% load static %}
+{% block style %}
+<style>
+  /* Import Poppins Font */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-    <!-- Required for the forms from startbootstrap, if you use them -->
-    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+  /* Global styling */
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#616161, black);
+    min-height: 100vh;
+  }
 
-    <!-- Bootstrap 5 JS for navbar toggler/collapse and dropdowns -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% endblock content %}
+  /* Retailer Container */
+  .retailer-container {
+    width: 75%;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px 30px;
+  }
+
+  /* Header styling */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .header h2 {
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #5ab3ad;
+  }
+
+  /* Form group styling */
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .form-group label {
+    width: 25%;
+    text-align: right;
+    margin-right: 15px;
+    font-size: 15px;
+    color: #333;
+  }
+  .form-group input,
+  .form-group textarea {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    box-sizing: border-box;
+  }
+
+  /* Buttons styling */
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .button, button.button {
+    background-color: #5ab3ad;
+    color: #fff;
+    padding: 8px 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .button:hover, button.button:hover {
+    background-color: #429a93;
+  }
+
+  /* Footer button styling */
+  .footer-button {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    color: white;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  .footer-button i {
+    margin-right: 5px;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="retailer-container">
+  <div class="header">
+    <h2><b>Add Retailer</b></h2>
+    <div class="buttons">
+      <a href="{% url 'view_retailers' %}" class="button">View Retailers</a>
+    </div>
+  </div>
+  <br />
+  {% if message %}
+  <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 20px;">
+    {{ message }}
+  </div>
+  {% endif %}
+  <div class="section">
+    <form action="{% url 'add_retailer' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="retailerName">Firm Name:</label>
+        {{ form.firm_name }}
+      </div>
+      <div class="form-group">
+        <label for="personName">Person Name:</label>
+        {{ form.person_name }}
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        {{ form.phone_number }}
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        {{ form.email_id }}
+      </div>
+      <div class="form-group">
+        <label for="address">Address:</label>
+        {{ form.address }}
+      </div>
+      <!-- 'Credit' field removed as requested -->
+      <div class="buttons">
+        <button type="submit" class="button">Add Retailer</button>
+        <button type="reset" class="button">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="footer-button">
+  <a class="nav-link" href="#">
+    <i class="far fa-arrow-alt-circle-up"></i>
+  </a>
+</div>
+<!-- Bootstrap 5 JS for navbar toggler/collapse and dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}
