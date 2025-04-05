@@ -17,10 +17,21 @@ def add_retailer(request):
             print("Form valid")
             retailer = form.save(commit=False)
             retailer.user = request.user
-            retailer.save()
-            message = "Retailer added successfully!"
-            # Reset the form by creating a new instance
-            form = RetailerForm()
+            # Check for unique constraint violation
+            if Retailer.objects.filter(user=request.user, firm_name=retailer.firm_name).exists():
+                message = "Retailer with this Firm Name already exists for your account."
+                message_type = "error"
+            # Check for phone number length and all are digits
+            elif len(retailer.phone_number) != 10 or not retailer.phone_number.isdigit():
+                message = "Phone number must be 10 digits."
+                message_type = "error"
+            else:
+                # Save the retailer instance
+                retailer.save()
+                message = "Retailer added successfully!"
+                message_type = "success"
+                # Reset the form by creating a new instance
+                form = RetailerForm()
         else:
             print("Form errors:", form.errors)
     else:

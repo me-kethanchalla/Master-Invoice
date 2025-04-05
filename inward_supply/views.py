@@ -18,9 +18,18 @@ def add_supplier(request):
         if form.is_valid():
             supplier = form.save(commit=False)
             supplier.user = request.user
-            supplier.save()
-            message = "Supplier added successfully!"
-            return redirect('view_suppliers')
+            if Supplier.objects.filter(user=request.user, firm_name=supplier.firm_name).exists():
+                message = "Supplier with this Firm Name already exists for your account."
+                message_type = "error"
+            # Check for phone number length and all are digits
+            elif len(supplier.phone_number) != 10 or not supplier.phone_number.isdigit():
+                message = "Phone number must be 10 digits."
+                message_type = "error"
+            else:
+                supplier.save()
+                message = "Supplier added successfully!"
+                message_type = "success"
+                form = SupplierForm()  # Reset the form after successful submission
         else:
             print("Form errors:", form.errors)
     else:
