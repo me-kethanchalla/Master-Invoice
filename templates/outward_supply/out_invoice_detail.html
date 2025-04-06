@@ -1,64 +1,139 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(#616161, black);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  .invoice-container {
+    width: 83%;
+    margin: 30px auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #ddd;
+    color: #333;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .card-header h3 {
+    margin: 0;
+    display: inline-block;
+    padding-bottom: 5px;
+    border-bottom: 3px solid #66C2C2;
+  }
+  .row.mb-4 {
+    margin-bottom: 20px;
+  }
+  .table-responsive {
+    margin-top: 20px;
+  }
+  table.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.table th,
+  table.table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  table.table thead tr {
+    border-bottom: 3px solid #66C2C2;
+  }
+  table.table thead {
+    background-color: #f8f9fa;
+  }
+  .button {
+    background-color: #66C2C2;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  .button:hover {
+    background-color: #55a3a3;
+  }
+  .text-md-end {
+    text-align: right;
+  }
+  .mt-4 {
+    margin-top: 20px;
+  }
+</style>
+{% endblock style %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3>Invoice #{{ invoice.bill_number }}</h3>
+<div class="invoice-container">
+    <div class="card-header">
+        <h3>Invoice #{{ invoice.bill_number }}</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5>Retailer Information</h5>
+                <p><strong>Name:</strong> <strong>{{ invoice.retailer.firm_name }}</strong></p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <h5>Invoice Details</h5>
+                <p><strong>Date:</strong> {{ invoice.date }}</p>
+                <p><strong>Bill Number:</strong> {{ invoice.bill_number }}</p>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <h5>Retaier Information</h5>
-                    <p><strong>Name:</strong> <b><strong>{{ invoice.retailer.firm_name }}</strong></b></p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Invoice Details</h5>
-                    <p><strong>Date:</strong> {{ invoice.date }}</p>
-                    <p><strong>Bill Number:</strong> {{ invoice.bill_number }}</p>
-                </div>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit Amount</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in invoice.products.all %}
-                        <tr>
-                            <td>{{ item.product_name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.unit_amount }}</td>
-                            <td>{{ item.amount }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center">No products found.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="3" class="text-end">Discount:</th>
-                            <th>{{ invoice.discount }}%</th>
-                        </tr>
-                        <tr>
-                            <th colspan="3" class="text-end">Total Amount(with discount):</th>
-                            <th>{{ invoice.get_total_amount }}</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            
-            <div class="mt-4">
-                <a href="{% url 'out_invoice_list' %}" class="btn btn-secondary">Back to List</a>
-            </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Amount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice.products.all %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unit_amount }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Discount:</th>
+                        <th>{{ invoice.discount }}%</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" class="text-end">Total Amount (with discount):</th>
+                        <th>{{ invoice.get_total_amount }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="mt-4 text-end">
+            <a href="{% url 'out_invoice_list' %}" class="button">Back to List</a>
         </div>
     </div>
 </div>
