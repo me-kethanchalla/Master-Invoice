@@ -77,7 +77,7 @@
                                 <i id="Siu" class="fas fa-box"></i>
                                 <h3 class="text-uppercase m-0">Inventory</h3>
                                 <div class="sub-optionss">
-                                    <a href="{% url 'add_inventory' %}">Add Product</a>
+                                    <a href="{% url 'add_inventory' %}">Add New Item</a>
                                     <a href="{% url 'inventory_list' %}">View Inventory</a>
                                 </div>
                             </div>
@@ -86,11 +86,11 @@
                         <div class="col-md-3 mb-3 mb-md-0">
                             <div class="cardd" id="suppliers" onclick="toggleSection('suppliers')">
                                 <i id="Siu" class="fas fa-truck"></i>
-                                <h3 class="text-uppercase m-0">Supply Inflow</h3>
+                                <h3 class="text-uppercase m-0">Supply Inward</h3>
                                 <div class="sub-optionss">
                                     <a href="{% url 'add_supplier' %}">Add Supplier</a>
-                                    <a href="{% url 'add-inward-bill' %}">Enter Invoice Bill</a>
-                                    <a href="{% url 'invoice_list' %}">Transaction Inflow</a>
+                                    <a href="{% url 'add-inward-bill' %}">Enter Supplier Invoice </a>
+                                    <a href="{% url 'invoice_list' %}">Supplier Invoice History</a>
                                     <a href="{% url 'view_suppliers' %}">View Suppliers</a>
                                 </div>
                             </div>
@@ -99,11 +99,11 @@
                         <div class="col-md-3 mb-3 mb-md-0">
                             <div class="cardd" id="retailers" onclick="toggleSection('retailers')">
                                 <i id="Siu" class="fas fa-store"></i>
-                                <h3 class="text-uppercase m-0">Supply Outflow</h3>
+                                <h3 class="text-uppercase m-0">Supply Outward</h3>
                                 <div class="sub-optionss">
                                     <a href="{% url 'add_retailer' %}">Add Retailer</a>
-                                    <a href= "{% url 'add-outward-bill' %}">Billing to Retailer</a>
-                                    <a href= "{% url 'out_invoice_list' %}">Transaction Outlfow</a>
+                                    <a href= "{% url 'add-outward-bill' %}">Generate Retailer Invoice</a>
+                                    <a href= "{% url 'out_invoice_list' %}">Retailer Invoice History</a>
                                     <a href="{% url 'view_retailers' %}">View Retailers</a>
                                 </div>
                             </div>
@@ -115,9 +115,9 @@
                                 <i id="Siu" class="fas fa-money-bill-wave"></i>
                                 <h3 class="text-uppercase m-0">Transactions</h3>
                                 <div class="sub-optionss">
-                                    <a href="{% url 'add_outward_transaction' %}">Add Outward Transactions</a>
-                                    <a href="{% url 'add_inward_transaction' %}">Add Inward Transactions</a>
-                                    <a href="{% url 'view_transaction_history' %}">View Transaction History</a>
+                                    <a href="{% url 'add_outward_transaction' %}">Add Payment Outflow</a>
+                                    <a href="{% url 'add_inward_transaction' %}">Add Payment Inflow</a>
+                                    <a href="{% url 'view_transaction_history' %}">Payment History</a>
                                     <a href="{% url 'pending' %}">Pending Transactions</a>
                                 </div>
                             </div>
@@ -149,10 +149,11 @@
                     <div class="col-lg-8">
                         <h2 class="text-white mb-4">Built by while(1)</h2>
                         <p class="text-white-50">
-                            Our app streamlines warehouse operations by digitalizing the storage and dispatch process.
-                            It ensures efficient tracking, easy inventory management, and seamless order fulfillment. 
-                            With a user-friendly interface, it reduces manual errors and enhances productivity. 
-                            Optimize your warehouse logistics with our smart, digital solution!
+                            Managing a warehouse doesn’t have to be a hassle. At Master Invoice, we’ve built a simple yet powerful platform that takes the stress out of storage and dispatch. By digitizing your inventory process, we help you track stock effortlessly, fulfill orders smoothly, and stay on top of your operations — all from a clean, easy-to-use interface.
+
+No more paper trails. No more confusion. Just smart, reliable tools that boost efficiency, cut down on errors, and give you more control over your warehouse.
+
+Whether you're a small business or a growing operation, Master Invoice is here to make your logistics flow better.
                             <br><br><br><br><br><br><br>
                         </p>
                     </div>
@@ -179,7 +180,9 @@
                                 <i class="fas fa-envelope text-primary mb-2"></i>
                                 <h4 class="text-uppercase m-0">Email</h4>
                                 <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50"><a href="#!">isaha@cse.iitk.ac.in</a></div>
+                                <div class="small text-black-50">
+                                    <a href="mailto:master.invoice.while1@gmail.com">master.invoice.while1@gmail.com</a>
+                                  </div>
                             </div>
                         </div>
                     </div>
@@ -189,7 +192,7 @@
                                 <i class="fas fa-mobile-alt text-primary mb-2"></i>
                                 <h4 class="text-uppercase m-0">Phone</h4>
                                 <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50">+91 6942069420</div>
+                                <div class="small text-black-50">+91 9848323323</div>
                             </div>
                         </div>
                     </div>
