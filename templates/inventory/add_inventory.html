@@ -132,6 +132,15 @@
     <div class="section">
       <form action="{% url 'add_inventory' %}" method="post">
         {% csrf_token %}
+        {% if form.cost_price.errors %}
+      <div class="alert alert-danger">{{ form.cost_price.errors }}</div>
+        {% endif %}
+        {% if form.sale_price.errors %}
+        <div class="alert alert-danger">{{ form.sale_price.errors }}</div>
+          {% endif %}
+          {% if form.max_retail_price.errors %}
+          <div class="alert alert-danger">{{ form.max_retail_price.errors }}</div>
+            {% endif %}
         <div class="form-group">
           <label for="id_product_name">Product Name:</label>
           {{ form.product_name }}

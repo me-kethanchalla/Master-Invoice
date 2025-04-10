@@ -31,7 +31,19 @@ def add_inventory(request):
             inventory_item = form.save(commit=False)
             inventory_item.user = request.user
             inventory_item.profit = inventory_item.sale_price - inventory_item.cost_price
+            sp = inventory_item.sale_price
+            cp = inventory_item.cost_price
+            mrp = inventory_item.max_retail_price
             
+            if sp < 0:
+                form.add_error('sale_price', "Sale Price cannot be negative value")
+                return render(request, 'inventory/add_inventory.html', {'form': form, 'message': "Error: Invalid Sale Price",  'message_type': message_type})
+            if cp < 0:
+                form.add_error('cost_price', "Cost Price cannot be negative value")
+                return render(request, 'inventory/add_inventory.html', {'form': form, 'message': "Error: Invalid Cost Price",  'message_type': message_type})
+            if mrp < 0:
+                form.add_error('max_retail_price', "MRP cannot be negative value")
+                return render(request, 'inventory/add_inventory.html', {'form': form, 'message': "Error: Invalid MRP",  'message_type': message_type})
             if Inventory.objects.filter(user=request.user, item_id=inventory_item.item_id).exists():
                 message = "Inventory item with this Item ID already exists for your account."
                 message_type = "error"
