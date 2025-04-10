@@ -132,15 +132,6 @@
     <div class="section">
       <form action="{% url 'add_inventory' %}" method="post">
         {% csrf_token %}
-        {% if form.cost_price.errors %}
-      <div class="alert alert-danger">{{ form.cost_price.errors }}</div>
-        {% endif %}
-        {% if form.sale_price.errors %}
-        <div class="alert alert-danger">{{ form.sale_price.errors }}</div>
-          {% endif %}
-          {% if form.max_retail_price.errors %}
-          <div class="alert alert-danger">{{ form.max_retail_price.errors }}</div>
-            {% endif %}
         <div class="form-group">
           <label for="id_product_name">Product Name:</label>
           {{ form.product_name }}
@@ -157,14 +148,23 @@
           <label for="id_cost_price">Cost Price:</label>
           {{ form.cost_price }}
         </div>
+        {% if form.cost_price.errors %}
+      <div class="alert alert-danger">{{ form.cost_price.errors }}</div>
+        {% endif %}
         <div class="form-group">
           <label for="id_sale_price">Sale Price:</label>
           {{ form.sale_price }}
         </div>
+        {% if form.sale_price.errors %}
+        <div class="alert alert-danger">{{ form.sale_price.errors }}</div>
+          {% endif %}
         <div class="form-group">
           <label for="id_max_retail_price">Maximum Retail Price:</label>
           {{ form.max_retail_price }}
         </div>
+        {% if form.max_retail_price.errors %}
+          <div class="alert alert-danger">{{ form.max_retail_price.errors }}</div>
+            {% endif %}
         <div class="form-group">
           <label for="id_gst">GST (%):</label>
           {{ form.gst }}
