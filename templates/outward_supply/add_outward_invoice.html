@@ -175,6 +175,11 @@
       <label for="id_discount">Discount (%):</label>
       {{ form.discount }}
     </div>
+    {% if form.discount.errors %}
+      <div class="alert alert-danger">
+        {{ form.discount.errors }}
+      </div>
+    {% endif %}
     
     <div class="section">
       <label for="billed-to">Billed To:</label>
@@ -228,8 +233,8 @@
   </div>
   
   <div class="footer">
-    <p><br><br>Authorized by:</p>
-  </div>
+    <p><br><br>Authorized by: {{ firmname }}</p>
+  </div>  
   
   <div class="footer-button">
     <a class="nav-link" href="#">
@@ -328,7 +333,8 @@
               tax += sale_price * quantity * (gst / 100);
           }
       });
-      let total = subtotal + tax;
+      let disc = parseFloat(document.getElementById("id_discount").value || 0);
+      let total = (subtotal + tax)* (1 - (disc / 100));
       
       document.getElementById("subtotal").textContent = `Subtotal: ₹${subtotal.toFixed(2)}`;
       document.getElementById("tax-display").textContent = `Tax: ₹${tax.toFixed(2)}`;
@@ -340,6 +346,14 @@
       addRow();
       updateTotals();
   }
+  window.onload = function() {
+      addRow();
+      updateTotals();
+
+      const discountField = document.getElementById("id_discount");
+      discountField.addEventListener("input", updateTotals);
+  };
+
 </script>
 <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

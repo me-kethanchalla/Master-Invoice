@@ -24,5 +24,14 @@ class OutwardInvoiceForm(forms.Form):
     bill_number = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'})
-    ) 
-    discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Discount (%)'}), help_text="Enter discount percentage (if any).")   
+    )
+    discount = forms.FloatField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Discount (%)'}),
+        help_text="Enter discount percentage (if any)."
+    )
+
+    def clean_discount(self):
+        discount = self.cleaned_data.get('discount')
+        if discount is not None and discount >= 100:
+            raise forms.ValidationError("Discount cannot be 100 or more.")
+        return discount 
