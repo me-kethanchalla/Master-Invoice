@@ -52,3 +52,6 @@ class Supplier(models.Model):
 
     def __str__(self):
         return f"{self.firm_name} ({self.person_name})"
+    
+    class Meta:
+        unique_together = ('user', 'firm_name')
