@@ -21,6 +21,9 @@ class Retailer(models.Model):
     def __str__(self):
         return f"{self.firm_name} ({self.person_name})"
     
+    class Meta:
+        unique_together = ('user', 'firm_name')
+    
 class Outward_Invoice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
