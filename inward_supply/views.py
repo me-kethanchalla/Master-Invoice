@@ -16,6 +16,7 @@ def add_supplier(request):
     if request.method == 'POST':
         form = SupplierForm(request.POST)
         if form.is_valid():
+            
             supplier = form.save(commit=False)
             supplier.user = request.user
             if Supplier.objects.filter(user=request.user, firm_name=supplier.firm_name).exists():
