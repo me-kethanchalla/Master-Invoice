@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
 from django.db import IntegrityError
 from django.views.decorators.cache import never_cache
+from user.models import Profile
+
 
 
 @login_required
@@ -166,12 +168,15 @@ def add_invoice(request):
             print("Form errors:", form.errors)
     else:
         form = InvoiceForm()
+    profile = get_object_or_404(Profile, user=request.user)
+    firmname = profile.firm_name
 
     return render(request, "inward_supply/invoice_form.html", {
         "form": form,
         "suppliers": suppliers,
         "productJSON": productJSON,
-        "message": message
+        "message": message,
+        "firmname": firmname
     })
 
 

@@ -6,6 +6,7 @@ from django.db.models import Q
 from decimal import Decimal
 import json
 from datetime import datetime, date
+from user.models import Profile
 
 @login_required
 def add_retailer(request):
@@ -93,6 +94,7 @@ def add_out_invoice(request):
         if form.is_valid():
             bill_number = form.cleaned_data['bill_number']
             invoice_date = form.cleaned_data['date']
+            discount_value = form.cleaned_data['discount']
 
             # Check for future date
             if invoice_date > date.today():
@@ -112,6 +114,16 @@ def add_out_invoice(request):
                     "retailers": retailers,
                     "productJSON": productJSON,
                     "message": "Error: Duplicate Bill Number"
+                })
+            
+            # Validate discount before creating the invoice
+            if discount_value >= 100:
+                form.add_error('discount', "Discount cannot be 100 or more.")
+                return render(request, "outward_supply/add_outward_invoice.html", {
+                    "form": form,
+                    "retailers": retailers,
+                    "productJSON": productJSON,
+                    "message": "Discount should be less than 100%"
                 })
 
             # Pre-check: Validate stock
@@ -211,12 +223,15 @@ def add_out_invoice(request):
     else:
         form = OutwardInvoiceForm()
 
-    
+    profile = get_object_or_404(Profile, user=request.user)
+    firmname = profile.firm_name
+
     return render(request, "outward_supply/add_outward_invoice.html", {
         "form": form,
         "retailers": retailers,
         "productJSON": productJSON,
-        "message": message
+        "message": message,
+        "firmname": firmname
     })
 
 
