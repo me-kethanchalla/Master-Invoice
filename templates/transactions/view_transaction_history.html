@@ -117,6 +117,14 @@
 
   <!-- Retailers Table -->
   <div id="retailersTable" class="table-responsive">
+    <form method="get" style="margin-bottom: 15px;">
+      <label for="start">Start date:</label>
+      <input type="date" id="start" name="start_date" value="{{ request.GET.start_date }}">
+      
+      <label for="end">End date:</label>
+      <input type="date" id="end" name="end_date" value="{{ request.GET.end_date }}">
+      <button class="button" type="submit">Filter</button>
+    </form>
     <table class="table">
       <thead>
         <tr>
@@ -145,6 +153,15 @@
 
   <!-- Suppliers Table -->
   <div id="suppliersTable" class="table-responsive" style="display:none;">
+    <form method="get" style="margin-bottom: 15px;">
+      <label for="start">Start date:</label>
+      <input type="date" id="start" name="start_date" value="{{ request.GET.start_date }}">
+      
+      <label for="end">End date:</label>
+      <input type="date" id="end" name="end_date" value="{{ request.GET.end_date }}">
+    
+      <button class="button" type="submit">Filter</button>
+    </form>
     <table class="table">
       <thead>
         <tr>

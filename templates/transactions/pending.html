@@ -79,12 +79,6 @@
     color: #fff;
     white-space: nowrap;
   }
-  .retailer-credit {
-    color: red;
-  }
-  .supplier-credit {
-    color: green;
-  }
 
   /* Footer button styling */
   .footer-button {
@@ -126,11 +120,18 @@
       </thead>
       <tbody>
         {% for retailer in retailers %}
-          {% if retailer.credit != 0 %}
+          {% if retailer.credit > 0 %}
             <tr>
               <td>{{ retailer.person_name }}</td>
               <td>{{ retailer.firm_name }}</td>
-              <td class="retailer-credit">-₹{{ retailer.credit }}</td>
+              <td class="retailer-credit" style="color: green;">₹{{ retailer.credit }}</td>
+            </tr>
+          {% endif %}
+          {% if retailer.credit < 0 %}
+            <tr>
+              <td>{{ retailer.person_name }}</td>
+              <td>{{ retailer.firm_name }}</td>
+              <td class="retailer-credit" style="color: red;">₹{{ retailer.credit | cut:"-" }}</td>
             </tr>
           {% endif %}
         {% endfor %}
@@ -150,11 +151,18 @@
       </thead>
       <tbody>
         {% for supplier in suppliers %}
-          {% if supplier.debit != 0 %}
+          {% if supplier.debit > 0 %}
             <tr>
               <td>{{ supplier.person_name }}</td>
               <td>{{ supplier.firm_name }}</td>
-              <td class="supplier-credit">₹{{ supplier.debit }}</td>
+              <td class="supplier-credit" style="color: red;">₹{{ supplier.debit }}</td>
+            </tr>
+          {% endif %}
+          {% if supplier.debit < 0 %}
+            <tr>
+              <td>{{ supplier.person_name }}</td>
+              <td>{{ supplier.firm_name }}</td>
+              <td class="supplier-credit" style="color: green;">₹{{ supplier.debit | cut:"-" }}</td>
             </tr>
           {% endif %}
         {% endfor %}

@@ -20,6 +20,12 @@ def view_transaction_history(request):
  suppliers = Supplier.objects.filter(user=request.user)
  retailers = Retailer.objects.filter(user=request.user)
  transactions = Transaction.objects.filter(user=request.user)
+ start_date = request.GET.get("start_date")
+ end_date = request.GET.get("end_date")
+ if start_date:
+    transactions = transactions.filter(add_date__gte=start_date)
+ if end_date:
+    transactions = transactions.filter(add_date__lte=end_date)
  return render(request, 'transactions/view_transaction_history.html', {'suppliers': suppliers, 'retailers': retailers, 'transactions': transactions})
 
 
