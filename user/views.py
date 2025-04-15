@@ -55,18 +55,18 @@ def user_login(request):
                 store_otp(request, otp, 5)
                 send_otp_email(register_form.cleaned_data['email'], otp) 
                 return redirect('verify_otp')   
-            else:
-                messages.error(request, "Registration failed. Please check the errors below.")
+            # else:
+            #     messages.error(request, "Registration failed. Please check the errors below.")
 
         elif 'login' in request.POST:
             login_form = CustomAuthenticationForm(request, data=request.POST)
             if login_form.is_valid():
                 user = login_form.get_user()
                 login(request, user)
-                messages.success(request, "Login successful.")
+               # messages.success(request, "Login successful.")
                 return redirect('home')
-            else:
-                messages.error(request, "Login failed. Please check your credentials.")    
+            # else:
+            #     messages.error(request, "Login failed. Please check your credentials.")    
     return render(request, 'user/login.html',{
         'register_form': register_form,
         'login_form': login_form
@@ -96,7 +96,7 @@ def edit_profile(request):
         user_profile.address = address
         user_profile.save()
 
-        messages.success(request, "Profile updated successfully!")  # Show success message
+       # messages.success(request, "Profile updated successfully!")  # Show success message
         return redirect('profile')  # Redirect to profile page after saving
 
     return render(request, 'user/editprofile.html')
@@ -110,7 +110,7 @@ def details(request):
         profile_form = DetailsForm(request.POST, instance=user_profile)
         if profile_form.is_valid():
             profile_form.save()
-            messages.success(request, "Details saved successfully!")
+          #  messages.success(request, "Details saved successfully!")
             return redirect('home')
         
     else:
@@ -180,7 +180,7 @@ from django.contrib.auth import logout
 @never_cache
 def user_logout(request):
     logout(request)
-    messages.success(request, "Logged out successfully.")
+#    messages.success(request, "Logged out successfully.")
     request.session.flush()  # Clears all session data
     return redirect('login2')
 
@@ -212,7 +212,7 @@ def verify_and_reset(request):
                 user.save()
                 request.session.pop("otp", None)
                 request.session.pop("otp_expiry", None) 
-                messages.success(request, "Password reset successful. You can now log in.")
+                # messages.success(request, "Password reset successful. You can now log in.")
                 return redirect('login2')
             else:
                 messages.error(request, "Passwords do not match.")
