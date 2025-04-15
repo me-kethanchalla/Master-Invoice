@@ -316,7 +316,7 @@ def outward_invoice_bill(request):
         return JsonResponse({
         "bill_count": bill_count,
         "dates": dates,
-        "total_num_bills": len(bill_count)
+        "total_num_bills": sum(bill_count)
     })
     except Exception as e:
         print(e)
