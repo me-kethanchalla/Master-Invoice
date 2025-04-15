@@ -81,7 +81,7 @@ def update_transaction_supplier(request):
                 remarks=remark,
                 type=0
             )
-        messages.success(request, "Transactions updated successfully!")
+     #   messages.success(request, "Transactions updated successfully!")
         return redirect('view_transaction_history')
     return render(request, 'transactions/add_inward_transaction.html', {'suppliers': suppliers, 'retailers': retailers})
 
@@ -127,6 +127,6 @@ def update_transaction_retailer(request):
                 remarks=remark,
                 type=1
             )
-        messages.success(request, "Transactions updated successfully!")
+       # messages.success(request, "Transactions updated successfully!")
         return redirect('view_transaction_history')
     return render(request, 'transactions/pending.html', {'suppliers': suppliers, 'retailers': retailers})
